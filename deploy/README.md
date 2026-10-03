@@ -1,5 +1,9 @@
 # Synology deployment templates
 
+Current NAS deployment: only `allegro-firmowe`, over authenticated HTTPS, with
+operator-approved management enabled. The private instance and its OAuth grant
+were retired on 2026-10-03. The two-account examples below remain reusable templates.
+
 For persistent services exposed through authenticated HTTPS, use
 [the HTTP deployment guide](http.md) and
 [Compose template](compose.http.yaml.example). The SSH/stdio setup below is
@@ -60,7 +64,7 @@ new config directory with mode 0700 and credential files with mode 0600.
 Remove inherited Synology ACLs granting everyone access on this new directory
 before writing credentials. Templates contain no real credentials.
 
-## Verified NAS preparation (2026-10-03)
+## Historical NAS preparation (2026-10-03, before HTTP migration)
 
 The AMD64 image was built from release `62d1dbb` on kiciserwer. Its ID is
 `sha256:3a48f93bd129a249572aefa8e313879477716dc16c8ec2acf8519e42218e94e3`.

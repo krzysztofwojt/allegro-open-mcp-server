@@ -11,7 +11,6 @@ The image ID is
 
 | Allegro account | Public MCP URL | NAS loopback upstream |
 | --- | --- | --- |
-| Private | `https://allegro-prywatne-mcp.kwojt.net/mcp` | `http://127.0.0.1:3030` |
 | Company | `https://allegro-firmowe-mcp.kwojt.net/mcp` | `http://127.0.0.1:3031` |
 
 Each protected NAS env file must contain its own random
@@ -22,9 +21,8 @@ Allegro OAuth settings. Keep the files under
 key values. Never commit, paste into chat, or reuse either inbound API key.
 
 For client configuration, protected files containing only the MCP key are
-available at `/volume1/docker/allegro-mcp/config/client-access/prywatne.key`
-and `firmowe.key`. These contain no Allegro OAuth credentials. Copy the matching
-key into the client's secret field. If rotating a key, update both its env file
+available at `/volume1/docker/allegro-mcp/config/client-access/firmowe.key`.
+This contains no Allegro OAuth credentials. Copy this key into the client's secret field. If rotating a key, update both its env file
 and client key file, then recreate only that account's container.
 
 The inbound `ALLEGRO_MCP_API_KEY` protects bot-to-MCP requests. It is separate
@@ -69,34 +67,34 @@ documentation](https://developers.openai.com/plugins/build/auth#client-identific
 
 Install [renew-certificates.sh](renew-certificates.sh) under
 `/usr/local/share/acme.sh/allegro-mcp-ops/`, with that directory and script
-accessible only to `certadmin`. The two new ACME certificate directories must
+accessible only to `certadmin`. The company ACME certificate directory must
 also belong to this account and use mode `0700`, with files mode `0600`.
 Create an enabled daily DSM Task Scheduler script task, owned by `certadmin`,
-running this script at 00:15. It renews and deploys only the two Allegro
-certificates, treats ACME's not-due status separately, and fails on renewal or
+running this script at 00:15. It renews and deploys only the company Allegro
+certificate, treats ACME's not-due status separately, and fails on renewal or
 deployment errors or certificates expiring within 14 days. Existing certificate
 tasks remain separate. Verify the task's exit status and served TLS certificates.
 
 ## Verified deployment (2026-10-03)
 
-- Both public DNS records are DNS-only A records in the Cloudflare `kwojt.net`
-  zone, matching the existing public MCP address. CoreDNS was not changed.
-- DSM routes terminate TLS and forward to loopback ports 3030 and 3031.
-  ZeroSSL certificates for both names expire on 2027-01-01. HTTPS validation
-  through the public WAN address passed. HSTS is enabled for these new names.
+- Only the company MCP is deployed. Its DNS-only A record is in Cloudflare's
+  `kwojt.net` zone; DSM terminates HTTPS and forwards to `127.0.0.1:3031`.
+  Its ZeroSSL certificate expires on 2027-01-01 and HSTS is enabled.
 - Enabled DSM task 20, `Renew Allegro MCP HTTPS certificates`, runs daily at
-  00:15 as `certadmin`. A manual scheduler run succeeded; fresh certificates
-  were correctly reported as not yet due. Future renewal remains automatic.
-- DSM's IPv4 and IPv6 firewall is enabled with a default drop policy. Allegro
-  uses the existing TCP 443 allowance; no backend-port allowance was added.
-  Docker binds both upstream ports only to `127.0.0.1`.
-  Synology Tailscale uses userspace networking and can forward private tailnet
-  traffic to these loopback listeners; this path also requires the MCP key.
-- Local HTTP and public HTTPS both rejected missing, invalid and other-account
-  keys with 401. Matching keys initialized MCP, listed 272 tools (maximum name
-  length 62), and read `/me` for the distinct private and company accounts.
-- Both services have writes disabled and `unless-stopped` restart policies.
-  No write operation was used for verification. Bot connections are left to
-  the account owner; direct ChatGPT OAuth is not implemented by this deployment.
-- All 274 tests, lint, mypy, generated-output/freshness checks, package build,
-  NAS Docker build and GitHub CI for the HTTP implementation passed.
+  00:15 as `certadmin`. Its script now targets only the company certificate.
+- DSM's IPv4 and IPv6 firewall retains its default drop policy and existing
+  TCP 443 allowance. The Docker upstream is bound only to loopback.
+  Synology Tailscale userspace forwarding still requires the MCP key.
+- Local HTTP and public HTTPS reject missing and invalid keys with 401.
+  The company key initializes MCP, lists 272 tools (maximum name length 62),
+  and reads the expected company account identity.
+- Company writes are enabled with the approved management OAuth scopes;
+  buyer-payment refunds remain excluded. No real write was used for validation.
+  Direct ChatGPT OAuth is not implemented by this deployment.
+- The private service, token volume, env file, inbound key, Cloudflare record,
+  DSM proxy route, TLS certificate and ACME files were removed at the operator's
+  request. Its OAuth association was also removed from the private Allegro account.
+  The shared OAuth application remains registered for the company service.
+- Previous implementation validation passed all 274 tests, lint, mypy,
+  generated-output checks, package/NAS Docker builds and GitHub CI.
+  Retirement was verified by resource absence and a fresh company read smoke.

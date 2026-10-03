@@ -7,6 +7,9 @@ OAuth grant. The default deployment remains read-only for both accounts.
 
 ## Prepared company-only opt-in
 
+The two-account instructions below are reusable templates. The current NAS
+deployment contains only the company service; the private instance was retired.
+
 Use [the company override](compose.firmowe-writes.yaml.example) with the base
 HTTP Compose configuration after approving activation. It changes only
 `allegro-firmowe`; do not enable writes on `allegro-prywatne`.
@@ -58,11 +61,11 @@ documentation](https://developer.allegro.pl/news/zarzadzanie-lista-scopeow-aplik
 
 The operator-approved company deployment has its write gate enabled and a new
 grant containing all four management scopes and messaging. The private
-deployment keeps its write gate disabled. Buyer-payment refunds remain excluded.
+deployment was removed at the operator's request. Buyer-payment refunds remain excluded.
 
-Both deployments passed local and public HTTPS checks: missing, invalid and
-other-account keys returned HTTP 401; authenticated requests returned HTTP 200,
-listed 272 tools and read the expected account identity. The company token was
+The remaining company deployment passed fresh local and public HTTPS checks:
+missing and invalid keys returned HTTP 401; authenticated requests returned
+HTTP 200, listed 272 tools and read the expected company account identity. The company token was
 saved only after checking its account identity and granted scopes. The 26
 targeted write-gating, HTTP-authentication and contract tests passed.
 

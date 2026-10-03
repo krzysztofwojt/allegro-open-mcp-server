@@ -6,7 +6,7 @@ ACME=/usr/local/share/acme.sh/acme.sh
 ACME_HOME=/usr/local/share/acme.sh/.acme.sh
 LOG_DIR=/usr/local/share/acme.sh/allegro-mcp-ops
 status=0
-for domain in allegro-prywatne-mcp.kwojt.net allegro-firmowe-mcp.kwojt.net; do
+for domain in allegro-firmowe-mcp.kwojt.net; do
     result=0
     "$ACME" --renew -d "$domain" --home "$ACME_HOME" >"$LOG_DIR/$domain.renew.log" 2>&1 || result=$?
     case "$result" in
