@@ -7,18 +7,37 @@ Tag: Fulfillment Products
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 def get_available_products(
-    *, offset: int | None = None, limit: int | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getAvailableProducts", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getAvailableProducts", "query:offset", "offset")),
+    ] = None,
+    limit: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getAvailableProducts", "query:limit", "limit")),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get list of available products
 
     Use this resource to get a list of products that can be added to Advance Ship Notice. The list contains products for which the seller has created offers and is ordered by product's name. Read more: <a href="../../tutorials/one-fulfillment-by-allegro-0ADwgOLqWSw#sprawdz-dostepne-produkty-do-awizacji" target="_blank">PL</a> / <a href="../../tutorials/one-fulfillment-by-allegro-4R9dXyMPlc9#check-available-products-for-asn" target="_blank">EN</a>.
@@ -26,13 +45,7 @@ def get_available_products(
 
     HTTP: ``GET /fulfillment/available-products``
     """
-    params = {
-        "offset": offset,
-        "limit": limit,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/fulfillment/available-products",
-        params=params,
+    return call_operation(
+        "getAvailableProducts",
+        {"header:Accept-Language": Accept_Language, "query:offset": offset, "query:limit": limit},
     )
-    return cast(dict[str, Any], response)

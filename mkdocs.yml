@@ -122,6 +122,7 @@ nav:
       - Sandbox setup: tutorials/sandbox.md
   - How-to guides:
       - Pick an OAuth flow: how-to/oauth-flows.md
+      - Two accounts on kiciserwer: how-to/two-accounts-kiciserwer.md
       - Configure Claude Desktop: how-to/with-claude-desktop.md
       - Configure Claude Code: how-to/with-claude-code.md
       - Run with MCP Inspector: how-to/with-mcp-inspector.md
@@ -130,6 +131,7 @@ nav:
       - Configuration: reference/configuration.md
       - Error codes: reference/error-codes.md
       - Tool catalog: reference/tool-catalog.md
+      - Allegro API update audit: reference/api-update-2026-10-03.md
       - Third-party licenses: reference/licenses.md
   - Explanation:
       - Architecture: explanation/architecture.md

@@ -108,3 +108,14 @@ def _is_optional_of(annotation: object, target: type) -> bool:
     if typing.get_origin(annotation) in {typing.Union, type(None) | int}:
         return target in typing.get_args(annotation)
     return False
+
+
+def test_every_generated_model_has_a_valid_schema() -> None:
+    from pydantic import BaseModel
+
+    from allegro_client.models._generated import models
+
+    for name in dir(models):
+        model = getattr(models, name)
+        if isinstance(model, type) and issubclass(model, BaseModel) and model is not BaseModel:
+            model.model_json_schema()

@@ -50,7 +50,7 @@ def auth_status() -> AuthStatus | ErrorResponse:
     granted scope list. Never reveals the token bytes themselves.
     """
     client = get_client()
-    auth = getattr(client, "_auth", None)
+    auth = client.auth_strategy
     tokens = getattr(auth, "_tokens", None) if auth is not None else None
     config = getattr(client, "_config", None)
     flow = str(getattr(config, "auth_flow", ""))
@@ -84,9 +84,13 @@ def auth_login_device() -> AuthStatus | ErrorResponse:
     refresh token has been revoked at Allegro.
     """
     client = get_client()
-    auth = getattr(client, "_auth", None)
+    auth = client.auth_strategy
     if auth is None:
         return ErrorResponse(error="NO_AUTH", message="No auth strategy attached.")
+    from allegro_client.auth.base import AuthStrategy
+
+    if not isinstance(auth, AuthStrategy):
+        return ErrorResponse(error="NO_AUTH", message="No Allegro auth strategy attached.")
     fresh = auth.acquire()
     auth._persist(fresh)
     return auth_status()
@@ -103,7 +107,7 @@ def auth_revoke() -> AuthRevokeResult | ErrorResponse:
     revocation API not currently exposed.
     """
     client = get_client()
-    auth = getattr(client, "_auth", None)
+    auth = client.auth_strategy
     store = getattr(auth, "_store", None) if auth is not None else None
     if store is None:
         return ErrorResponse(error="NO_AUTH", message="No auth strategy attached.")

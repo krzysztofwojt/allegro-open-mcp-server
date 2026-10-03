@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import httpx
 import pytest
 from pydantic import SecretStr
 
@@ -110,7 +111,7 @@ class TestRequiresScope:
 
         # Fabricate an auth strategy attached to the client — we use the
         # client's own httpx auth slot so reaches via getattr work.
-        class _FakeStrategy:
+        class _FakeStrategy(httpx.Auth):
             _tokens = TokenSet(
                 access_token="x",
                 refresh_token=None,
@@ -118,7 +119,7 @@ class TestRequiresScope:
                 scope="allegro:api:sale:offers:read",
             )
 
-        _SHARED_CLIENT._auth = _FakeStrategy()  # type: ignore[attr-defined]
+        _SHARED_CLIENT._http.auth = _FakeStrategy()
 
         @requires_scope("allegro:api:sale:offers:write")
         def tool() -> int:

@@ -11,21 +11,43 @@ from uuid import UUID
 from pydantic import AwareDatetime, BaseModel, Field, RootModel
 
 
-class Type(BaseModel):
+class Group(BaseModel):
+    """
+    Group the billing type belongs to.
+    """
+
     id: Annotated[
         str | None,
         Field(
-            description="Three-letter code of the billing type of the returned billing entry.",
-            examples=["LIS"],
+            description="Technical identifier of the billing type group.",
+            examples=["delivery-services"],
         ),
     ] = None
     name: Annotated[
         str | None,
         Field(
-            description='Billing type of the returned billing entry. This type is translated based on the value of the "Accept-Language" header. By default a message in English is returned.',
-            examples=["Listing fee"],
+            description='Name of the billing type group. This value is translated based on the value of the "Accept-Language" header. By default a message in Polish is returned.',
+            examples=["Delivery"],
         ),
     ] = None
+
+
+class Type(BaseModel):
+    id: Annotated[
+        str | None,
+        Field(
+            description="Three-letter code of the billing type of the returned billing entry.",
+            examples=["XOR"],
+        ),
+    ] = None
+    name: Annotated[
+        str | None,
+        Field(
+            description='Billing type of the returned billing entry. This type is translated based on the value of the "Accept-Language" header. By default a message in Polish is returned.',
+            examples=["One Courier Allegro Delivery additional fee"],
+        ),
+    ] = None
+    group: Annotated[Group | None, Field(description="Group the billing type belongs to.")] = None
 
 
 class Offer(BaseModel):
@@ -36,7 +58,7 @@ class Offer(BaseModel):
     id: Annotated[
         str | None,
         Field(
-            description="ID of the offer associated with the billing entry.",
+            description="ID of the offer associated with the billing entry. Can be either a numeric ID or a UUID.",
             examples=["12345678"],
         ),
     ] = None
@@ -134,7 +156,7 @@ class AdditionalInfoItem(BaseModel):
     name: Annotated[
         str | None,
         Field(
-            description='The display name for the additional information type. This value is translated based on the "Accept-Language" header. By default a message in English is returned.',
+            description='The display name for the additional information type. This value is translated based on the "Accept-Language" header. By default a message in Polish is returned.',
             examples=["Name of additional service"],
         ),
     ] = None
@@ -160,6 +182,20 @@ class BillingEntry(BaseModel):
         Field(description="Date of billing entry.", examples=["2019-05-08T09:45:32.818Z"]),
     ] = None
     type: Type | None = None
+    asset: Annotated[
+        Literal["DEBIT", "CREDIT"] | None,
+        Field(
+            description="Type of the recorded billing operation: debit or credit.",
+            examples=["DEBIT"],
+        ),
+    ] = None
+    marketplaceId: Annotated[
+        str | None,
+        Field(
+            description="The marketplace ID where operation was made.",
+            examples=["allegro-pl"],
+        ),
+    ] = None
     offer: Annotated[
         Offer | None,
         Field(description="Offer associated with the returned billing entry."),
@@ -620,7 +656,7 @@ class CustomerReturnRefundBankAccountAddress(BaseModel):
 
 
 class CustomerReturnParcelSender(BaseModel):
-    phoneNumber: Annotated[str | None, Field(examples=["333444555"])] = None
+    phoneNumber: Annotated[str | None, Field(examples=["+48333444555"])] = None
 
 
 class AdditionalServiceDefinitionRequest(BaseModel):
@@ -862,20 +898,6 @@ class ReturnPolicyContactV1(BaseModel):
         Field(description="A valid phone number of the seller", examples=["123 123 123"]),
     ] = None
     email: Annotated[
-        str | None,
-        Field(
-            description="A valid email address of the seller",
-            examples=["useridentifier@domain.com"],
-        ),
-    ] = None
-
-
-class ReturnPolicyContactV2(BaseModel):
-    phoneNumber: Annotated[
-        str | None,
-        Field(description="A valid phone number of the seller", examples=["123 123 123"]),
-    ] = None
-    emailAddress: Annotated[
         str | None,
         Field(
             description="A valid email address of the seller",
@@ -1477,7 +1499,7 @@ class CompatibilityListSupportedCategoriesDto(BaseModel):
     ] = None
 
 
-class Group(BaseModel):
+class Group1(BaseModel):
     id: Annotated[
         str | None,
         Field(
@@ -1492,7 +1514,7 @@ class Group(BaseModel):
 
 class CompatibleProductsGroupsDto(BaseModel):
     groups: Annotated[
-        list[Group] | None,
+        list[Group1] | None,
         Field(
             description="List of groups for given type of compatible products.",
             examples=[
@@ -1514,7 +1536,7 @@ class CompatibleProductsGroupsDto(BaseModel):
     ] = None
 
 
-class Group1(BaseModel):
+class Group2(BaseModel):
     """
     Group to which compatible product is assigned to.
     """
@@ -1551,7 +1573,7 @@ class CompatibleProductDto(BaseModel):
         ),
     ] = None
     group: Annotated[
-        Group1 | None,
+        Group2 | None,
         Field(description="Group to which compatible product is assigned to."),
     ] = None
     attributes: Annotated[
@@ -2238,6 +2260,12 @@ class OfferImageLinkUploadRequest(BaseModel):
             ],
         ),
     ]
+    isAiCoCreated: Annotated[
+        bool | None,
+        Field(
+            description='Sets the uploaded image to be marked as "AI". Optional - can be omitted or set to true/false. If the `isAiCoCreated` query parameter is also provided, its value must not conflict with this field, otherwise a `400` response is returned.'
+        ),
+    ] = None
 
 
 class OfferImageUploadResponse(BaseModel):
@@ -3117,6 +3145,36 @@ class BundleMarketplaceDTO(BaseModel):
     ]
 
 
+class FlexibleBundleOfferDTO(BaseModel):
+    """
+    Offer definition in a slot
+    """
+
+    id: Annotated[str, Field(description="Offer identifier")]
+    excludedFromDiscount: Annotated[
+        bool,
+        Field(description="Indicates if offer is excluded from discount calculation"),
+    ]
+
+
+class FlexibleBundleOfferAvailabilityDTO(BaseModel):
+    """
+    Offer availability information
+    """
+
+    available: Annotated[bool, Field(description="Indicates if offer is available")]
+    reasons: Annotated[list[str], Field(description="List of unavailability reasons")]
+
+
+class FlexibleBundleMarketplaceDiscountDTO(BaseModel):
+    """
+    Discount value for specific marketplace
+    """
+
+    marketplaceId: Annotated[str, Field(description="Marketplace identifier")]
+    percentage: Annotated[int, Field(description="Discount percentage", examples=[10])]
+
+
 class DeliveryMethod(BaseModel):
     id: Annotated[str | None, Field(description="ID of the delivery method")] = None
 
@@ -3138,16 +3196,7 @@ class MaxPackageWeight(BaseModel):
 
 class FirstItemRate(BaseModel):
     """
-    Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource.
-    """
-
-    amount: Annotated[str | None, Field(description="Amount")] = None
-    currency: Annotated[str | None, Field(description="ISO 4217 currency code")] = None
-
-
-class NextItemRate(BaseModel):
-    """
-    Deprecated. Rate for every other item, after the first, in the same parcel for the given delivery method. In case of shipping rates with no specified type, the rate amount and currency must comply with the shippingRatesConstraints.nextItemRate restrictions described in the delivery-methods resource. In case of shipping rates of the `PHYSICAL` or `ELECTRONIC` type, the rate amount must be "0.00".
+    Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource. Note that there is no additional payment for any subsequent item in the parcel.
     """
 
     amount: Annotated[str | None, Field(description="Amount")] = None
@@ -3186,13 +3235,7 @@ class ShippingRate(BaseModel):
     firstItemRate: Annotated[
         FirstItemRate,
         Field(
-            description="Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource."
-        ),
-    ]
-    nextItemRate: Annotated[
-        NextItemRate,
-        Field(
-            description='Deprecated. Rate for every other item, after the first, in the same parcel for the given delivery method. In case of shipping rates with no specified type, the rate amount and currency must comply with the shippingRatesConstraints.nextItemRate restrictions described in the delivery-methods resource. In case of shipping rates of the `PHYSICAL` or `ELECTRONIC` type, the rate amount must be "0.00".'
+            description="Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource. Note that there is no additional payment for any subsequent item in the parcel."
         ),
     ]
     shippingTime: Annotated[
@@ -3231,12 +3274,27 @@ class ShippingRatesSet(BaseModel):
         ),
     ] = None
     name: Annotated[
-        str | None,
+        str,
         Field(
             description="User defined name of the shipping rates set. It may only contain: letters, numbers, hyphens, dots, commas and spaces.",
             examples=["Allegro Delivery shipping rate"],
             max_length=64,
             min_length=1,
+        ),
+    ]
+    type: Annotated[
+        Literal["PHYSICAL", "ELECTRONIC"],
+        Field(
+            description="Whether the shipping rates set is physical or electronic. Note that once a shipping rates set is created, it cannot be changed later.",
+            examples=["PHYSICAL"],
+        ),
+    ]
+    dispatchCountry: Annotated[
+        str | None,
+        Field(
+            description="The dispatch country code in ISO 3166-1 alfa-2 format. It must be passed if the `PHYSICAL` type is provided. Note that once a shipping rates set is created, it cannot be changed later.",
+            examples=["PL"],
+            max_length=2,
         ),
     ] = None
     rates: list[ShippingRate]
@@ -3313,20 +3371,6 @@ class JoinPolicy(BaseModel):
     ]
 
 
-class CustomCost(BaseModel):
-    """
-    Feature is no longer supported, 'allowed' property is always false.
-    """
-
-    allowed: Annotated[
-        bool,
-        Field(
-            description="If true the customer can enter a custom shipping cost.",
-            examples=[False],
-        ),
-    ]
-
-
 class DeliverySettingsResponse(BaseModel):
     marketplace: Annotated[
         Marketplace3,
@@ -3345,13 +3389,6 @@ class DeliverySettingsResponse(BaseModel):
         ),
     ] = None
     joinPolicy: Annotated[JoinPolicy, Field(description="Policy of calculating delivery costs.")]
-    customCost: Annotated[
-        CustomCost,
-        Field(
-            deprecated=True,
-            description="Feature is no longer supported, 'allowed' property is always false.",
-        ),
-    ]
     updatedAt: Annotated[
         str,
         Field(
@@ -3425,20 +3462,6 @@ class JoinPolicy1(BaseModel):
     ]
 
 
-class CustomCost1(BaseModel):
-    """
-    Feature is no longer supported, attempting to set property 'allowed' to true will return 422.
-    """
-
-    allowed: Annotated[
-        bool,
-        Field(
-            description="If true the customer can enter a custom shipping cost.",
-            examples=[False],
-        ),
-    ]
-
-
 class DeliverySettingsRequest(BaseModel):
     marketplace: Annotated[
         Marketplace4 | None,
@@ -3459,13 +3482,6 @@ class DeliverySettingsRequest(BaseModel):
         ),
     ] = None
     joinPolicy: Annotated[JoinPolicy1, Field(description="Policy of calculating delivery costs.")]
-    customCost: Annotated[
-        CustomCost1,
-        Field(
-            deprecated=True,
-            description="Feature is no longer supported, attempting to set property 'allowed' to true will return 422.",
-        ),
-    ]
 
 
 class WholesalePriceList1(BaseModel):
@@ -4619,6 +4635,35 @@ class CheckoutFormPaymentProvider(RootModel[Literal["PAYU", "P24", "AF", "OFFLIN
     ]
 
 
+class CheckoutFormCodBookedPayment(BaseModel):
+    """
+    The cash on delivery (COD) collected payment detailed information.
+    """
+
+    paymentId: Annotated[
+        UUID,
+        Field(
+            description="COD payment id.",
+            examples=["0f8f1d13-7e9e-11e8-9b00-c5b0dfb78ea6"],
+        ),
+    ]
+    shipmentId: Annotated[
+        str | None,
+        Field(
+            description="Shipment id of the COD package.",
+            examples=["ba88f0fb-acf3-438a-877e-580da50c0874"],
+        ),
+    ] = None
+    paidAmount: Price
+    paidAt: Annotated[
+        AwareDatetime | None,
+        Field(
+            description="ISO date and time when the COD payment was confirmed.",
+            examples=["2018-01-05T10:23:43.123Z"],
+        ),
+    ] = None
+
+
 class CheckoutFormFulfillmentStatus(
     RootModel[
         Literal[
@@ -4686,7 +4731,7 @@ class CheckoutFormDeliveryAddress(BaseModel):
         None
     )
     phoneNumber: Annotated[
-        str | None, Field(description="Phone number", examples=["123123123"])
+        str | None, Field(description="Phone number", examples=["+48123123123"])
     ] = None
     modifiedAt: Annotated[
         str | None,
@@ -4880,6 +4925,20 @@ class CheckoutFormLineItemTax(BaseModel):
     ] = None
 
 
+class CheckoutFormLineItemSetSerialNumbersEntryRequest(BaseModel):
+    value: Annotated[str, Field(description="Serial number entered by the Seller.")]
+
+
+class CheckoutFormLineItemSerialNumbersEntry(BaseModel):
+    value: Annotated[str, Field(description="Serial number entered by the Seller.")]
+    returned: Annotated[
+        bool | None,
+        Field(
+            description="Flag indicating if the given serial number has been declared for return by the Buyer."
+        ),
+    ] = None
+
+
 class LineItemDiscount(BaseModel):
     type: Annotated[
         Literal[
@@ -4928,6 +4987,30 @@ class CheckoutFormsOrderInvoiceFileSecurityVerification(BaseModel):
         Literal["ACCEPTED", "REJECTED", "WAITING"] | None, Field(examples=["ACCEPTED"])
     ] = None
     verifiedAt: Annotated[AwareDatetime | None, Field(examples=["2025-11-07T12:56:10.349Z"])] = None
+
+
+class CheckoutFormsOrderInvoiceFileVerificationDetails(BaseModel):
+    type: Annotated[
+        Literal["WARNING", "ERROR"] | None,
+        Field(
+            description="WARNING if the issue doesn't prevent the invoice from being accepted, ERROR if the issue prevents the invoice from being accepted",
+            examples=["WARNING"],
+        ),
+    ] = None
+    code: Annotated[
+        str | None,
+        Field(
+            description="Technical code of the warning or error",
+            examples=["MISSING_EORI_NUMBER"],
+        ),
+    ] = None
+    message: Annotated[
+        str | None,
+        Field(
+            description="User friendly message to display.",
+            examples=["EORI number is missing from the invoice"],
+        ),
+    ] = None
 
 
 class CheckFormsNewOrderInvoiceFile(BaseModel):
@@ -5000,6 +5083,7 @@ class ClaimStatusChangeRequest(BaseModel):
             "REJECTED_PRODUCT_CONFORMS_TO_CONTRACT",
             "REJECTED_MINOR_DEFECT",
             "REJECTED_OTHER",
+            "REJECTED_CLAIM_WITHDRAWN_BY_BUYER",
         ],
         Field(examples=["ACCEPTED_PARTIAL_REFUND"]),
     ]
@@ -5197,7 +5281,7 @@ class CheckoutFormOrderWaybillResponse(BaseModel):
     ] = None
 
 
-class NextPage1(BaseModel):
+class NextPage2(BaseModel):
     id: Annotated[
         str | None,
         Field(
@@ -5307,7 +5391,7 @@ class ChangedParameterDto(BaseModel):
     ] = None
 
 
-class Publication3(BaseModel):
+class Publication2(BaseModel):
     status: Annotated[
         Literal["PROPOSED", "LISTED"] | None,
         Field(
@@ -5324,7 +5408,7 @@ class Category2(ProductCategory):
     ] = None
 
 
-class Publication4(BaseModel):
+class Publication3(BaseModel):
     status: Annotated[
         Literal["PROPOSED", "LISTED"] | None,
         Field(
@@ -5334,7 +5418,7 @@ class Publication4(BaseModel):
     ] = None
 
 
-class Publication5(BaseModel):
+class Publication4(BaseModel):
     status: Annotated[
         Literal["PROPOSED", "LISTED"] | None,
         Field(
@@ -5443,12 +5527,15 @@ class ProductParameterDto(BaseModel):
     options: Options1 | None = None
 
 
-class AiCoCreatedContent(BaseModel):
+class AiCoCreatedImage(ImageUrl):
     """
-    Each path will point to a specific field in object which is co-created by AI.
+    An image declared as generated using AI.
     """
 
-    paths: Annotated[list[str], Field(examples=[["images", "description"]])]
+    url: Annotated[
+        str,
+        Field(examples=["https://a.allegroimg.com/original/00e0c9/1d7c95614fd6a7c713b075d0251a"]),
+    ]
 
 
 class TrustedContent(BaseModel):
@@ -5468,7 +5555,7 @@ class TrustedContent(BaseModel):
     ]
 
 
-class Publication6(BaseModel):
+class Publication5(BaseModel):
     duration: OfferDuration | None = None
     startingAt: OfferStartingAt | None = None
     endingAt: OfferEndingAt | None = None
@@ -5784,7 +5871,80 @@ class ProductSetElementDeposits(BaseModel):
     ] = None
 
 
-class Publication7(BaseModel):
+class Ingredient(BaseModel):
+    """
+    A single ingredient used in a product composition component.
+    """
+
+    name: Annotated[str, Field(description="Name of the ingredient.", examples=["Aqua"])]
+
+
+class Component(BaseModel):
+    """
+    A single component of the product composition.
+    """
+
+    name: Annotated[
+        str | None,
+        Field(
+            description="Optional name of the component. It is required when the product contains more than one component.",
+            examples=["Cream"],
+        ),
+    ] = None
+    ingredients: Annotated[
+        list[Ingredient] | None,
+        Field(description="Array of ingredients included in this component."),
+    ] = None
+
+
+class Composition(BaseModel):
+    """
+    Composition of the product, consisting of components and their ingredients.
+    """
+
+    components: Annotated[
+        list[Component] | None,
+        Field(description="Array of components the product composition consists of."),
+    ] = None
+
+
+class ProductSetElementCompositionRequest(BaseModel):
+    composition: Annotated[
+        Composition | None,
+        Field(
+            description="Composition of the product, consisting of components and their ingredients."
+        ),
+    ] = None
+
+
+class Composition1(BaseModel):
+    """
+    Composition of the product, consisting of components and their ingredients.
+    """
+
+    mode: Annotated[
+        Literal["MANUAL", "AUTO"] | None,
+        Field(
+            description="Indicates whether the composition was provided manually (`MANUAL`) or generated automatically (`AUTO`).",
+            examples=["MANUAL"],
+        ),
+    ] = None
+    components: Annotated[
+        list[Component] | None,
+        Field(description="Array of components the product composition consists of."),
+    ] = None
+
+
+class ProductSetElementCompositionResponse(BaseModel):
+    composition: Annotated[
+        Composition1 | None,
+        Field(
+            description="Composition of the product, consisting of components and their ingredients."
+        ),
+    ] = None
+
+
+class Publication6(BaseModel):
     status: Annotated[
         Literal["PROPOSED", "LISTED", "NOT_LISTED", "REMOVED"] | None,
         Field(
@@ -5799,7 +5959,7 @@ class ProductOfferResponse(BaseModel):
         str | None,
         Field(description="Product id.", examples=["c9e39cae-9cb6-11e9-a2a3-2a2ae2dbcce4"]),
     ] = None
-    publication: Publication7 | None = None
+    publication: Publication6 | None = None
 
 
 class ImpliedWarranty1(ImpliedWarranty):
@@ -6047,7 +6207,7 @@ class AdditionalEmailRequest(BaseModel):
 
 class ClassifiedPackages(BaseModel):
     basePackage: ClassifiedPackage
-    extraPackages: list[ClassifiedPackage] | None = None
+    extraPackages: list[ClassifiedExtraPackage] | None = None
 
 
 class ClassifiedResponse(BaseModel):
@@ -6337,7 +6497,7 @@ class RelatedReason(BaseModel):
     ] = None
 
 
-class Publication9(BaseModel):
+class Publication8(BaseModel):
     """
     Information about publication of the given offer.
     """
@@ -6361,7 +6521,7 @@ class Publication9(BaseModel):
 
 class OfferEventEndedOffer(OfferEventExternalOffer):
     publication: Annotated[
-        Publication9,
+        Publication8,
         Field(description="Information about publication of the given offer."),
     ]
 
@@ -7180,68 +7340,6 @@ class TaxExemption(BaseModel):
     ] = None
 
 
-class AdditionalMarketplaces1(BaseModel):
-    status: Annotated[Literal["ALLOWED", "DENIED"] | None, Field(examples=["ALLOWED"])] = None
-
-
-class AllegroPricesAccountChangeRequest(BaseModel):
-    status: Annotated[Literal["ALLOWED", "DENIED"] | None, Field(examples=["ALLOWED"])] = None
-    additionalMarketplaces: Annotated[
-        dict[str, AdditionalMarketplaces1] | None,
-        Field(
-            description="Consent statuses on marketplaces other than the base marketplace of the account."
-        ),
-    ] = None
-
-
-class AllegroPricesAccountConsentChangeResponse(BaseModel):
-    status: Annotated[Literal["ALLOWED", "DENIED"] | None, Field(examples=["ALLOWED"])] = None
-    additionalMarketplaces: Annotated[
-        dict[str, AdditionalMarketplaces1] | None,
-        Field(
-            description="Consent statuses on marketplaces other than the base marketplace of the account."
-        ),
-    ] = None
-
-
-class AllegroPricesOfferChangeRequest(BaseModel):
-    status: Annotated[
-        Literal["ALLOWED", "DENIED"] | None,
-        Field(
-            description="Use it to update the consent on the base marketplace of the offer.",
-            examples=["ALLOWED"],
-        ),
-    ] = None
-    additionalMarketplaces: Annotated[
-        dict[str, AdditionalMarketplaces1] | None,
-        Field(
-            description="Use it to update the consent on marketplaces other than the base marketplace of the offer."
-        ),
-    ] = None
-
-
-class AllegroPricesOfferConsentChangeResponse(BaseModel):
-    status: Annotated[
-        Literal["ALLOWED", "DENIED"] | None,
-        Field(
-            description="Consent status on the base marketplace of the offer.",
-            examples=["ALLOWED"],
-        ),
-    ] = None
-    additionalMarketplaces: Annotated[
-        dict[str, AdditionalMarketplaces1] | None,
-        Field(
-            description="Consent statuses on marketplaces other than the base marketplace of the offer."
-        ),
-    ] = None
-
-
-class AllegroPricesQualificationResponse(BaseModel):
-    status: Annotated[
-        Literal["QUALIFIED", "DISQUALIFIED"] | None, Field(examples=["QUALIFIED"])
-    ] = None
-
-
 class AccountParticipationMarketplaceRequest(BaseModel):
     """
     Marketplace participation update request
@@ -7250,7 +7348,7 @@ class AccountParticipationMarketplaceRequest(BaseModel):
     id: Annotated[
         str,
         Field(
-            description="Marketplace identifier (must be a supported marketplace)",
+            description="Marketplace identifier. Supported values: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.",
             examples=["allegro-pl"],
         ),
     ]
@@ -7285,7 +7383,7 @@ class AccountParticipationMarketplace(BaseModel):
     id: Annotated[
         str,
         Field(
-            description="Marketplace identifier (e.g., allegro-pl, allegro-cz)",
+            description="Marketplace identifier. One of: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.",
             examples=["allegro-pl"],
         ),
     ]
@@ -7314,7 +7412,7 @@ class Marketplace5(BaseModel):
     id: Annotated[
         str,
         Field(
-            description="Marketplace identifier (e.g., allegro-pl, allegro-cz)",
+            description="Marketplace identifier. Supported values: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.",
             examples=["allegro-pl"],
             min_length=1,
         ),
@@ -7552,7 +7650,7 @@ class MarketplaceDto(BaseModel):
     id: Annotated[
         str,
         Field(
-            description="Marketplace identifier (e.g., 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu')",
+            description="Marketplace identifier. One of: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.",
             examples=["allegro-pl"],
         ),
     ]
@@ -8005,7 +8103,7 @@ class Output1(BaseModel):
             description="Object containing info about created participation in AlleDiscount, contains the id of the created participation."
         ),
     ] = None
-    errors: list[ErrorsHolder] | None = None
+    errors: list[Error] | None = None
 
 
 class AlleDiscountGetSubmitCommandResponse(BaseModel):
@@ -8162,7 +8260,7 @@ class Output3(BaseModel):
             description="Withdrawn offer participation data. Non-null when command status is `SUCCESSFUL`."
         ),
     ] = None
-    errors: list[ErrorsHolder] | None = None
+    errors: list[Error] | None = None
 
 
 class AlleDiscountGetWithdrawCommandResponse(BaseModel):
@@ -8440,7 +8538,7 @@ class Application(BaseModel):
     ] = None
 
 
-class Publication10(BaseModel):
+class Publication9(BaseModel):
     """
     Time period when reduced price (and possible badge if it applies for campaign) is displayed on the list of offers or on the offer page.
     """
@@ -8508,7 +8606,7 @@ class AlleDiscountCampaign(BaseModel):
         Field(description="Time period when the campaign is open for offer submission."),
     ] = None
     publication: Annotated[
-        Publication10 | None,
+        Publication9 | None,
         Field(
             description="Time period when reduced price (and possible badge if it applies for campaign) is displayed on the list of offers or on the offer page."
         ),
@@ -8550,9 +8648,24 @@ class Interlocutor(BaseModel):
     ]
 
 
+class MessageAuthorVBeta1(BaseModel):
+    role: Literal["BUYER", "SELLER", "USER", "CONSULTANT", "ALLEGRO"]
+    login: Annotated[str | None, Field(examples=["AllegroLogin"])] = None
+
+
 class MessageAuthor(BaseModel):
     login: Annotated[str, Field(examples=["AllegroLogin"])]
     isInterlocutor: Annotated[bool, Field(examples=[True])]
+
+
+class ThreadParticipantVBeta1(BaseModel):
+    role: Literal["BUYER", "SELLER", "USER"]
+    login: str
+
+
+class ThreadOrderOfferVBeta1(BaseModel):
+    id: str
+    quantity: int
 
 
 class Thread(BaseModel):
@@ -8568,6 +8681,10 @@ class ThreadId(BaseModel):
     id: Annotated[str, Field(examples=["88ae369b-8f65-4fc4-9c77-bedf604a2e2"])]
 
 
+class NextPage3(BaseModel):
+    id: Annotated[str, Field(examples=["cD0yMDI2LTA2LTAyVDEyOjEwOjAwWjtzPTEwMDQ="])]
+
+
 class ThreadsList(BaseModel):
     threads: list[Thread]
     offset: Annotated[int, Field(examples=[20], ge=0)]
@@ -8578,12 +8695,25 @@ class ThreadReadFlag(BaseModel):
     read: Annotated[bool, Field(examples=["false"])]
 
 
+class ThreadReadFlagVBeta1(BaseModel):
+    read: Annotated[bool, Field(examples=[False])]
+
+
 class MessageOffer(BaseModel):
     id: Annotated[str, Field(examples=["82398120310"])]
 
 
+class MessageOrderVBeta1(BaseModel):
+    id: Annotated[str, Field(examples=["88ae369b-8f65-4fc4-9c77-bedf604a2e2"])]
+
+
 class MessageOrder(BaseModel):
     id: Annotated[str, Field(examples=["88ae369b-8f65-4fc4-9c77-bedf604a2e2"])]
+
+
+class MessageRelatedObjectVBeta1(BaseModel):
+    offer: MessageOffer | None = None
+    order: MessageOrderVBeta1 | None = None
 
 
 class MessageRelatedObject(BaseModel):
@@ -8619,6 +8749,41 @@ class MessageAttachmentInfo(BaseModel):
     status: Annotated[Literal["NEW", "SAFE", "UNSAFE", "EXPIRED"], Field(examples=["NEW"])]
 
 
+class MessageAttachmentInfoVBeta1(BaseModel):
+    id: Annotated[str, Field(examples=["97dc0b60-2da4-4247-92ba-b748630ba0f6"])]
+    fileName: Annotated[str, Field(examples=["exampleName.jpeg"])]
+    mimeType: Annotated[str | None, Field(examples=["image/jpeg"])] = None
+    url: Annotated[
+        str | None,
+        Field(
+            examples=[
+                "https://upload.allegro.pl/message-center/message-attachments/97dc0b60-2da4-4247-92ba-b748630ba0f6"
+            ]
+        ),
+    ] = None
+    status: Annotated[Literal["NEW", "SAFE", "UNSAFE", "EXPIRED"], Field(examples=["NEW"])]
+
+
+class MessageVBeta1(BaseModel):
+    id: Annotated[str, Field(examples=["97dc0b60-2da4-4247-92ba-b748630ba0f6"])]
+    status: Annotated[
+        Literal["VERIFYING", "BLOCKED", "DELIVERED", "INTERACTING", "DISMISSED"],
+        Field(examples=["DELIVERED"]),
+    ]
+    type: Annotated[
+        Literal["ASK_QUESTION", "MAIL", "MESSAGE_CENTER"],
+        Field(examples=["MESSAGE_CENTER"]),
+    ]
+    createdAt: Annotated[AwareDatetime, Field(examples=["2020-08-26T12:52:04Z"])]
+    author: MessageAuthorVBeta1
+    text: Annotated[str, Field(examples=["Sample message"])]
+    subject: Annotated[str, Field(examples=["Sample subject"])]
+    relatesTo: MessageRelatedObjectVBeta1
+    hasAdditionalAttachments: Annotated[bool, Field(examples=[False])]
+    attachments: list[MessageAttachmentInfoVBeta1]
+    additionalInformation: MessageAdditionalInformation
+
+
 class Message(BaseModel):
     id: Annotated[str, Field(examples=["97dc0b60-2da4-4247-92ba-b748630ba0f6"])]
     status: Annotated[
@@ -8638,6 +8803,11 @@ class Message(BaseModel):
     hasAdditionalAttachments: Annotated[bool, Field(examples=[False])]
     attachments: list[MessageAttachmentInfo]
     additionalInformation: MessageAdditionalInformation | None = None
+
+
+class MessagesListVBeta1(BaseModel):
+    messages: list[MessageVBeta1]
+    nextPage: NextPage3
 
 
 class MessagesList(BaseModel):
@@ -8664,6 +8834,13 @@ class NewMessage(BaseModel):
     text: Annotated[str, Field(examples=["Sample message"], max_length=2000)]
     attachments: list[MessageAttachmentId] | None = None
     order: MessageOrder
+
+
+class NewMessageVBeta1(BaseModel):
+    recipient: Recipient
+    text: Annotated[str, Field(examples=["Sample message"], max_length=2000)]
+    attachments: list[MessageAttachmentId] | None = None
+    order: MessageOrderVBeta1
 
 
 class NewAttachmentDeclaration(BaseModel):
@@ -8831,20 +9008,6 @@ class Condition(BaseModel):
     fulfilled: Annotated[
         bool | None, Field(description="Indicates whether this condition is met")
     ] = None
-    passedDeliveryMethods: Annotated[
-        list[DeliveryMethodId] | None,
-        Field(
-            deprecated=True,
-            description="Set of delivery methods that meet this condition. May be null if the condition does not apply to delivery methods.",
-        ),
-    ] = None
-    failedDeliveryMethods: Annotated[
-        list[DeliveryMethodId] | None,
-        Field(
-            deprecated=True,
-            description="Set of delivery methods that fail to meet this condition. May be null if the condition does not apply to delivery methods.",
-        ),
-    ] = None
 
 
 class SmartOfferClassificationReport(BaseModel):
@@ -8855,19 +9018,6 @@ class SmartOfferClassificationReport(BaseModel):
         bool | None,
         Field(
             description="Indicates whether that particular offer is set to be reclassified in the next 24 hours"
-        ),
-    ] = None
-    smartDeliveryMethods: Annotated[
-        list[SmartDeliveryMethod] | None,
-        Field(
-            deprecated=True,
-            description="Delivery methods marked with Smart! label",
-            examples=[
-                [
-                    {"id": "2488f7b7-5d1c-4d65-b85c-4cbcf253fd93"},
-                    {"id": "c3066682-97a3-42fe-9eb5-3beeccab840c"},
-                ]
-            ],
         ),
     ] = None
     conditions: Annotated[
@@ -8881,32 +9031,12 @@ class SmartOfferClassificationReport(BaseModel):
                         "name": "Zgodność z cennikiem",
                         "description": "Wymagamy aby metody dostawy były zgodne z cennikiem.",
                         "fulfilled": True,
-                        "passedDeliveryMethods": [
-                            {"id": "2488f7b7-5d1c-4d65-b85c-4cbcf253fd93"},
-                            {"id": "c3066682-97a3-42fe-9eb5-3beeccab840c"},
-                            {"id": "259b5c7a-9056-4c74-80ec-8bdc50cb0413"},
-                            {"id": "08e2ef8e-90c8-49db-8970-d6c2773f1530"},
-                        ],
-                        "failedDeliveryMethods": [
-                            {"id": "b20ef9e1-faa2-4f25-9032-adbea23e5cb9"},
-                            {"id": "9081532b-5ad3-467d-80bc-9252982e9dd8"},
-                            {"id": "98f86f81-0018-41c5-ac83-073a56fc7021"},
-                            {"id": "5d9c7838-e05f-4dec-afdd-58e884170ba7"},
-                        ],
                     },
                     {
                         "code": "returnPaidBy",
                         "name": "Koszty zwrotu",
                         "description": "Oferta musi mieć politykę zwrotu. Zagraniczne metody dostawy są zaklasyfikowane tylko jeśli koszt zwrotu jest pokryty przez sprzedającego.",
                         "fulfilled": True,
-                        "passedDeliveryMethods": [
-                            {"id": "2488f7b7-5d1c-4d65-b85c-4cbcf253fd93"},
-                            {"id": "c3066682-97a3-42fe-9eb5-3beeccab840c"},
-                        ],
-                        "failedDeliveryMethods": [
-                            {"id": "259b5c7a-9056-4c74-80ec-8bdc50cb0413"},
-                            {"id": "08e2ef8e-90c8-49db-8970-d6c2773f1530"},
-                        ],
                     },
                 ]
             ],
@@ -9421,6 +9551,33 @@ class TaxIdResponse(BaseModel):
     ] = None
 
 
+class FulfillmentWarehouseLocation(BaseModel):
+    """
+    The address of the warehouse.
+    """
+
+    street: Annotated[
+        str | None,
+        Field(description="The warehouse street address.", examples=["Adamów 50"]),
+    ] = None
+    city: Annotated[str | None, Field(description="The warehouse city.", examples=["Adamów"])] = (
+        None
+    )
+    countryCode: Annotated[
+        str | None,
+        Field(
+            description="The warehouse country code in ISO 3166-1 alpha-2 format.",
+            examples=["PL"],
+        ),
+    ] = None
+    postCode: Annotated[
+        str | None, Field(description="The warehouse postal code.", examples=["05-825"])
+    ] = None
+    province: Annotated[
+        str | None, Field(description="The province code.", examples=["MAZOWIECKIE"])
+    ] = None
+
+
 class DeclaredAsnVolume(RootModel[float]):
     root: Annotated[
         float,
@@ -9748,7 +9905,7 @@ class AddressDto(BaseModel):
             examples=["email@mail.com"],
         ),
     ]
-    phone: Annotated[str, Field(description="Cell phone", examples=["500600700"])]
+    phone: Annotated[str, Field(description="Cell phone", examples=["+48500600700"])]
 
 
 class CashOnDeliveryDto(BaseModel):
@@ -9787,6 +9944,17 @@ class InsuranceDto(BaseModel):
     ]
 
 
+class PackageTypeDto(RootModel[Literal["DOX", "PACKAGE", "PALLET", "OTHER"]]):
+    root: Annotated[
+        Literal["DOX", "PACKAGE", "PALLET", "OTHER"],
+        Field(
+            description="Available values: PACKAGE|DOX|PALLET|OTHER.",
+            examples=["PACKAGE"],
+            pattern="DOX|PACKAGE|PALLET|OTHER",
+        ),
+    ]
+
+
 class TransportingInfoDto(BaseModel):
     carrierId: Annotated[str, Field(description="Carrier identifier.", examples=["INPOST"])]
     carrierWaybill: Annotated[
@@ -9802,30 +9970,9 @@ class ShipmentIdsDto(BaseModel):
     shipmentIds: Annotated[list[str], Field(max_length=2147483647, min_length=1)]
 
 
-class PickupDateProposalDto(BaseModel):
-    id: Annotated[
-        str,
-        Field(description="Internal pickup proposal ID.", examples=["2023071210001300"]),
-    ]
-    name: Annotated[
-        str,
-        Field(
-            description="Human readable name of pickup proposal.",
-            examples=["2023-07-12 10:00-13:00"],
-        ),
-    ]
-    description: Annotated[
-        str | None,
-        Field(
-            description="Additional information for pickup proposal.",
-            examples=["Odbiór A"],
-        ),
-    ] = None
-
-
 class PickupTimeDto(BaseModel):
     """
-    Pickup time date proposal. Required if pickupDateProposalId not provided.
+    Pickup time date proposal.
     """
 
     date: Annotated[
@@ -9849,7 +9996,6 @@ class PickupDateProposalsDto(BaseModel):
     shipmentId: Annotated[str | None, Field(examples=["ba88f0fb-acf3-438a-877e-580da50c0874"])] = (
         None
     )
-    proposalItems: Annotated[list[PickupDateProposalDto] | None, Field(deprecated=True)] = None
     pickupTimes: list[PickupTimeDto] | None = None
 
 
@@ -10067,7 +10213,7 @@ class DeliveryServiceIdDto(BaseModel):
     deliveryMethodId: Annotated[
         str | None,
         Field(
-            description="Id of delivery method, chosen by buyer in order.",
+            description="Id of delivery method, chosen by buyer in order. If the Method ID is blank, then the system will automatically read it from the order.",
             examples=["c3066682-97a3-42fe-9eb5-3beeccab840c"],
         ),
     ] = None
@@ -10078,6 +10224,30 @@ class DeliveryServiceIdDto(BaseModel):
             examples=["c9e6f40a-3d25-48fc-838c-055ceb1c5bc0"],
         ),
     ] = None
+
+
+class DeliveryTypeDto(RootModel[Literal["DOOR", "APM", "PUDO"]]):
+    root: Annotated[
+        Literal["DOOR", "APM", "PUDO"],
+        Field(description="Representation of possible delivery types."),
+    ]
+
+
+class DeliveryPaymentDto(RootModel[Literal["PREPAID", "POSTPAID"]]):
+    root: Annotated[
+        Literal["PREPAID", "POSTPAID"],
+        Field(description="Representation of possible payment types for a delivery."),
+    ]
+
+
+class CountryCodeDto(RootModel[str]):
+    root: Annotated[
+        str,
+        Field(
+            description="Country code in ISO 3166-1 alfa-2 format (two-letter code).",
+            examples=["PL"],
+        ),
+    ]
 
 
 class LimitWithCurrencyDto(BaseModel):
@@ -10190,7 +10360,7 @@ class ResponsiblePersonContact(BaseModel):
         str | None,
         Field(
             description="Phone number of responsible person. This field is optional.",
-            examples=["123123123"],
+            examples=["+48123123123"],
             max_length=30,
         ),
     ] = None
@@ -10247,7 +10417,7 @@ class ResponsibleProducerContact(BaseModel):
         str | None,
         Field(
             description="Phone number of responsible producer. This field is optional.",
-            examples=["123123123"],
+            examples=["+48123123123"],
             max_length=30,
         ),
     ] = None
@@ -10655,6 +10825,56 @@ class DepositType(BaseModel):
     price: Price | None = None
 
 
+class ProductIngredientsRequest(BaseModel):
+    productId: Annotated[
+        UUID | None,
+        Field(
+            description="Optional identifier of the product the ingredients belong to. At most one product in a request may omit this field. When provided, it must not be blank.",
+            examples=["0e810d4a-bbee-495c-8979-866bb06d3904"],
+        ),
+    ] = None
+    ingredients: Annotated[
+        str,
+        Field(
+            description="Raw, free-text ingredients declaration to parse. May describe a single ingredients list, or multiple named components separated by newlines, each in the `name:\\n ingredient1, ingredient2, ...` format.",
+            examples=[
+                "shampoo:\\n aqua, sodium chloride, parfum\\n conditioner:\\n glycerin, niacinamide"
+            ],
+        ),
+    ]
+
+
+class ParsedIngredientResponse(BaseModel):
+    name: Annotated[
+        str | None,
+        Field(description="Name of the parsed ingredient.", examples=["aqua"]),
+    ] = None
+
+
+class ParseDiagnosticResponse(BaseModel):
+    code: Annotated[
+        str | None,
+        Field(
+            description="Machine-readable diagnostic code, e.g. `UNKNOWN_INGREDIENT`, `DUPLICATE_INGREDIENT_NAME`, `EMPTY_INGREDIENTS`.",
+            examples=["UNKNOWN_INGREDIENT"],
+        ),
+    ] = None
+    message: Annotated[
+        str | None,
+        Field(
+            description="Human-readable, localized diagnostic message. Localized based on the `Accept-Language` header.",
+            examples=["Ingredient is not present in the known ingredients collection"],
+        ),
+    ] = None
+    context: Annotated[
+        str | None,
+        Field(
+            description="Fragment of the submitted text (e.g. the offending ingredient or component name) the diagnostic refers to.",
+            examples=["Unknownium"],
+        ),
+    ] = None
+
+
 class BillingEntries(BaseModel):
     billingEntries: Annotated[
         list[BillingEntry] | None, Field(description="List of billing types.")
@@ -10687,16 +10907,16 @@ class AdditionalServices(BaseModel):
 
 class FulfillmentRefundDisposition(BaseModel):
     type: Annotated[
-        Literal["RETURN", "BOUNCE"] | None,
+        Literal["RETURN", "BOUNCE", "REPLACEMENT"] | None,
         Field(
-            description="Type of the refund disposition. - `RETURN` - buyer return, - `BOUNCE` - operational return."
+            description="Type of the refund disposition. - `RETURN` - buyer return, - `BOUNCE` - operational return, - `REPLACEMENT` - fewer items shipped than ordered."
         ),
     ] = None
     refund: FulfillmentRefundDispositionRefund | None = None
     stockStatus: Annotated[
-        Literal["SELLABLE", "NON_SELLABLE", "MISSING", "ITEM_MISMATCH"] | None,
+        Literal["SELLABLE", "NON_SELLABLE", "MISSING", "ITEM_MISMATCH", "NOT_APPLICABLE"] | None,
         Field(
-            description="Status describing whether the item returns to sellable stock. - `SELLABLE` - item returns to sellable stock, - `NON_SELLABLE` - item designated for removal process or disposal, - `MISSING` - expected item was not found in parcel, - `ITEM_MISMATCH` - same product but different serial numbers."
+            description="Status describing whether the item returns to sellable stock. - `SELLABLE` - item returns to sellable stock, - `NON_SELLABLE` - item designated for removal process or disposal, - `MISSING` - expected item was not found in parcel, - `ITEM_MISMATCH` - same product but different serial numbers, - `NOT_APPLICABLE` - used for REPLACEMENT type."
         ),
     ] = None
     verificationStatus: Annotated[
@@ -10746,6 +10966,9 @@ class CustomerReturnItem(BaseModel):
         str | None, Field(examples=["https://allegro.pl/oferta/item-name-7678887152"])
     ] = None
     reason: CustomerReturnItemReason | None = None
+    serialNumbers: Annotated[
+        list[str] | None, Field(description="List of serial numbers of included items")
+    ] = None
 
 
 class CustomerReturnReturnParcel(BaseModel):
@@ -11263,7 +11486,7 @@ class CompatibilityListIdItem(BaseModel):
     text: Annotated[
         str | None,
         Field(
-            description="Text description of the compatible item. When creating (Post) or updating (Put) a compatibility list the field is ignored."
+            description="Text description of the compatible item. When creating (POST) or updating (PATCH) a compatibility list the field is ignored."
         ),
     ] = None
     additionalInfo: list[CompatibilityListIdItemAdditionalInfo] | None = None
@@ -11702,9 +11925,18 @@ class PublicationRequest(BaseModel):
 class Publication(PublicationRequest):
     endingAt: OfferEndingAt | None = None
     endedBy: Annotated[
-        Literal["USER", "ADMIN", "EXPIRATION", "EMPTY_STOCK", "PRODUCT_DETACHMENT", "ERROR"] | None,
+        Literal[
+            "USER",
+            "ADMIN",
+            "EXPIRATION",
+            "EMPTY_STOCK",
+            "PRODUCT_DETACHMENT",
+            "ERROR",
+            "VISIBILITY",
+        ]
+        | None,
         Field(
-            description="Indicates the reason for ending the offer: - `USER` - offer ended by the seller. - `ADMIN` - offer ended by an admin. - `EXPIRATION` - offer duration had expired (valid for offers with specified duration). - `EMPTY_STOCK` - offer ended because all available items had been sold out. - `PRODUCT_DETACHMENT` - offer ended because its link to the product was removed. Status will only occur\n  if the base marketplace of offer requires full productization.\n- `ERROR` - offer ended due to internal problem with offer publication. The publication command responded with\n  success status, but further processing failed."
+            description="Indicates the reason for ending the offer: - `USER` - offer ended by the seller. - `ADMIN` - offer ended by an admin. - `EXPIRATION` - offer duration had expired (valid for offers with specified duration). - `EMPTY_STOCK` - offer ended because all available items had been sold out. - `PRODUCT_DETACHMENT` - offer ended because its link to the product was removed. Status will only occur\n  if the base marketplace of offer requires full productization.\n- `ERROR` - offer ended due to internal problem with offer publication. The publication command responded with\n  success status, but further processing failed.\n- `VISIBILITY` - offer ended because it doesn't qualify for visibility in any marketplace."
         ),
     ] = None
 
@@ -11784,45 +12016,12 @@ class BundleDiscountDTO(BaseModel):
     ]
 
 
-class Publication1(BaseModel):
-    """
-    Bundle status on each marketplace.
-    """
-
+class BundlePublicationDTO(BaseModel):
     marketplace: BundleMarketplaceDTO
     status: Annotated[
         Literal["ACTIVE", "SUSPENDED"],
         Field(description="Bundle's status.", examples=["ACTIVE"]),
     ]
-
-
-class OfferBundleDTO(BaseModel):
-    id: Annotated[
-        str,
-        Field(description="Bundle ID.", examples=["a42d09c2-2669-4e7c-989b-7c341e84f787"]),
-    ]
-    offers: Annotated[list[BundledOfferDTO], Field(description="Offers included in bundle.")]
-    publication: Annotated[Publication1, Field(description="Bundle status on each marketplace.")]
-    discounts: Annotated[list[BundleDiscountDTO], Field(description="Discounts on marketplaces.")]
-    createdAt: Annotated[
-        AwareDatetime,
-        Field(
-            description='When this bundle was created in <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO_8601</a> format.',
-            examples=["2023-05-01T10:12:32.321Z"],
-        ),
-    ]
-    createdBy: Annotated[
-        Literal["USER", "ALLEGRO"],
-        Field(
-            description='Who created this bundle. It is set to: <ul> <li> `USER` for all bundles created by seller on Allegro web page or via public API;</li> <li> `ALLEGRO` when bundle was created <a href="https://allegro.pl/dla-sprzedajacych/automatycznie-laczymy-wybrane-oferty-w-zestaw-K6VYllRgbs0" target="_blank">automatically</a> by Allegro. </li> </ul>',
-            examples=["USER"],
-        ),
-    ]
-
-
-class OfferBundlesDTO(BaseModel):
-    bundles: Annotated[list[OfferBundleDTO], Field(description="Seller's bundles.")]
-    nextPage: Annotated[NextPage | None, Field(description="Next page information.")] = None
 
 
 class UpdateOfferBundleDiscountDTO(BaseModel):
@@ -11832,6 +12031,68 @@ class UpdateOfferBundleDiscountDTO(BaseModel):
             description="Discounts on marketplaces. Can be null or empty if bundle shouldn't have discount on any marketplace."
         ),
     ] = None
+
+
+class FlexibleBundleSlotDTO(BaseModel):
+    """
+    Slot definition in a bundle
+    """
+
+    id: Annotated[
+        str | None,
+        Field(description="Slot identifier (not provided when creating new bundle)"),
+    ] = None
+    order: Annotated[int, Field(description="Slot order in the bundle", ge=0, le=5)]
+    entryPoint: Annotated[bool, Field(description="Indicates if this slot is an entry point")]
+    requiredQuantity: Annotated[
+        int, Field(description="Required quantity of offers from this slot", ge=1)
+    ]
+    offers: Annotated[
+        list[FlexibleBundleOfferDTO],
+        Field(description="List of offers in this slot", min_length=1),
+    ]
+
+
+class FlexibleBundleOfferMarketplaceDetailsDTO(BaseModel):
+    """
+    Marketplace-specific offer details
+    """
+
+    id: Annotated[str, Field(description="Marketplace identifier")]
+    availability: FlexibleBundleOfferAvailabilityDTO
+
+
+class FlexibleBundleWholeBundleDiscountDTO(BaseModel):
+    """
+    Whole bundle discount configuration
+    """
+
+    minimumBoughtOffers: Annotated[
+        int,
+        Field(description="Minimum number of bought offers to apply discount", ge=2, le=6),
+    ]
+    discounts: Annotated[
+        list[FlexibleBundleMarketplaceDiscountDTO],
+        Field(
+            description="Discount values per marketplace (must be unique per marketplace)",
+            min_length=1,
+        ),
+    ]
+
+
+class FlexibleBundleSlotDiscountDTO(BaseModel):
+    """
+    Discount configuration for specific slot
+    """
+
+    order: Annotated[int, Field(description="Slot order", ge=0, le=5)]
+    discounts: Annotated[
+        list[FlexibleBundleMarketplaceDiscountDTO],
+        Field(
+            description="Discount values per marketplace (must be unique per marketplace)",
+            min_length=1,
+        ),
+    ]
 
 
 class StandardizedDescription(BaseModel):
@@ -12061,7 +12322,7 @@ class MarketplaceReference(BaseModel):
     id: MarketplaceId
 
 
-class Publication2(BaseModel):
+class Publication1(BaseModel):
     """
     Information about the publication of the offer on the given marketplace.
     """
@@ -12075,7 +12336,7 @@ class OfferListingDtoV1AdditionalMarketplace(BaseModel):
     """
 
     publication: Annotated[
-        Publication2 | None,
+        Publication1 | None,
         Field(
             description="Information about the publication of the offer on the given marketplace."
         ),
@@ -12188,7 +12449,7 @@ class CheckoutFormBuyerReference(BaseModel):
         ),
     ] = None
     phoneNumber: Annotated[
-        str | None, Field(description="Phone number", examples=["123123123"])
+        str | None, Field(description="Phone number", examples=["+48123123123"])
     ] = None
     preferences: BuyerPreferencesReference | None = None
     address: CheckoutFormBuyerAddressReference | None = None
@@ -12285,10 +12546,54 @@ class CheckoutFormInvoiceAddressCompany(BaseModel):
     ] = None
 
 
-class CheckoutFormsOrderInvoiceFile(BaseModel):
-    name: Annotated[str | None, Field(examples=["invoice.pdf"])] = None
-    uploadedAt: Annotated[AwareDatetime | None, Field(examples=["2025-11-07T12:56:10.349Z"])] = None
-    securityVerification: CheckoutFormsOrderInvoiceFileSecurityVerification | None = None
+class CheckoutFormLineItemSetSerialNumbersEntriesRequest(BaseModel):
+    """
+    Serial numbers entered by the Seller. The seller is expected to provide serial numbers when processing an order whose destination country requires them and the product category qualifies for serial numbers.
+    """
+
+    entries: list[CheckoutFormLineItemSetSerialNumbersEntryRequest]
+
+
+class CheckoutFormLineItemSerialNumbers(BaseModel):
+    """
+    Serial numbers required for export orders.
+    """
+
+    expected: Annotated[
+        bool | None,
+        Field(
+            description="Informs whether the serial numbers are expected to be entered by the Seller. The seller is expected to provide serial numbers when processing an order whose destination country requires them and the product category qualifies for serial numbers.",
+            examples=[True],
+        ),
+    ] = None
+    entries: list[CheckoutFormLineItemSerialNumbersEntry] | None = None
+
+
+class CheckoutFormsOrderInvoiceFileVerification(BaseModel):
+    """
+    Additional invoice file verification.
+    """
+
+    status: Annotated[
+        Literal[
+            "NOT_APPLICABLE",
+            "WAITING",
+            "ACCEPTED",
+            "ACCEPTED_WITH_WARNINGS",
+            "REJECTED",
+        ]
+        | None,
+        Field(
+            description="Verification status. Always NOT_APPLICABLE in the REGULAR orderMode. In the UKRAINE_EXPORT orderMode can be WAITING, ACCEPTED, ACCEPTED_WITH_WARNINGS or REJECTED.",
+            examples=["ACCEPTED_WITH_WARNINGS"],
+        ),
+    ] = None
+    details: Annotated[
+        list[CheckoutFormsOrderInvoiceFileVerificationDetails] | None,
+        Field(
+            description="Contains warnings and errors when status is ACCEPTED_WITH_WARNINGS or REJECTED. Empty in other statuses."
+        ),
+    ] = None
 
 
 class CheckFormsNewOrderInvoice(BaseModel):
@@ -12369,29 +12674,6 @@ class ProductChangeDto(BaseModel):
     ] = None
 
 
-class ProductProposalsResponse(BaseModel):
-    id: Annotated[
-        str | None,
-        Field(description="Product id.", examples=["c9e39cae-9cb6-11e9-a2a3-2a2ae2dbcce4"]),
-    ] = None
-    name: Annotated[str | None, Field(description="Product name.", examples=["iPhone 5s"])] = None
-    category: Category2 | None = None
-    images: Annotated[list[ImageUrl] | None, Field(description="List of product images.")] = None
-    parameters: Annotated[
-        list[NewProductParameterDto] | None,
-        Field(description="List of product parameters."),
-    ] = None
-    description: StandardizedDescription | None = None
-    language: Annotated[
-        str | None,
-        Field(
-            description="Language of product data (name, description, parameters's values).",
-            examples=["pl-PL"],
-        ),
-    ] = None
-    publication: Publication4 | None = None
-
-
 class ProductSimilarCategoryWithPath(BaseModel):
     """
     Category in which the product can be listed for sale
@@ -12412,6 +12694,29 @@ class SaleProductResponseCategoriesDto(BaseModel):
     ] = None
 
 
+class AiCoCreatedContent(BaseModel):
+    """
+    Information about content declared as generated using AI.
+    """
+
+    images: Annotated[
+        list[AiCoCreatedImage] | None,
+        Field(
+            description='List of images to be labeled as "AI" during the initial upload.\xa0 If an image is not present in this list, it will not be labeled as "AI".'
+        ),
+    ] = None
+
+
+class ProductAiCoCreatedContent(AiCoCreatedContent):
+    paths: Annotated[
+        list[str],
+        Field(
+            description="Each path points to a specific field co-created by AI.",
+            examples=[["images", "description"]],
+        ),
+    ]
+
+
 class SaleProductOffer(BaseModel):
     """
     Single offer data.
@@ -12422,9 +12727,7 @@ class SaleProductOffer(BaseModel):
     location: Location | None = None
     images: Annotated[
         list[str] | None,
-        Field(
-            examples=['["https://a.allegroimg.com/original/12068b/359d04074521b79df1b2807a6727"]']
-        ),
+        Field(examples=[["https://a.allegroimg.com/original/12068b/359d04074521b79df1b2807a6727"]]),
     ] = None
     description: StandardizedDescription | None = None
     external: ExternalId | None = None
@@ -12452,7 +12755,7 @@ class SaleProductOfferRequestBase(SaleProductOffer):
         ),
     ] = None
     parameters: list[ParameterProductOfferRequest] | None = None
-    publication: Publication6 | None = None
+    publication: Publication5 | None = None
     delivery: Delivery2 | None = None
     afterSalesServices: AfterSalesServicesProductOfferRequest | None = None
     sizeTable: Annotated[
@@ -12577,7 +12880,7 @@ class SaleProductOfferPublicationResponse(Publication):
     marketplaces: SaleProductOfferPublicationMarketplacesResponse | None = None
 
 
-class Publication8(BaseModel):
+class Publication7(BaseModel):
     """
     <small>[read-only]</small> Contains information about the visibility status of the listing for the given service.
     """
@@ -12603,7 +12906,7 @@ class AdditionalMarketplacesResponse1(BaseModel):
         Field(description="The offer price for the selected additional marketplace."),
     ] = None
     publication: Annotated[
-        Publication8 | None,
+        Publication7 | None,
         Field(
             description="<small>[read-only]</small> Contains information about the visibility status of the listing for the given service."
         ),
@@ -13142,22 +13445,6 @@ class TaxRate(BaseModel):
     ] = None
 
 
-class AdditionalMarketplaces5(BaseModel):
-    consent: Annotated[Literal["ALLOWED", "DENIED"] | None, Field(examples=["ALLOWED"])] = None
-    qualification: AllegroPricesQualificationResponse | None = None
-
-
-class AllegroPricesEligibilityResponse(BaseModel):
-    consent: Annotated[Literal["ALLOWED", "DENIED"] | None, Field(examples=["ALLOWED"])] = None
-    qualification: AllegroPricesQualificationResponse | None = None
-    additionalMarketplaces: Annotated[
-        dict[str, AdditionalMarketplaces5] | None,
-        Field(
-            description="Eligibility state on marketplces other than the base marketplace of the account."
-        ),
-    ] = None
-
-
 class AlleDiscount(BaseModel):
     """
     AlleDiscount specific data.
@@ -13201,6 +13488,11 @@ class AlleDiscountListSubmittedResponse(BaseModel):
     totalCount: Annotated[
         int | None, Field(description="Total number of submitted offers.", examples=[1])
     ] = None
+
+
+class ThreadOrderVBeta1(BaseModel):
+    id: str
+    offers: list[ThreadOrderOfferVBeta1]
 
 
 class OfferDescriptionTranslation(BaseModel):
@@ -13463,6 +13755,21 @@ class ThirdPartyDeliveryShipping(Shipping):
     ] = None
 
 
+class FulfillmentWarehouse(BaseModel):
+    """
+    Represents the warehouse assigned to the seller.
+    """
+
+    id: Annotated[
+        str | None, Field(description="The warehouse identifier.", examples=["ADM-01"])
+    ] = None
+    name: Annotated[
+        str | None,
+        Field(description="The warehouse name.", examples=["Magazyn Allegro"]),
+    ] = None
+    location: FulfillmentWarehouseLocation | None = None
+
+
 class StockProductItem(BaseModel):
     """
     Groups together product and its quantity.
@@ -13598,14 +13905,7 @@ class PickupAddressDto(AddressDto):
 
 
 class PackageRequestDto(BaseModel):
-    type: Annotated[
-        str,
-        Field(
-            description="Available values: PACKAGE|DOX|PALLET|OTHER.",
-            examples=["PACKAGE"],
-            pattern="DOX|PACKAGE|PALLET|OTHER",
-        ),
-    ]
+    type: PackageTypeDto
     length: DimensionValue
     width: DimensionValue
     height: DimensionValue
@@ -13621,12 +13921,13 @@ class PackageRequestDto(BaseModel):
 
 class ShipmentCreateRequestDto(BaseModel):
     deliveryMethodId: Annotated[
-        str,
+        str | None,
         Field(
-            description="Id of delivery method, chosen by buyer in order.",
+            deprecated=True,
+            description="Id of delivery method, chosen by buyer in the order. This field will be removed in the future. Use the `carrier`, `cashOnDelivery`, and `packages.transportingInfo` fields instead.",
             examples=["c3066682-97a3-42fe-9eb5-3beeccab840c"],
         ),
-    ]
+    ] = None
     credentialsId: Annotated[
         str | None,
         Field(
@@ -13675,20 +13976,19 @@ class ShipmentCancelCommandDto(BaseModel):
 
 class PickupCreateRequestDto(BaseModel):
     shipmentIds: Annotated[list[str], Field(max_length=2147483647, min_length=1)]
-    pickupDateProposalId: Annotated[
-        str,
-        Field(
-            deprecated=True,
-            description="Internal pickup proposal ID. Required if pickupTime not provided.",
-            examples=["2023071210001300"],
-        ),
-    ]
     pickupTime: PickupTimeDto | None = None
     address: PickupAddressDto
 
 
 class PickupProposalsRequestDto(BaseModel):
-    shipmentIds: Annotated[list[str], Field(max_length=2147483647, min_length=1)]
+    shipmentIds: Annotated[
+        list[str],
+        Field(
+            description="An array of unique shipment identifiers to retrieve details for. Must contain between 1 and 100 IDs.",
+            max_length=100,
+            min_length=1,
+        ),
+    ]
     readyDate: Annotated[
         str | None,
         Field(description="Date when shipments will be ready.", examples=["2020-01-01"]),
@@ -13759,7 +14059,8 @@ class ShipmentDto(BaseModel):
     deliveryMethodId: Annotated[
         str | None,
         Field(
-            description="Id of delivery method, chosen by buyer in order.",
+            deprecated=True,
+            description="Id of delivery method, chosen by buyer in order. In the future this information will be no longer available. Instead of it use carrier, cashOnDelivery and packages.transportingInfo properties.",
             examples=["c3066682-97a3-42fe-9eb5-3beeccab840c"],
         ),
     ] = None
@@ -13817,7 +14118,7 @@ class ShipmentDto(BaseModel):
         list[str] | None,
         Field(
             description="List with identifiers of the carriers that take part in the transport of this shipment. Often it is a single value list, when only one carrier is involved. There are shipments where multiple carriers are used to deliver the package, mainly in a case of international shipments, then there will be two or more values.",
-            examples=[["InPost", "WEDO"]],
+            examples=[["InPost"]],
         ),
     ] = None
     pickupAvailable: Annotated[
@@ -13875,6 +14176,44 @@ class DeliveryServicesDto(BaseModel):
     """
 
     services: list[DeliveryServiceDto] | None = None
+
+
+class Dimensions(BaseModel):
+    length: DimensionValue | None = None
+    width: DimensionValue | None = None
+    height: DimensionValue | None = None
+
+
+class Limits(BaseModel):
+    cashOnDelivery: MoneyDto | None = None
+    insurance: MoneyDto | None = None
+    dimensions: Dimensions | None = None
+    weight: WeightValue | None = None
+
+
+class DeliveryOptionDto(BaseModel):
+    """
+    Representation of delivery options, along with their limits.
+    """
+
+    deliveryType: DeliveryTypeDto | None = None
+    paymentType: DeliveryPaymentDto | None = None
+    packageType: PackageTypeDto | None = None
+    originCountry: CountryCodeDto | None = None
+    destinationCountry: CountryCodeDto | None = None
+    limits: Limits | None = None
+    additionalServices: list[AdditionalServiceDto] | None = None
+    additionalProperties: list[AdditionalPropertyDto] | None = None
+
+
+class DeliveryProposalDto(BaseModel):
+    """
+    Representation of possible transport options for the order.
+    """
+
+    orderId: str | None = None
+    suggestedInput: ShipmentCreateRequestDto | None = None
+    deliveryOptions: list[DeliveryOptionDto] | None = None
 
 
 class PersonalData(BaseModel):
@@ -14179,6 +14518,38 @@ class DepositTypeResponse(BaseModel):
     deposits: Annotated[list[DepositType] | None, Field(description="List of deposit types")] = None
 
 
+class ParseIngredientsRequest(BaseModel):
+    products: Annotated[
+        list[ProductIngredientsRequest],
+        Field(
+            description="List of products for which raw ingredients text should be parsed. Must not be empty.",
+            min_length=1,
+        ),
+    ]
+
+
+class ParsedItemResponse(BaseModel):
+    name: Annotated[
+        str | None,
+        Field(
+            description="Name of the parsed component. May be null if the text describes a single, unnamed ingredients list.",
+            examples=["shampoo"],
+        ),
+    ] = None
+    ingredients: Annotated[
+        list[ParsedIngredientResponse] | None,
+        Field(description="Ingredients parsed for this component."),
+    ] = None
+    errors: Annotated[
+        list[ParseDiagnosticResponse] | None,
+        Field(description="Errors detected while parsing this component."),
+    ] = None
+    warnings: Annotated[
+        list[ParseDiagnosticResponse] | None,
+        Field(description="Non-critical issues detected while parsing this component."),
+    ] = None
+
+
 class InitializeRefund(BaseModel):
     payment: RefundPayment
     order: RefundOrder
@@ -14336,25 +14707,6 @@ class OfferAdditionalMarketplace(BaseModel):
 
 
 class ReturnPolicyRequestV1(BaseModel):
-    name: Annotated[
-        str,
-        Field(description="Return policy name.", examples=["Default"], max_length=200),
-    ]
-    availability: ReturnPolicyAvailability
-    withdrawalPeriod: Annotated[
-        str | None,
-        Field(
-            description="Period in ISO 8601 format. Only periods in full days are accepted.",
-            examples=["P14D"],
-        ),
-    ] = None
-    returnCost: ReturnPolicyReturnCost
-    address: ReturnPolicyAddress
-    contact: ReturnPolicyContactV1 | None = None
-    options: ReturnPolicyOptions
-
-
-class ReturnPolicyRequestV2(BaseModel):
     name: Annotated[str, Field(description="Return policy name.", max_length=200)]
     isFulfillment: Annotated[
         bool,
@@ -14372,12 +14724,15 @@ class ReturnPolicyRequestV2(BaseModel):
     ] = None
     returnCost: ReturnPolicyReturnCost | None = None
     address: ReturnPolicyAddress | None = None
-    contact: ReturnPolicyContactV2 | None = None
+    contact: ReturnPolicyContactV1 | None = None
     options: ReturnPolicyOptions | None = None
 
 
-class ReturnPolicyUpdateRequestV2(BaseModel):
-    name: Annotated[str, Field(description="Return policy name.", max_length=200)]
+class ReturnPolicyUpdateRequestV1(BaseModel):
+    name: Annotated[
+        str,
+        Field(description="Return policy name.", examples=["Default"], max_length=200),
+    ]
     availability: ReturnPolicyAvailability
     withdrawalPeriod: Annotated[
         str | None,
@@ -14388,35 +14743,11 @@ class ReturnPolicyUpdateRequestV2(BaseModel):
     ] = None
     returnCost: ReturnPolicyReturnCost | None = None
     address: ReturnPolicyAddress | None = None
-    contact: ReturnPolicyContactV2 | None = None
-    options: ReturnPolicyOptions | None = None
-
-
-class ReturnPolicyResponseV1(BaseModel):
-    id: Annotated[
-        UUID,
-        Field(
-            description="The ID of the return policy definition.",
-            examples=["09f0b4cc-7880-11e9-8f9e-2a86e4085a59"],
-        ),
-    ]
-    seller: Seller
-    name: Annotated[str, Field(description="Return policy name.", max_length=200)]
-    availability: ReturnPolicyAvailability
-    withdrawalPeriod: Annotated[
-        str | None,
-        Field(
-            description="Period in ISO 8601 format. Can be null if availability range is 'DISABLED'.",
-            examples=["P14D"],
-        ),
-    ] = None
-    returnCost: ReturnPolicyReturnCost | None = None
-    address: ReturnPolicyAddress | None = None
     contact: ReturnPolicyContactV1 | None = None
     options: ReturnPolicyOptions | None = None
 
 
-class ReturnPolicyResponseV2(BaseModel):
+class ReturnPolicyResponseV1(BaseModel):
     id: Annotated[
         UUID,
         Field(
@@ -14440,7 +14771,7 @@ class ReturnPolicyResponseV2(BaseModel):
     ] = None
     returnCost: ReturnPolicyReturnCost | None = None
     address: ReturnPolicyAddress | None = None
-    contact: ReturnPolicyContactV2 | None = None
+    contact: ReturnPolicyContactV1 | None = None
     options: ReturnPolicyOptions | None = None
 
 
@@ -14920,6 +15251,70 @@ class CreateOfferBundleDTO(BaseModel):
     ] = None
 
 
+class OfferBundleDTO(BaseModel):
+    id: Annotated[
+        str,
+        Field(description="Bundle ID.", examples=["a42d09c2-2669-4e7c-989b-7c341e84f787"]),
+    ]
+    offers: Annotated[list[BundledOfferDTO], Field(description="Offers included in bundle.")]
+    publication: Annotated[
+        list[BundlePublicationDTO],
+        Field(description="Bundle status on each marketplace."),
+    ]
+    discounts: Annotated[list[BundleDiscountDTO], Field(description="Discounts on marketplaces.")]
+    createdAt: Annotated[
+        AwareDatetime,
+        Field(
+            description='When this bundle was created in <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO_8601</a> format.',
+            examples=["2023-05-01T10:12:32.321Z"],
+        ),
+    ]
+    createdBy: Annotated[
+        Literal["USER", "ALLEGRO"],
+        Field(
+            description='Who created this bundle. It is set to: <ul> <li> `USER` for all bundles created by seller on Allegro web page or via public API;</li> <li> `ALLEGRO` when bundle was created <a href="https://allegro.pl/dla-sprzedajacych/automatycznie-laczymy-wybrane-oferty-w-zestaw-K6VYllRgbs0" target="_blank">automatically</a> by Allegro. </li> </ul>',
+            examples=["USER"],
+        ),
+    ]
+
+
+class OfferBundlesDTO(BaseModel):
+    bundles: Annotated[list[OfferBundleDTO], Field(description="Seller's bundles.")]
+    nextPage: Annotated[NextPage | None, Field(description="Next page information.")] = None
+
+
+class FlexibleBundleGetOfferDTO(BaseModel):
+    """
+    Offer with properties and marketplace details
+    """
+
+    id: Annotated[str, Field(description="Offer identifier")]
+    excludedFromDiscount: Annotated[
+        bool,
+        Field(description="Indicates if offer is excluded from discount calculation"),
+    ]
+    entryPoint: Annotated[bool, Field(description="Indicates if this offer is an entry point")]
+    marketplaces: Annotated[
+        list[FlexibleBundleOfferMarketplaceDetailsDTO],
+        Field(description="Marketplace-specific details"),
+    ]
+
+
+class FlexibleBundleSlotsDiscountDTO(BaseModel):
+    """
+    Slots discount configuration
+    """
+
+    slots: Annotated[
+        list[FlexibleBundleSlotDiscountDTO],
+        Field(
+            description="Discount configuration per slot (order must be unique)",
+            max_length=6,
+            min_length=1,
+        ),
+    ]
+
+
 class SellerCreateRebateRequestDto(BaseModel):
     benefits: Annotated[list[Benefit], Field(description="What kind of rebate will be given")]
     offerCriteria: Annotated[
@@ -14959,11 +15354,6 @@ class SellerRebatesDto(BaseModel):
 class ReturnPoliciesListReturnPolicyV1(BaseModel):
     count: Annotated[int | None, Field(ge=0)] = None
     returnPolicies: list[ReturnPolicyResponseV1] | None = None
-
-
-class ReturnPoliciesListReturnPolicyV2(BaseModel):
-    count: Annotated[int | None, Field(ge=0)] = None
-    returnPolicies: list[ReturnPolicyResponseV2] | None = None
 
 
 class ListingOffer(BaseModel):
@@ -15051,6 +15441,13 @@ class OfferReference(BaseModel):
     name: Annotated[str, Field(description="Offer name.", examples=["Name of purchased offer"])]
     external: ExternalId | None = None
     productSet: OfferProductSetReference | None = None
+    hsNumber: Annotated[
+        str | None,
+        Field(
+            description="HS number of the purchased product. See: [Harmonized System (HS) Codes](https://www.trade.gov/harmonized-system-hs-codes)",
+            examples=["09012100"],
+        ),
+    ] = None
 
 
 class CheckoutFormFulfillment(BaseModel):
@@ -15113,13 +15510,29 @@ class CheckoutFormLineItem(BaseModel):
         ),
     ] = None
     discounts: list[LineItemDiscount] | None = None
+    serialNumbers: CheckoutFormLineItemSerialNumbers | None = None
 
 
-class CheckoutFormsOrderInvoice(BaseModel):
-    id: Annotated[str | None, Field(examples=["56ae349d-8045-4bb3-adcc-7cf6fb420f61"])] = None
-    invoiceNumber: Annotated[str | None, Field(examples=["FV 01/2020"])] = None
-    createdAt: Annotated[AwareDatetime | None, Field(examples=["2021-01-07T15:50:00.000Z"])] = None
-    file: CheckoutFormsOrderInvoiceFile | None = None
+class CheckoutFormLineItemSetSerialNumbersRequest(BaseModel):
+    """
+    Serial numbers update for given line item of export order.
+    """
+
+    id: Annotated[
+        UUID,
+        Field(
+            description="Line item identifier",
+            examples=["62ae358b-8f65-4fc4-9c77-bedf604a2e2b"],
+        ),
+    ]
+    serialNumbers: CheckoutFormLineItemSetSerialNumbersEntriesRequest
+
+
+class CheckoutFormsOrderInvoiceFile(BaseModel):
+    name: Annotated[str | None, Field(examples=["invoice.pdf"])] = None
+    uploadedAt: Annotated[AwareDatetime | None, Field(examples=["2025-11-07T12:56:10.349Z"])] = None
+    securityVerification: CheckoutFormsOrderInvoiceFileSecurityVerification | None = None
+    verification: CheckoutFormsOrderInvoiceFileVerification | None = None
 
 
 class AllegroPickupDropOffPointsResponse(BaseModel):
@@ -15185,6 +15598,30 @@ class ProductChangesResponse(BaseModel):
     ] = None
 
 
+class ProductProposalsResponse(BaseModel):
+    id: Annotated[
+        str | None,
+        Field(description="Product id.", examples=["c9e39cae-9cb6-11e9-a2a3-2a2ae2dbcce4"]),
+    ] = None
+    name: Annotated[str | None, Field(description="Product name.", examples=["iPhone 5s"])] = None
+    category: Category2 | None = None
+    images: Annotated[list[ImageUrl] | None, Field(description="List of product images.")] = None
+    parameters: Annotated[
+        list[NewProductParameterDto] | None,
+        Field(description="List of product parameters."),
+    ] = None
+    description: StandardizedDescription | None = None
+    aiCoCreatedContent: ProductAiCoCreatedContent | None = None
+    language: Annotated[
+        str | None,
+        Field(
+            description="Language of product data (name, description, parameters's values).",
+            examples=["pl-PL"],
+        ),
+    ] = None
+    publication: Publication3 | None = None
+
+
 class SaleProductSafetyDto(BaseModel):
     """
     Suggested product safety data in accordance with GPSR. <br />**Note:** Allegro does not assume responsibility for the accuracy of this data. It is the merchant's responsibility to verify its applicability to their product.
@@ -15220,6 +15657,7 @@ class ProductSetItem(
     ProductSetElementSafetyInformationRequest,
     MarketedBeforeGPSRObligation,
     ProductSetElementDeposits,
+    ProductSetElementCompositionRequest,
 ):
     pass
 
@@ -15229,6 +15667,7 @@ class ProductSetItem2(
     ProductSetElementSafetyInformationResponse,
     MarketedBeforeGPSRObligation,
     ProductSetElementDeposits,
+    ProductSetElementCompositionResponse,
 ):
     product: Product1 | None = None
     responsiblePerson: Annotated[
@@ -15669,6 +16108,49 @@ class AlleDiscountListEligibleResponse(BaseModel):
     ] = None
 
 
+class ThreadVBeta1(BaseModel):
+    id: Annotated[str, Field(examples=["L1H4FmWRwD5lAEInohQoEGWQR71RfBpEmHqeKZSXdhW"])]
+    read: Annotated[bool, Field(examples=[False])]
+    type: Annotated[
+        Literal["COMMON", "POST_PURCHASE_ISSUE"],
+        Field(
+            description="Thread type: `COMMON` - standard conversation; `POST_PURCHASE_ISSUE` - post-purchase issue thread. Available only for content version 'application/vnd.allegro.beta.v1+json'."
+        ),
+    ]
+    createdAt: Annotated[AwareDatetime, Field(examples=["2020-08-25T10:52:04Z"])]
+    lastMessageDateTime: Annotated[AwareDatetime, Field(examples=["2020-08-26T12:52:04Z"])]
+    participants: list[ThreadParticipantVBeta1]
+    orders: list[ThreadOrderVBeta1] | None = None
+    subType: Annotated[
+        Literal[
+            "PRODUCT_INCONSISTENT_WITH_THE_OFFER",
+            "PRODUCT_ARRIVED_DAMAGED",
+            "DEFECT_DETECTED_DURING_USE",
+            "NO_PRODUCT_IN_THE_SHIPMENT",
+            "MISSING_PRODUCT_ELEMENTS",
+            "PACKAGE_DELAYED",
+            "PACKAGE_DAMAGED",
+            "PACKAGE_LOST",
+            "OTHER",
+            "NO_REFUND",
+            "SELLER_DOES_NOT_WANT_TO_ACCEPT_RETURN",
+            "PROBLEM_WITH_SENDING_PRODUCT_BACK",
+            "NO_DOCUMENTATIONS",
+            "PROBLEM_WITH_WITHDRAWAL_CANCELLATION_OF_PURCHASE",
+        ]
+        | None,
+        Field(
+            description="Reason for the post-purchase issue: `PRODUCT_INCONSISTENT_WITH_THE_OFFER` - product does not match the offer description, photos, or parameters; `PRODUCT_ARRIVED_DAMAGED` - product arrived damaged; `DEFECT_DETECTED_DURING_USE` - defect detected during use; `NO_PRODUCT_IN_THE_SHIPMENT` - product missing from the shipment; `MISSING_PRODUCT_ELEMENTS` - product elements, such as screws, missing; `PACKAGE_DELAYED` - package delayed; `PACKAGE_DAMAGED` - package damaged; `PACKAGE_LOST` - package lost; `OTHER` - reason not listed; `NO_REFUND` - refund not received after order cancellation or return; `SELLER_DOES_NOT_WANT_TO_ACCEPT_RETURN` - seller refuses to accept the return; `PROBLEM_WITH_SENDING_PRODUCT_BACK` - problem returning the product; `NO_DOCUMENTATIONS` - proof of purchase, instructions, or warranty missing; `PROBLEM_WITH_WITHDRAWAL_CANCELLATION_OF_PURCHASE` - problem with withdrawal from or cancellation of the purchase."
+        ),
+    ] = None
+    status: Literal["OPEN", "CLOSED"]
+
+
+class ThreadsListVBeta1(BaseModel):
+    threads: list[ThreadVBeta1]
+    nextPage: NextPage3
+
+
 class AdvanceShipNotice(BaseModel):
     items: Annotated[list[ProductItem], Field(description="A list of product items.")]
     handlingUnit: HandlingUnit | None = None
@@ -15834,6 +16316,30 @@ class PostPurchaseIssueChatResponse(BaseModel):
     chat: list[PostPurchaseIssueChatMessage] | None = None
 
 
+class ProductParseResult(BaseModel):
+    productId: Annotated[
+        UUID | None,
+        Field(
+            description="Identifier of the product this parsing result refers to.",
+            examples=["0e810d4a-bbee-495c-8979-866bb06d3904"],
+        ),
+    ] = None
+    items: Annotated[
+        list[ParsedItemResponse] | None,
+        Field(description="Components successfully parsed out of the submitted ingredients text."),
+    ] = None
+    errors: Annotated[
+        list[ParseDiagnosticResponse] | None,
+        Field(description="Errors that prevented parts of the ingredients text from being parsed."),
+    ] = None
+    warnings: Annotated[
+        list[ParseDiagnosticResponse] | None,
+        Field(
+            description="Non-critical issues found during parsing, e.g. an ingredient unknown to the ingredients collection."
+        ),
+    ] = None
+
+
 class CustomerReturn(BaseModel):
     id: Annotated[str | None, Field(examples=["a3405c27-b01c-4357-9bea-e13925708b46"])] = None
     isFulfillment: Annotated[
@@ -15963,7 +16469,18 @@ class OfferAutomaticPricingCommand(BaseModel):
 
 
 class CompatibilityListManual(BaseModel):
-    type: Annotated[Literal["MANUAL"], Field(description="Type of the compatibility list.")]
+    type: Annotated[
+        Literal["MANUAL"] | None, Field(description="Type of the compatibility list.")
+    ] = None
+    items: Annotated[
+        list[CompatibilityListItem] | None,
+        Field(
+            description='List of the compatible items. Maximum number of elements on the list depends on type of included compatible items. Configuration and details concerning the compatible items in selected category are provided in the response for GET <a href="/documentation/#tag/Compatibility-List/paths/~1sale~1compatibility-list~1supported-categories/get"> supported-categories</a> resource in `validationRules` object.'
+        ),
+    ] = None
+
+
+class CompatibilityListManualRequest(BaseModel):
     items: Annotated[
         list[CompatibilityListItem],
         Field(
@@ -16025,6 +16542,46 @@ class OfferStatsResponseDto(BaseModel):
     """
 
     offerStats: list[OfferStatResponseDto] | None = None
+
+
+class FlexibleBundleGetSlotDTO(BaseModel):
+    """
+    Slot with offers and category
+    """
+
+    id: Annotated[UUID, Field(description="Slot identifier")]
+    order: Annotated[int, Field(description="Slot order in the bundle")]
+    entryPoint: Annotated[bool, Field(description="Indicates if this slot is an entry point")]
+    requiredQuantity: Annotated[
+        int, Field(description="Required quantity of offers from this slot")
+    ]
+    offers: Annotated[
+        list[FlexibleBundleGetOfferDTO],
+        Field(description="List of offers in this slot"),
+    ]
+
+
+class FlexibleBundleDiscountDTO(BaseModel):
+    """
+    Discount configuration for bundle
+    """
+
+    type: Annotated[
+        Literal["WHOLE_BUNDLE_DISCOUNT", "SLOT_DISCOUNT"],
+        Field(
+            description="Type of discount. WHOLE_BUNDLE_DISCOUNT means that the discount amount will be distributed proportionally across the offers in the bundle. SLOT_DISCOUNT allows you to specify which slots in the bundle are discounted and by how much, eg. slot with smartphone cases can be discounted by 20%, but slot with earphones can be not discounted at all."
+        ),
+    ]
+    bundle: Annotated[
+        FlexibleBundleWholeBundleDiscountDTO | None,
+        Field(
+            description="Whole bundle discount configuration (required when type is WHOLE_BUNDLE_DISCOUNT)"
+        ),
+    ] = None
+    slot: Annotated[
+        FlexibleBundleSlotsDiscountDTO | None,
+        Field(description="Slots discount configuration (required when type is SLOT_DISCOUNT)"),
+    ] = None
 
 
 class OfferListingDtoV1Publication(BaseModel):
@@ -16100,16 +16657,19 @@ class CheckoutFormInvoiceInfo(BaseModel):
     ] = None
 
 
-class CheckoutFormsOrderInvoices(BaseModel):
-    invoices: list[CheckoutFormsOrderInvoice] | None = None
-    links: list[CheckoutFormsOrderLink] | None = None
-    hasExternalInvoices: Annotated[
-        bool | None,
-        Field(
-            description="Informs whether an invoice or a proof-of-purchase has been sent outside of Allegro platform",
-            examples=[False],
-        ),
-    ] = None
+class CheckoutFormLineItemsSetSerialNumbersRequest(BaseModel):
+    """
+    Serial numbers update request for export orders.
+    """
+
+    lineItems: list[CheckoutFormLineItemSetSerialNumbersRequest]
+
+
+class CheckoutFormsOrderInvoice(BaseModel):
+    id: Annotated[str | None, Field(examples=["56ae349d-8045-4bb3-adcc-7cf6fb420f61"])] = None
+    invoiceNumber: Annotated[str | None, Field(examples=["FV 01/2020"])] = None
+    createdAt: Annotated[AwareDatetime | None, Field(examples=["2021-01-07T15:50:00.000Z"])] = None
+    file: CheckoutFormsOrderInvoiceFile | None = None
 
 
 class SaleProductDto(BaseModel):
@@ -16128,7 +16688,7 @@ class SaleProductDto(BaseModel):
     compatibilityList: SaleProductCompatibilityList | None = None
     tecdocSpecification: TecdocSpecification | None = None
     description: StandardizedDescription | None = None
-    aiCoCreatedContent: AiCoCreatedContent | None = None
+    aiCoCreatedContent: ProductAiCoCreatedContent | None = None
     trustedContent: TrustedContent | None = None
     hasProtectedBrand: Annotated[
         bool | None,
@@ -16137,7 +16697,7 @@ class SaleProductDto(BaseModel):
             examples=[True],
         ),
     ] = None
-    publication: Publication3 | None = None
+    publication: Publication2 | None = None
     productSafety: SaleProductSafetyDto | None = None
 
 
@@ -16148,7 +16708,7 @@ class BaseSaleProductResponseDto(BaseModel):
     category: ProductCategoryWithPath
     images: list[ImageUrl] | None = None
     parameters: list[ProductParameterDto] | None = None
-    aiCoCreatedContent: AiCoCreatedContent | None = None
+    aiCoCreatedContent: ProductAiCoCreatedContent | None = None
     trustedContent: TrustedContent | None = None
     hasProtectedBrand: Annotated[
         bool | None,
@@ -16158,7 +16718,7 @@ class BaseSaleProductResponseDto(BaseModel):
         ),
     ] = None
     productSafety: SaleProductSafetyDto | None = None
-    publication: Publication5 | None = None
+    publication: Publication4 | None = None
 
 
 class SaleProductOfferRequestV1(SaleProductOfferRequestBase):
@@ -16172,7 +16732,7 @@ class SaleProductOfferRequestV1(SaleProductOfferRequestBase):
     publication: SaleProductOfferPublicationRequest | None = None
     additionalMarketplaces: AdditionalMarketplacesRequest | None = None
     compatibilityList: Annotated[
-        CompatibilityListManual | None,
+        CompatibilityListManualRequest | None,
         Field(
             description="For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically."
         ),
@@ -16181,6 +16741,7 @@ class SaleProductOfferRequestV1(SaleProductOfferRequestBase):
         str | None,
         Field(description="Declared base language of the offer.", examples=["pl-PL"]),
     ] = None
+    aiCoCreatedContent: AiCoCreatedContent | None = None
 
 
 class SaleProductOfferPatchRequestV1(SaleProductOfferRequestBase):
@@ -16190,7 +16751,7 @@ class SaleProductOfferPatchRequestV1(SaleProductOfferRequestBase):
     fundraisingCampaign: ProductOfferFundraisingCampaignRequest | None = None
     additionalServices: ProductOfferAdditionalServicesRequest | None = None
     compatibilityList: Annotated[
-        CompatibilityListManual | None,
+        CompatibilityListManualRequest | None,
         Field(
             description="For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically."
         ),
@@ -16203,6 +16764,7 @@ class SaleProductOfferPatchRequestV1(SaleProductOfferRequestBase):
         str | None,
         Field(description="Declared base language of the offer.", examples=["pl-PL"]),
     ] = None
+    aiCoCreatedContent: AiCoCreatedContent | None = None
 
 
 class PaymentOperations(BaseModel):
@@ -16433,6 +16995,15 @@ class PostPurchaseIssue(BaseModel):
     attachments: list[PostPurchaseIssueAttachment] | None = None
 
 
+class ParseIngredientsResponse(BaseModel):
+    products: Annotated[
+        list[ProductParseResult] | None,
+        Field(
+            description="Parsing result for every product submitted in the request, in the same order."
+        ),
+    ] = None
+
+
 class CustomerReturnResponse(BaseModel):
     count: Annotated[int, Field(examples=[1])]
     customerReturns: Annotated[
@@ -16447,6 +17018,74 @@ class CompatibilityListProductOfferResponse(
         CompatibilityListManual | CompatibilityListProductBasedProductOfferResponse,
         Field(),
     ]
+
+
+class FlexibleBundleCreateDTO(BaseModel):
+    slots: Annotated[list[FlexibleBundleSlotDTO], Field(max_length=6, min_length=2)]
+    discount: FlexibleBundleDiscountDTO | None = None
+
+
+class FlexibleBundleUpdateDTO(BaseModel):
+    slots: Annotated[list[FlexibleBundleSlotDTO], Field(max_length=6, min_length=2)]
+    discount: FlexibleBundleDiscountDTO | None = None
+
+
+class FlexibleBundleListingDTO(BaseModel):
+    """
+    Bundle summary information
+    """
+
+    id: Annotated[str, Field(description="Bundle identifier")]
+    createdBy: Annotated[
+        Literal["USER", "ALLEGRO"],
+        Field(
+            description="Who created this bundle. It is set to: <ul> <li> `USER` for all bundles created by seller on Allegro web page or via public API;</li> <li> `ALLEGRO` when bundle was created by Allegro. </li> </ul>",
+            examples=["USER"],
+        ),
+    ]
+    createdAt: Annotated[
+        AwareDatetime,
+        Field(
+            description='When this bundle was created in <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO_8601</a> format.',
+            examples=["2025-05-01T10:12:32.321Z"],
+        ),
+    ]
+    slotsRepresentatives: Annotated[
+        list[str], Field(description="List of offer's ids, one per slot")
+    ]
+    discount: Annotated[
+        FlexibleBundleDiscountDTO | None,
+        Field(description="Optional discount configuration"),
+    ] = None
+
+
+class FlexibleBundleGetDTO(BaseModel):
+    """
+    Complete bundle information with slots and offers
+    """
+
+    id: Annotated[UUID, Field(description="Bundle identifier")]
+    createdBy: Annotated[
+        Literal["USER", "ALLEGRO"],
+        Field(
+            description="Who created this bundle. It is set to: <ul> <li> `USER` for all bundles created by seller on Allegro web page or via public API;</li> <li> `ALLEGRO` when bundle was created by Allegro. </li> </ul>",
+            examples=["USER"],
+        ),
+    ]
+    createdAt: Annotated[
+        AwareDatetime,
+        Field(
+            description='When this bundle was created in <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank">ISO_8601</a> format.',
+            examples=["2025-05-01T10:12:32.321Z"],
+        ),
+    ]
+    slots: Annotated[
+        list[FlexibleBundleGetSlotDTO], Field(description="List of slots in the bundle")
+    ]
+    discount: Annotated[
+        FlexibleBundleDiscountDTO | None,
+        Field(description="Optional discount configuration"),
+    ] = None
 
 
 class OfferListingDto(BaseModel):
@@ -16513,6 +17152,7 @@ class CheckoutForm(BaseModel):
     invoice: CheckoutFormInvoiceInfo | None = None
     lineItems: list[CheckoutFormLineItem]
     surcharges: list[CheckoutFormPaymentReference]
+    codBookedPayments: list[CheckoutFormCodBookedPayment] | None = None
     note: CheckoutFormNoteReference | None = None
     marketplace: CheckoutFormMarketplace | None = None
     summary: CheckoutFormSummary
@@ -16528,11 +17168,30 @@ class CheckoutForm(BaseModel):
     ] = None
 
 
+class CheckoutFormsOrderInvoices(BaseModel):
+    orderMode: Annotated[
+        Literal["REGULAR", "UKRAINE_EXPORT"] | None,
+        Field(
+            description="Whether an order is in a regular mode or in a special mode for exports to Ukraine",
+            examples=["UKRAINE_EXPORT"],
+        ),
+    ] = None
+    invoices: list[CheckoutFormsOrderInvoice] | None = None
+    links: list[CheckoutFormsOrderLink] | None = None
+    hasExternalInvoices: Annotated[
+        bool | None,
+        Field(
+            description="Informs whether an invoice or a proof-of-purchase has been sent outside of Allegro platform",
+            examples=[False],
+        ),
+    ] = None
+
+
 class GetSaleProductsResponse(BaseModel):
     products: list[BaseSaleProductResponseDto]
     categories: SaleProductResponseCategoriesDto | None = None
     filters: list[ListingResponseFilters] | None = None
-    nextPage: NextPage1 | None = None
+    nextPage: NextPage2 | None = None
 
 
 class SaleProductOfferResponseV1(SaleProductOffer):
@@ -16587,6 +17246,7 @@ class SaleProductOfferResponseV1(SaleProductOffer):
             examples=["2019-05-29T12:00:00Z"],
         ),
     ] = None
+    aiCoCreatedContent: AiCoCreatedContent | None = None
 
 
 class OfferMarketplacesPublication(BaseModel):
@@ -16614,6 +17274,15 @@ class BadgeApplications(BaseModel):
 
 class PostPurchaseIssueListResponse(BaseModel):
     issues: list[PostPurchaseIssue] | None = None
+
+
+class FlexibleBundlesListingDTO(BaseModel):
+    """
+    Paginated list of bundles
+    """
+
+    bundles: Annotated[list[FlexibleBundleListingDTO], Field(description="List of bundles")]
+    nextPage: Annotated[NextPage | None, Field(description="Next page information.")] = None
 
 
 class OffersSearchResultDto(BaseModel):

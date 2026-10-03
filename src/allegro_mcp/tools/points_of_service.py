@@ -7,17 +7,30 @@ Tag: Points of service
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def create_pos(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def create_pos(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "createPOSUsingPOST", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Create a point of service
 
     Use this resource to create a point of service. Read more: <a href="../../news/punkty-odbioru-osobistego-8dmlj8qk7ik" target="_blank">PL</a> / <a href="../../news/points-of-service-Rdoz09ZE7sW" target="_blank">EN</a>.
@@ -25,21 +38,32 @@ def create_pos(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorR
 
     HTTP: ``POST /points-of-service``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/points-of-service",
-        json=body,
-        params=params,
-    )
-    return cast(dict[str, Any], response)
+    return call_operation("createPOSUsingPOST", {"header:Accept-Language": Accept_Language})
 
 
 @mcp.tool
 @allegro_call
 def get_pos_list(
-    *, seller_id: str | None = None, countryCode: str | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    seller_id: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("getPOSListUsingGET", "query:seller.id", "seller_id")),
+    ],
+    countryCode: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getPOSListUsingGET", "query:countryCode", "countryCode")
+        ),
+    ] = None,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPOSListUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the user's points of service
 
     Use this resource to get a list of points of service by seller ID. Read more: <a href="../../news/punkty-odbioru-osobistego-8dmlj8qk7ik" target="_blank">PL</a> / <a href="../../news/points-of-service-Rdoz09ZE7sW" target="_blank">EN</a>.
@@ -47,21 +71,32 @@ def get_pos_list(
 
     HTTP: ``GET /points-of-service``
     """
-    params = {
-        "seller.id": seller_id,
-        "countryCode": countryCode,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/points-of-service",
-        params=params,
+    return call_operation(
+        "getPOSListUsingGET",
+        {
+            "query:seller.id": seller_id,
+            "query:countryCode": countryCode,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def get_pos_data(*, id: str) -> dict[str, Any] | ErrorResponse:
+def get_pos_data(
+    *,
+    id: Annotated[
+        str, Field(json_schema_extra=input_schema("getPOSDataUsingGET", "path:id", "id"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPOSDataUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the details of a point of service
 
     Use this resource to get a details of a point of service for a given ID. Read more: <a href="../../news/punkty-odbioru-osobistego-8dmlj8qk7ik" target="_blank">PL</a> / <a href="../../news/points-of-service-Rdoz09ZE7sW" target="_blank">EN</a>.
@@ -69,19 +104,26 @@ def get_pos_data(*, id: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /points-of-service/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/points-of-service/{id}",
-        params=params,
+    return call_operation(
+        "getPOSDataUsingGET", {"path:id": id, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def modify_pos(*, id: str, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def modify_pos(
+    *,
+    id: Annotated[str, Field(json_schema_extra=input_schema("modifyPOSUsingPUT", "path:id", "id"))],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "modifyPOSUsingPUT", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Modify a point of service
 
     Use this resource to modify a point of service. Read more: <a href="../../news/punkty-odbioru-osobistego-8dmlj8qk7ik" target="_blank">PL</a> / <a href="../../news/points-of-service-Rdoz09ZE7sW" target="_blank">EN</a>.
@@ -89,20 +131,28 @@ def modify_pos(*, id: str, body: dict[str, Any] | None = None) -> dict[str, Any]
 
     HTTP: ``PUT /points-of-service/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "PUT",
-        f"/points-of-service/{id}",
-        json=body,
-        params=params,
+    return call_operation(
+        "modifyPOSUsingPUT", {"path:id": id, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def delete_pos(*, id: str) -> dict[str, Any] | ErrorResponse:
+def delete_pos(
+    *,
+    id: Annotated[
+        str, Field(json_schema_extra=input_schema("deletePOSUsingDELETE", "path:id", "id"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "deletePOSUsingDELETE", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Delete a point of service
 
     Use this resource to delete a point of service. Read more: <a href="../../news/punkty-odbioru-osobistego-8dmlj8qk7ik" target="_blank">PL</a> / <a href="../../news/points-of-service-Rdoz09ZE7sW" target="_blank">EN</a>.
@@ -110,10 +160,6 @@ def delete_pos(*, id: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``DELETE /points-of-service/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "DELETE",
-        f"/points-of-service/{id}",
-        params=params,
+    return call_operation(
+        "deletePOSUsingDELETE", {"path:id": id, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)

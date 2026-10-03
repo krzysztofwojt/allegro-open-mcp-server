@@ -15,7 +15,7 @@ src/
     ├── errors.py                # ErrorResponse envelope + map_error()
     ├── logging.py               # file-rotating logger (stdout reserved for MCP)
     ├── server.py                # argparse → bootstrap → mcp.run()
-    └── tools/                   # 268 @mcp.tool functions
+    └── tools/                   # 272 @mcp.tool functions
         ├── _runtime.py          # FastMCP instance + lifecycle + allegro_call
         ├── _decorators.py       # require_nonempty, requires_scope, requires_writes_enabled
         ├── auth.py              # hand-written: auth_status, auth_login_device, auth_revoke
@@ -60,15 +60,15 @@ into `src/allegro_client/models/_generated/`. Output is committed and
 reviewed in PRs.
 
 Drift detection: each codegen run stamps a SHA-256 banner in the output's
-`__init__.py`; `make check-models-freshness` warns if the upstream spec
+`__init__.py`; `make check-models-freshness` fails if the upstream spec
 has moved.
 
 ## Tool generation
 
 `scripts/gen_tools.py` reads the same spec and emits one tool function
-per `(method, path)` operation, grouped by tag. ~265 generated tools +
-3 hand-written auth tools = **268 MCP tools** out of the box. Tools call
-the typed `AllegroClient.request_json(...)` and return
-`dict[str, Any] | ErrorResponse`.
+per `(method, path)` operation, grouped by tag. 269 generated tools +
+3 hand-written auth tools = **272 MCP tools** out of the box. Tools dispatch through a generated operation contract and validate input
+against the official OpenAPI schema before calling `AllegroClient.request_json(...)`.
+JSON responses retain their original shape; binary responses use a base64 envelope.
 
 Re-run with `make gen-tools` whenever the OpenAPI spec changes.

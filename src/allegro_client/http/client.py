@@ -20,6 +20,7 @@ any envelope wrapping; that's the MCP layer's job.
 
 from __future__ import annotations
 
+import base64
 import logging
 from typing import Any, TypeVar
 
@@ -69,6 +70,11 @@ class AllegroClient:
                 "Accept-Language": config.accept_language,
             },
         )
+
+    @property
+    def auth_strategy(self) -> httpx.Auth | None:
+        """Return the attached strategy for local OAuth status and maintenance."""
+        return self._http.auth
 
     # ---- Context-manager glue ---------------------------------------------
 
@@ -154,6 +160,9 @@ class AllegroClient:
         *,
         json: BaseModel | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        content: bytes | None = None,
+        allow_binary: bool = False,
     ) -> Any:
         """Issue an HTTP request and return the parsed JSON body.
 
@@ -169,9 +178,10 @@ class AllegroClient:
         function gets to see the response.
         """
         media_type = media_types.resolve(path)
-        headers = {"Accept": media_type}
+        request_headers = httpx.Headers({"Accept": media_type})
         if json is not None:
-            headers["Content-Type"] = media_type
+            request_headers["Content-Type"] = media_type
+        request_headers.update(headers or {})
 
         body: Any = None
         if isinstance(json, BaseModel):
@@ -187,7 +197,8 @@ class AllegroClient:
                 path,
                 params=cleaned_params,
                 json=body,
-                headers=headers,
+                headers=request_headers,
+                content=content,
             )
         except httpx.HTTPError as exc:
             raise AllegroError(
@@ -206,6 +217,17 @@ class AllegroClient:
                 body={},
                 request_id=request_id,
             )
+
+        if (
+            allow_binary
+            and 200 <= response.status_code < 300
+            and "json" not in response.headers.get("Content-Type", "").lower()
+        ):
+            return {
+                "content_base64": base64.b64encode(response.content).decode("ascii"),
+                "content_type": response.headers.get("Content-Type", "application/octet-stream"),
+                "content_length": len(response.content),
+            }
 
         try:
             payload = response.json()

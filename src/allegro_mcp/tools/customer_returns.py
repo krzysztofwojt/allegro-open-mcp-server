@@ -7,37 +7,161 @@ Tag: Customer returns
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 def get_customer_returns(
     *,
-    customerReturnId: str | None = None,
-    orderId: str | None = None,
-    buyer_email: str | None = None,
-    buyer_login: str | None = None,
-    items_offerId: str | None = None,
-    items_name: str | None = None,
-    parcels_waybill: str | None = None,
-    parcels_transportingWaybill: str | None = None,
-    parcels_carrierId: str | None = None,
-    parcels_transportingCarrierId: str | None = None,
-    parcels_sender_phoneNumber: str | None = None,
-    referenceNumber: str | None = None,
-    from_: str | None = None,
-    createdAt_gte: str | None = None,
-    createdAt_lte: str | None = None,
-    marketplaceId: str | None = None,
-    status: str | None = None,
-    limit: int | None = None,
-    offset: int | None = None,
-) -> dict[str, Any] | ErrorResponse:
+    customerReturnId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:customerReturnId", "customerReturnId"
+            )
+        ),
+    ] = None,
+    orderId: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("getCustomerReturns", "query:orderId", "orderId")),
+    ] = None,
+    buyer_email: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getCustomerReturns", "query:buyer.email", "buyer_email")
+        ),
+    ] = None,
+    buyer_login: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getCustomerReturns", "query:buyer.login", "buyer_login")
+        ),
+    ] = None,
+    items_offerId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:items.offerId", "items_offerId"
+            )
+        ),
+    ] = None,
+    items_name: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getCustomerReturns", "query:items.name", "items_name")
+        ),
+    ] = None,
+    parcels_waybill: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:parcels.waybill", "parcels_waybill"
+            )
+        ),
+    ] = None,
+    parcels_transportingWaybill: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns",
+                "query:parcels.transportingWaybill",
+                "parcels_transportingWaybill",
+            )
+        ),
+    ] = None,
+    parcels_carrierId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:parcels.carrierId", "parcels_carrierId"
+            )
+        ),
+    ] = None,
+    parcels_transportingCarrierId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns",
+                "query:parcels.transportingCarrierId",
+                "parcels_transportingCarrierId",
+            )
+        ),
+    ] = None,
+    parcels_sender_phoneNumber: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns",
+                "query:parcels.sender.phoneNumber",
+                "parcels_sender_phoneNumber",
+            )
+        ),
+    ] = None,
+    referenceNumber: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:referenceNumber", "referenceNumber"
+            )
+        ),
+    ] = None,
+    from_: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("getCustomerReturns", "query:from", "from_")),
+    ] = None,
+    createdAt_gte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:createdAt.gte", "createdAt_gte"
+            )
+        ),
+    ] = None,
+    createdAt_lte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:createdAt.lte", "createdAt_lte"
+            )
+        ),
+    ] = None,
+    marketplaceId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "query:marketplaceId", "marketplaceId"
+            )
+        ),
+    ] = None,
+    status: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("getCustomerReturns", "query:status", "status")),
+    ] = None,
+    limit: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getCustomerReturns", "query:limit", "limit")),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getCustomerReturns", "query:offset", "offset")),
+    ] = None,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturns", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """[BETA] Get customer returns by provided query parameters
 
     Use this resource to get all customer returns filtered by query parameters. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-pobrac-liste-zwrotow" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-retrieve-customer-returns-list" target="_blank">EN</a>. This resource is limited to 25 requests per second for a single user and 50 requests per second for clientId.
@@ -45,38 +169,54 @@ def get_customer_returns(
 
     HTTP: ``GET /order/customer-returns``
     """
-    params = {
-        "customerReturnId": customerReturnId,
-        "orderId": orderId,
-        "buyer.email": buyer_email,
-        "buyer.login": buyer_login,
-        "items.offerId": items_offerId,
-        "items.name": items_name,
-        "parcels.waybill": parcels_waybill,
-        "parcels.transportingWaybill": parcels_transportingWaybill,
-        "parcels.carrierId": parcels_carrierId,
-        "parcels.transportingCarrierId": parcels_transportingCarrierId,
-        "parcels.sender.phoneNumber": parcels_sender_phoneNumber,
-        "referenceNumber": referenceNumber,
-        "from": from_,
-        "createdAt.gte": createdAt_gte,
-        "createdAt.lte": createdAt_lte,
-        "marketplaceId": marketplaceId,
-        "status": status,
-        "limit": limit,
-        "offset": offset,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/order/customer-returns",
-        params=params,
+    return call_operation(
+        "getCustomerReturns",
+        {
+            "query:customerReturnId": customerReturnId,
+            "query:orderId": orderId,
+            "query:buyer.email": buyer_email,
+            "query:buyer.login": buyer_login,
+            "query:items.offerId": items_offerId,
+            "query:items.name": items_name,
+            "query:parcels.waybill": parcels_waybill,
+            "query:parcels.transportingWaybill": parcels_transportingWaybill,
+            "query:parcels.carrierId": parcels_carrierId,
+            "query:parcels.transportingCarrierId": parcels_transportingCarrierId,
+            "query:parcels.sender.phoneNumber": parcels_sender_phoneNumber,
+            "query:referenceNumber": referenceNumber,
+            "query:from": from_,
+            "query:createdAt.gte": createdAt_gte,
+            "query:createdAt.lte": createdAt_lte,
+            "query:marketplaceId": marketplaceId,
+            "query:status": status,
+            "query:limit": limit,
+            "query:offset": offset,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def get_customer_return_by_id(*, customerReturnId: str) -> dict[str, Any] | ErrorResponse:
+def get_customer_return_by_id(
+    *,
+    customerReturnId: Annotated[
+        str,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturnById", "path:customerReturnId", "customerReturnId"
+            )
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getCustomerReturnById", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """[BETA] Get customer return by id
 
     Use this resource to get customer returns by its identifier. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-pobrac-szczegolowe-informacje-o-zwrocie" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-retrieve-detailed-information-about-customer-return" target="_blank">EN</a>.
@@ -84,21 +224,38 @@ def get_customer_return_by_id(*, customerReturnId: str) -> dict[str, Any] | Erro
 
     HTTP: ``GET /order/customer-returns/{customerReturnId}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/order/customer-returns/{customerReturnId}",
-        params=params,
+    return call_operation(
+        "getCustomerReturnById",
+        {"path:customerReturnId": customerReturnId, "header:Accept-Language": Accept_Language},
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def reject_customer_return_refund(
-    *, customerReturnId: str, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    customerReturnId: Annotated[
+        str,
+        Field(
+            json_schema_extra=input_schema(
+                "rejectCustomerReturnRefund", "path:customerReturnId", "customerReturnId"
+            )
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "rejectCustomerReturnRefund", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("rejectCustomerReturnRefund", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """[BETA] Reject customer return refund
 
     Use this resource to reject customer return refund with provided reason. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-odmowic-zwrotu-wplaty" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-reject-customer-return-refund" target="_blank">EN</a>.
@@ -106,11 +263,11 @@ def reject_customer_return_refund(
 
     HTTP: ``POST /order/customer-returns/{customerReturnId}/rejection``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/order/customer-returns/{customerReturnId}/rejection",
-        json=body,
-        params=params,
+    return call_operation(
+        "rejectCustomerReturnRefund",
+        {
+            "path:customerReturnId": customerReturnId,
+            "header:Accept-Language": Accept_Language,
+            "body": body,
+        },
     )
-    return cast(dict[str, Any], response)

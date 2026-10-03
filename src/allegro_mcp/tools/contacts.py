@@ -7,17 +7,34 @@ Tag: Contacts
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def create_contact(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def create_contact(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "createContactUsingPOST", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("createContactUsingPOST", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Create a new contact
 
     Use this resource to create a new contact. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#jak-utworzyc-nowy-kontakt" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#how-to-create-new-contact" target="_blank">EN</a>.
@@ -25,19 +42,24 @@ def create_contact(*, body: dict[str, Any] | None = None) -> dict[str, Any] | Er
 
     HTTP: ``POST /sale/offer-contacts``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/sale/offer-contacts",
-        json=body,
-        params=params,
+    return call_operation(
+        "createContactUsingPOST", {"header:Accept-Language": Accept_Language, "body": body}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def get_list_of_contacts() -> dict[str, Any] | ErrorResponse:
+def get_list_of_contacts(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getListOfContactsUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the user's contacts
 
     Use this resource to get details of many contacts. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#jak-pobrac-liste-kontaktow" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#how-to-retrieve-a-list-of-contacts" target="_blank">EN</a>.
@@ -45,18 +67,25 @@ def get_list_of_contacts() -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/offer-contacts``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/offer-contacts",
-        params=params,
-    )
-    return cast(dict[str, Any], response)
+    return call_operation("getListOfContactsUsingGET", {"header:Accept-Language": Accept_Language})
 
 
 @mcp.tool
 @allegro_call
-def get_contact(*, id: str) -> dict[str, Any] | ErrorResponse:
+def get_contact(
+    *,
+    id: Annotated[
+        str, Field(json_schema_extra=input_schema("getContactUsingGET", "path:id", "id"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getContactUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get contact details
 
     Use this resource to get contact details. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#jak-pobrac-szczegoly-danego-kontaktu" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#how-to-retrieve-contact-details" target="_blank">EN</a>.
@@ -64,21 +93,32 @@ def get_contact(*, id: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/offer-contacts/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/offer-contacts/{id}",
-        params=params,
+    return call_operation(
+        "getContactUsingGET", {"path:id": id, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def modify_contact(
-    *, id: str, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    id: Annotated[
+        str, Field(json_schema_extra=input_schema("modifyContactUsingPUT", "path:id", "id"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "modifyContactUsingPUT", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("modifyContactUsingPUT", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Modify contact details
 
     Use this resource to modify contact details. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#jak-zmienic-dane-kontaktu" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#how-to-change-contact-data" target="_blank">EN</a>.
@@ -86,11 +126,7 @@ def modify_contact(
 
     HTTP: ``PUT /sale/offer-contacts/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "PUT",
-        f"/sale/offer-contacts/{id}",
-        json=body,
-        params=params,
+    return call_operation(
+        "modifyContactUsingPUT",
+        {"path:id": id, "header:Accept-Language": Accept_Language, "body": body},
     )
-    return cast(dict[str, Any], response)

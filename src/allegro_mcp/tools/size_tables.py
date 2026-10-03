@@ -7,16 +7,32 @@ Tag: Size tables
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
-def get_table(*, tableId: str) -> dict[str, Any] | ErrorResponse:
+def get_table(
+    *,
+    tableId: Annotated[
+        str, Field(json_schema_extra=input_schema("getTableUsingGET", "path:tableId", "tableId"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getTableUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get a size table
 
     Use this resource to get selected size table. Read more: <a href="../../news/tabele-rozmiarow-w-rest-api-LRV05q2dGtV" target="_blank">PL</a> / <a href="../../news/size-tables-in-rest-api-D7KP4DE1BH3" target="_blank">EN</a>.
@@ -24,21 +40,31 @@ def get_table(*, tableId: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/size-tables/{tableId}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/size-tables/{tableId}",
-        params=params,
+    return call_operation(
+        "getTableUsingGET", {"path:tableId": tableId, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def modify_table(
-    *, tableId: str, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    tableId: Annotated[
+        str, Field(json_schema_extra=input_schema("modifyTableUsingPUT", "path:tableId", "tableId"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "modifyTableUsingPUT", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any], Field(json_schema_extra=input_schema("modifyTableUsingPUT", "body", "body"))
+    ],
+) -> Any | ErrorResponse:
     """Update a size table
 
     Use this resource to update selected size table. Read more: <a href="../../news/tabele-rozmiarow-zmieniamy-istniejacy-zasob-i-dodajemy-nowe-zasoby-do-ich-obslugi-k1nyd21A4fP" target="_blank">PL</a> / <a href="../../news/size-tables-we-change-the-existing-resource-and-add-new-resources-to-handle-them-jn91bynlbC9" target="_blank">EN</a>.
@@ -46,19 +72,25 @@ def modify_table(
 
     HTTP: ``PUT /sale/size-tables/{tableId}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "PUT",
-        f"/sale/size-tables/{tableId}",
-        json=body,
-        params=params,
+    return call_operation(
+        "modifyTableUsingPUT",
+        {"path:tableId": tableId, "header:Accept-Language": Accept_Language, "body": body},
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def get_tables() -> dict[str, Any] | ErrorResponse:
+def get_tables(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getTablesUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the user's size tables
 
     Use this resource to get all size tables assigned to a seller account. Read more: <a href="../../news/tabele-rozmiarow-w-rest-api-LRV05q2dGtV" target="_blank">PL</a> / <a href="../../news/size-tables-in-rest-api-D7KP4DE1BH3" target="_blank">EN</a>.
@@ -66,19 +98,27 @@ def get_tables() -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/size-tables``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/size-tables",
-        params=params,
-    )
-    return cast(dict[str, Any], response)
+    return call_operation("getTablesUsingGET", {"header:Accept-Language": Accept_Language})
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def create_table(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def create_table(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "createTableUsingPOST", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("createTableUsingPOST", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Create a size table
 
     Use this resource to create size table. Read more: <a href="../../news/tabele-rozmiarow-zmieniamy-istniejacy-zasob-i-dodajemy-nowe-zasoby-do-ich-obslugi-k1nyd21A4fP" target="_blank">PL</a> / <a href="../../news/size-tables-we-change-the-existing-resource-and-add-new-resources-to-handle-them-jn91bynlbC9" target="_blank">EN</a>.
@@ -86,19 +126,24 @@ def create_table(*, body: dict[str, Any] | None = None) -> dict[str, Any] | Erro
 
     HTTP: ``POST /sale/size-tables``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/sale/size-tables",
-        json=body,
-        params=params,
+    return call_operation(
+        "createTableUsingPOST", {"header:Accept-Language": Accept_Language, "body": body}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def get_tables_templates() -> dict[str, Any] | ErrorResponse:
+def get_tables_templates(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getTablesTemplatesUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the size tables templates
 
     Use this resource to get all size tables templates. Read more: <a href="../../news/tabele-rozmiarow-zmieniamy-istniejacy-zasob-i-dodajemy-nowe-zasoby-do-ich-obslugi-k1nyd21A4fP" target="_blank">PL</a> / <a href="../../news/size-tables-we-change-the-existing-resource-and-add-new-resources-to-handle-them-jn91bynlbC9" target="_blank">EN</a>.
@@ -106,10 +151,4 @@ def get_tables_templates() -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/size-tables-templates``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/size-tables-templates",
-        params=params,
-    )
-    return cast(dict[str, Any], response)
+    return call_operation("getTablesTemplatesUsingGET", {"header:Accept-Language": Accept_Language})

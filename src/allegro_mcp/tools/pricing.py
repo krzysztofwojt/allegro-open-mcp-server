@@ -7,17 +7,34 @@ Tag: Pricing
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def calculate_fee_preview(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def calculate_fee_preview(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "calculateFeePreviewUsingPOST", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("calculateFeePreviewUsingPOST", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Calculate fee and commission for an offer
 
     Provides information about fee and commission for an offer. This resource is limited to 25 requests per second for a single user. Read more: <a href="../../tutorials/jak-sprawdzic-oplaty-nn9DOL5PASX#kalkulator-oplat" target="_blank">PL</a> / <a href="../../tutorials/how-to-check-the-fees-3An6Wame3Um#fee-calculator" target="_blank">EN</a>.
@@ -25,19 +42,32 @@ def calculate_fee_preview(*, body: dict[str, Any] | None = None) -> dict[str, An
 
     HTTP: ``POST /pricing/offer-fee-preview``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/pricing/offer-fee-preview",
-        json=body,
-        params=params,
+    return call_operation(
+        "calculateFeePreviewUsingPOST", {"header:Accept-Language": Accept_Language, "body": body}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
-def offer_quotes_public(*, offer_id: list[str] | None = None) -> dict[str, Any] | ErrorResponse:
+def offer_quotes_public(
+    *,
+    offer_id: Annotated[
+        list[str],
+        Field(
+            json_schema_extra=input_schema(
+                "offerQuotesPublicUsingGET", "query:offer.id", "offer_id"
+            )
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "offerQuotesPublicUsingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the user's current offer quotes
 
     This endpoint returns current offer quotes (listing and promo fees) cycles for authenticated user and list of offers. Read more: <a href="../../tutorials/jak-sprawdzic-oplaty-nn9DOL5PASX#data-naliczenia-kolejnej-oplaty" target="_blank">PL</a> / <a href="../../tutorials/how-to-check-the-fees-3An6Wame3Um#check-when-a-fee-is-charged" target="_blank">EN</a>.
@@ -45,12 +75,7 @@ def offer_quotes_public(*, offer_id: list[str] | None = None) -> dict[str, Any] 
 
     HTTP: ``GET /pricing/offer-quotes``
     """
-    params = {
-        "offer.id": offer_id,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/pricing/offer-quotes",
-        params=params,
+    return call_operation(
+        "offerQuotesPublicUsingGET",
+        {"query:offer.id": offer_id, "header:Accept-Language": Accept_Language},
     )
-    return cast(dict[str, Any], response)

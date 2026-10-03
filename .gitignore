@@ -231,3 +231,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Account credentials and token stores must never enter Git.
+*.env
+*.env.*
+!.env.example
+**/tokens.json

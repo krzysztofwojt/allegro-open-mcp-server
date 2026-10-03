@@ -7,18 +7,41 @@ Tag: Responsible persons
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 def responsible_persons_get(
-    *, offset: int | None = None, limit: int | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    offset: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("responsiblePersonsGET", "query:offset", "offset")),
+    ] = None,
+    limit: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("responsiblePersonsGET", "query:limit", "limit")),
+    ] = None,
+    Accept: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("responsiblePersonsGET", "header:Accept", "Accept")),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "responsiblePersonsGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get the list of responsible persons
 
     Use this resource to get a list of responsible persons for the compliance of the product with EU regulations. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#osoba-odpowiedzialna-za-zgodnosc-produktu-z-przepisami-unijnymi" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#responsible-persons-for-the-compliance-of-the-product-with-eu-regulations" target="_blank">EN</a>.
@@ -26,24 +49,47 @@ def responsible_persons_get(
 
     HTTP: ``GET /sale/responsible-persons``
     """
-    params = {
-        "offset": offset,
-        "limit": limit,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/sale/responsible-persons",
-        params=params,
+    return call_operation(
+        "responsiblePersonsGET",
+        {
+            "query:offset": offset,
+            "query:limit": limit,
+            "header:Accept": Accept,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def responsible_persons_post(
-    *, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    Accept: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("responsiblePersonsPOST", "header:Accept", "Accept")),
+    ],
+    Content_Type: Annotated[
+        str,
+        Field(
+            json_schema_extra=input_schema(
+                "responsiblePersonsPOST", "header:Content-Type", "Content_Type"
+            )
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "responsiblePersonsPOST", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("responsiblePersonsPOST", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Create responsible person
 
     Use this resource to create a new responsible person for the compliance of the product with EU regulations. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#osoba-odpowiedzialna-za-zgodnosc-produktu-z-przepisami-unijnymi" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#responsible-persons-for-the-compliance-of-the-product-with-eu-regulations" target="_blank">EN</a>.
@@ -51,22 +97,50 @@ def responsible_persons_post(
 
     HTTP: ``POST /sale/responsible-persons``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/sale/responsible-persons",
-        json=body,
-        params=params,
+    return call_operation(
+        "responsiblePersonsPOST",
+        {
+            "header:Accept": Accept,
+            "header:Content-Type": Content_Type,
+            "header:Accept-Language": Accept_Language,
+            "body": body,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def responsible_persons_put(
-    *, id: str, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    id: Annotated[
+        str, Field(json_schema_extra=input_schema("responsiblePersonsPUT", "path:id", "id"))
+    ],
+    Accept: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("responsiblePersonsPUT", "header:Accept", "Accept")),
+    ],
+    Content_Type: Annotated[
+        str,
+        Field(
+            json_schema_extra=input_schema(
+                "responsiblePersonsPUT", "header:Content-Type", "Content_Type"
+            )
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "responsiblePersonsPUT", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("responsiblePersonsPUT", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Update responsible person
 
     Use this resource to update the responsible person for the compliance of the product with EU regulations. Read more: <a href="../../tutorials/jak-zarzadzac-kontem-danymi-uzytkownika-ZM9YAKgPgi2#osoba-odpowiedzialna-za-zgodnosc-produktu-z-przepisami-unijnymi" target="_blank">PL</a> / <a href="../../tutorials/account-and-user-data-management-jn9vBjqjnsw#responsible-persons-for-the-compliance-of-the-product-with-eu-regulations" target="_blank">EN</a>.
@@ -74,11 +148,13 @@ def responsible_persons_put(
 
     HTTP: ``PUT /sale/responsible-persons/{id}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "PUT",
-        f"/sale/responsible-persons/{id}",
-        json=body,
-        params=params,
+    return call_operation(
+        "responsiblePersonsPUT",
+        {
+            "path:id": id,
+            "header:Accept": Accept,
+            "header:Content-Type": Content_Type,
+            "header:Accept-Language": Accept_Language,
+            "body": body,
+        },
     )
-    return cast(dict[str, Any], response)

@@ -7,7 +7,7 @@ A Python [MCP](https://modelcontextprotocol.io/) server for the
 ```text
 src/
 ├── allegro_client/    # MCP-agnostic — extractable as its own PyPI package
-└── allegro_mcp/       # FastMCP wrapper that exposes ~265 tools
+└── allegro_mcp/       # FastMCP wrapper that exposes 269 tools
 ```
 
 ## What you get

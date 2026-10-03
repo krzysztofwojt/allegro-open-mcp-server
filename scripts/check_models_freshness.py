@@ -2,11 +2,11 @@
 """Detect drift between the upstream Allegro OpenAPI spec and the codegen banner.
 
 Run via ``make check-models-freshness``. Compares the SHA-256 of the live
-spec at https://developer.allegro.pl/swagger.yaml against the checksum line
+pinned spec and live spec at https://developer.allegro.pl/swagger.yaml against the checksum line
 written into ``src/allegro_client/models/_generated/__init__.py`` by
-``scripts.gen_models``. Exits 0 on match, 0 with a warning on mismatch
-(non-fatal so CI doesn't fail when Allegro pushes a routine spec update),
-and 1 only when the banner is missing or malformed.
+``scripts.gen_models``. Exits 0 only when both match; drift, missing banners
+and fetch failures fail the check. Use ``--force`` with the model generator
+when deliberately updating the pinned spec.
 """
 
 from __future__ import annotations
@@ -35,6 +35,11 @@ def main() -> int:
         return 1
     cached_digest = match.group(1)
 
+    pinned = REPO_ROOT / "specs" / "swagger.yaml"
+    if hashlib.sha256(pinned.read_bytes()).hexdigest() != cached_digest:
+        print("ERROR: generated models do not match pinned spec", file=sys.stderr)
+        return 1
+
     print(f"→ fetching {SPEC_URL}")
     with urllib.request.urlopen(SPEC_URL) as resp:
         upstream = resp.read()
@@ -48,9 +53,9 @@ def main() -> int:
         f"⚠ spec drift detected:\n"
         f"  cached:   {cached_digest}\n"
         f"  upstream: {upstream_digest}\n"
-        f"  → run `make gen-models` to refresh, then review the diff."
+        f"  → run `uv run python scripts/gen_models.py --force` and `make gen-tools`, then review the diff."
     )
-    return 0
+    return 1
 
 
 if __name__ == "__main__":

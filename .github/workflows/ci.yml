@@ -6,7 +6,7 @@ name: CI
 
 on:
   push:
-    branches: [master, main]
+    branches: ["**"]
   pull_request:
     branches: [master, main]
 
@@ -41,6 +41,12 @@ jobs:
 
       - name: Type-check (mypy --strict)
         run: uv run mypy src
+
+      - name: Generated output freshness
+        run: uv run python scripts/check_generated.py
+
+      - name: Package build
+        run: uv build
 
       - name: Tests (pytest)
         run: uv run pytest tests/ -v

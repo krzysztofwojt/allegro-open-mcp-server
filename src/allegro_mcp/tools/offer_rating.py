@@ -7,16 +7,32 @@ Tag: Offer rating
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
-def offer_rating_get(*, offerId: str) -> dict[str, Any] | ErrorResponse:
+def offer_rating_get(
+    *,
+    offerId: Annotated[
+        str, Field(json_schema_extra=input_schema("offerRatingGET", "path:offerId", "offerId"))
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "offerRatingGET", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get offer rating
 
     Use this resource to get offer rating. Read more: <a href="../../news/nowy-zasob-do-pobrania-oceny-produktu-q018mmPe0H7" target="_blank">PL</a> / <a href="../../news/new-resource-to-retrieve-product-rating-q018mmPrWUX" target="_blank">EN</a>.
@@ -24,10 +40,6 @@ def offer_rating_get(*, offerId: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /sale/offers/{offerId}/rating``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/sale/offers/{offerId}/rating",
-        params=params,
+    return call_operation(
+        "offerRatingGET", {"path:offerId": offerId, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)

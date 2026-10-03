@@ -51,6 +51,6 @@ Then in the Claude Code session:
 > /mcp
 ```
 
-You should see `allegro` in the list along with all 268 tools. Try
+You should see `allegro` in the list along with all 272 tools. Try
 `marketplaces_list` first — public, no auth state needed beyond a valid
 client_id.

@@ -1,0 +1,5045 @@
+{
+  "scope": {
+    "current_spec": "specs/swagger.yaml",
+    "current_spec_sha256": "c3849d2bc296e79c9abeb6962e11fedc4f0b54dc320f086431eacaf322e549bb",
+    "baseline_ref": "upstream/master",
+    "baseline_commit": "0d026c9095f0dcc564cb3c89cfa887b42530be12",
+    "baseline_spec_available": false,
+    "baseline_spec_checksum_only": "ae1672a032520d0668952395dfed25e05ff74e48ee6edec833fd8645a912e369",
+    "limit": "Not a full historical OpenAPI diff. Historical removals and semantic schema changes cannot be proven because upstream/master has only generated Python plus its spec checksum. Endpoint matching uses method + normalized path; model comparison uses generated AST class and field names."
+  },
+  "counts": {
+    "current_spec_operations": 269,
+    "current_contract_operations": 269,
+    "current_ast_api_tools": 269,
+    "current_registered_tools_including_auth": 272,
+    "upstream_ast_api_tools": 265,
+    "upstream_registered_tools_including_auth": 268,
+    "upstream_matched_routes": 260,
+    "current_only_routes": 9,
+    "upstream_only_routes": 5,
+    "current_spec_component_schemas": 981
+  },
+  "endpoint_delta": {
+    "current_only": [
+      {
+        "method": "DELETE",
+        "path": "/sale/flexible-bundles/{bundleId}",
+        "operation_id": "deleteFlexibleBundleUsingDELETE",
+        "tag": "Flexible bundles"
+      },
+      {
+        "method": "GET",
+        "path": "/fulfillment/warehouse",
+        "operation_id": "getFulfillmentWarehouse",
+        "tag": "Fulfillment Warehouse"
+      },
+      {
+        "method": "GET",
+        "path": "/sale/flexible-bundles",
+        "operation_id": "listSellersFlexibleBundlesUsingGET",
+        "tag": "Flexible bundles"
+      },
+      {
+        "method": "GET",
+        "path": "/sale/flexible-bundles/{bundleId}",
+        "operation_id": "getFlexibleBundleUsingGET",
+        "tag": "Flexible bundles"
+      },
+      {
+        "method": "GET",
+        "path": "/shipment-management/delivery-proposals/{orderId}",
+        "operation_id": "getDeliveryProposals",
+        "tag": "Shipment management"
+      },
+      {
+        "method": "POST",
+        "path": "/ingredients/parse",
+        "operation_id": "parseIngredients",
+        "tag": "Ingredients"
+      },
+      {
+        "method": "POST",
+        "path": "/order/checkout-forms/{id}/serial-numbers",
+        "operation_id": "setOrderLineItemsSerialNumbersUsingPOST",
+        "tag": "Order management"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/flexible-bundles",
+        "operation_id": "createFlexibleBundleUsingPOST",
+        "tag": "Flexible bundles"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/flexible-bundles/{bundleId}",
+        "operation_id": "updateFlexibleBundleUsingPUT",
+        "tag": "Flexible bundles"
+      }
+    ],
+    "upstream_only": [
+      {
+        "method": "GET",
+        "path": "/sale/allegro-prices-account-eligibility",
+        "tool": "get_allegro_prices_eligibility_for_account",
+        "tag": "Allegro Prices"
+      },
+      {
+        "method": "GET",
+        "path": "/sale/allegro-prices-offer-consents/{offerId}",
+        "tool": "get_allegro_prices_consent_for_offer",
+        "tag": "Allegro Prices"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/bundles",
+        "tool": "create_offer_bundle",
+        "tag": "Offer bundles"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/allegro-prices-account-consent",
+        "tool": "update_allegro_prices_consent_for_account",
+        "tag": "Allegro Prices"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/allegro-prices-offer-consents/{offerId}",
+        "tool": "update_allegro_prices_consent_for_offer",
+        "tag": "Allegro Prices"
+      }
+    ],
+    "coverage_by_area": [
+      {
+        "tag": "Offer management",
+        "current_operations": 16,
+        "current_ast_tools": 16,
+        "upstream_route_matches": 16,
+        "current_only": 0
+      },
+      {
+        "tag": "Batch offer modification",
+        "current_operations": 15,
+        "current_ast_tools": 15,
+        "upstream_route_matches": 15,
+        "current_only": 0
+      },
+      {
+        "tag": "After sale services",
+        "current_operations": 15,
+        "current_ast_tools": 15,
+        "upstream_route_matches": 15,
+        "current_only": 0
+      },
+      {
+        "tag": "Order management",
+        "current_operations": 15,
+        "current_ast_tools": 15,
+        "upstream_route_matches": 14,
+        "current_only": 1
+      },
+      {
+        "tag": "Shipment management",
+        "current_operations": 13,
+        "current_ast_tools": 13,
+        "upstream_route_matches": 12,
+        "current_only": 1
+      },
+      {
+        "tag": "Information about user",
+        "current_operations": 11,
+        "current_ast_tools": 11,
+        "upstream_route_matches": 11,
+        "current_only": 0
+      },
+      {
+        "tag": "Message Center",
+        "current_operations": 11,
+        "current_ast_tools": 11,
+        "upstream_route_matches": 11,
+        "current_only": 0
+      },
+      {
+        "tag": "Advance Ship Notices",
+        "current_operations": 11,
+        "current_ast_tools": 11,
+        "upstream_route_matches": 11,
+        "current_only": 0
+      },
+      {
+        "tag": "Rebates and promotions",
+        "current_operations": 8,
+        "current_ast_tools": 8,
+        "upstream_route_matches": 8,
+        "current_only": 0
+      },
+      {
+        "tag": "Post Purchase Issues",
+        "current_operations": 8,
+        "current_ast_tools": 8,
+        "upstream_route_matches": 8,
+        "current_only": 0
+      },
+      {
+        "tag": "Delivery",
+        "current_operations": 7,
+        "current_ast_tools": 7,
+        "upstream_route_matches": 7,
+        "current_only": 0
+      },
+      {
+        "tag": "Badge campaigns",
+        "current_operations": 7,
+        "current_ast_tools": 7,
+        "upstream_route_matches": 7,
+        "current_only": 0
+      },
+      {
+        "tag": "Allegro Prices",
+        "current_operations": 7,
+        "current_ast_tools": 7,
+        "upstream_route_matches": 7,
+        "current_only": 0
+      },
+      {
+        "tag": "AlleDiscount",
+        "current_operations": 7,
+        "current_ast_tools": 7,
+        "upstream_route_matches": 7,
+        "current_only": 0
+      },
+      {
+        "tag": "Classifieds",
+        "current_operations": 6,
+        "current_ast_tools": 6,
+        "upstream_route_matches": 6,
+        "current_only": 0
+      },
+      {
+        "tag": "Automatic pricing",
+        "current_operations": 6,
+        "current_ast_tools": 6,
+        "upstream_route_matches": 6,
+        "current_only": 0
+      },
+      {
+        "tag": "Categories and parameters",
+        "current_operations": 6,
+        "current_ast_tools": 6,
+        "upstream_route_matches": 6,
+        "current_only": 0
+      },
+      {
+        "tag": "Products",
+        "current_operations": 6,
+        "current_ast_tools": 6,
+        "upstream_route_matches": 6,
+        "current_only": 0
+      },
+      {
+        "tag": "Offer tags",
+        "current_operations": 6,
+        "current_ast_tools": 6,
+        "upstream_route_matches": 6,
+        "current_only": 0
+      },
+      {
+        "tag": "User's offer information",
+        "current_operations": 5,
+        "current_ast_tools": 5,
+        "upstream_route_matches": 5,
+        "current_only": 0
+      },
+      {
+        "tag": "Additional services",
+        "current_operations": 5,
+        "current_ast_tools": 5,
+        "upstream_route_matches": 5,
+        "current_only": 0
+      },
+      {
+        "tag": "Flexible bundles",
+        "current_operations": 5,
+        "current_ast_tools": 5,
+        "upstream_route_matches": 0,
+        "current_only": 5
+      },
+      {
+        "tag": "Points of service",
+        "current_operations": 5,
+        "current_ast_tools": 5,
+        "upstream_route_matches": 5,
+        "current_only": 0
+      },
+      {
+        "tag": "Size tables",
+        "current_operations": 5,
+        "current_ast_tools": 5,
+        "upstream_route_matches": 5,
+        "current_only": 0
+      },
+      {
+        "tag": "Offer bundles",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Contacts",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Responsible producers",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Images and attachments",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Compatibility List",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Commission refunds",
+        "current_operations": 4,
+        "current_ast_tools": 4,
+        "upstream_route_matches": 4,
+        "current_only": 0
+      },
+      {
+        "tag": "Offer translations",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Responsible persons",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Additional services translations",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Payments",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Customer returns",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Tax Identification Number",
+        "current_operations": 3,
+        "current_ast_tools": 3,
+        "upstream_route_matches": 3,
+        "current_only": 0
+      },
+      {
+        "tag": "Pricing",
+        "current_operations": 2,
+        "current_ast_tools": 2,
+        "upstream_route_matches": 2,
+        "current_only": 0
+      },
+      {
+        "tag": "Auctions and Bidding",
+        "current_operations": 2,
+        "current_ast_tools": 2,
+        "upstream_route_matches": 2,
+        "current_only": 0
+      },
+      {
+        "tag": "Billing",
+        "current_operations": 2,
+        "current_ast_tools": 2,
+        "upstream_route_matches": 2,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Removal",
+        "current_operations": 2,
+        "current_ast_tools": 2,
+        "upstream_route_matches": 2,
+        "current_only": 0
+      },
+      {
+        "tag": "Public user information",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Offer rating",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Charity",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Tax settings",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Information about marketplaces",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Returns",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Stock",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Parcels",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Products",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Fulfillment Warehouse",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 0,
+        "current_only": 1
+      },
+      {
+        "tag": "Conversions",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Deposits",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 1,
+        "current_only": 0
+      },
+      {
+        "tag": "Ingredients",
+        "current_operations": 1,
+        "current_ast_tools": 1,
+        "upstream_route_matches": 0,
+        "current_only": 1
+      }
+    ]
+  },
+  "current_signature_audit": {
+    "expected_openapi_parameters": 707,
+    "parameter_signature_issues": [],
+    "required_query_parameter_count": 14,
+    "required_header_parameter_count": 14,
+    "JSON_request_bodies": 78,
+    "non_JSON_request_bodies": [
+      {
+        "method": "PUT",
+        "path": "/after-sales-service-conditions/attachments/{attachmentId}",
+        "operation_id": "uploadAfterSalesServiceConditionsAttachmentUsingPUT",
+        "tag": "After sale services",
+        "media_types": [
+          "application/pdf"
+        ],
+        "required": false
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/offer-attachments/{attachmentId}",
+        "operation_id": "uploadOfferAttachmentUsingPUT",
+        "tag": "Images and attachments",
+        "media_types": [
+          "application/pdf",
+          "image/jpeg",
+          "image/png"
+        ],
+        "required": false
+      },
+      {
+        "method": "PUT",
+        "path": "/order/checkout-forms/{id}/invoices/{invoiceId}/file",
+        "operation_id": "uploadOrderInvoiceFile",
+        "tag": "Order management",
+        "media_types": [
+          "application/pdf"
+        ],
+        "required": false
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/issues/attachments/{attachmentId}",
+        "operation_id": "uploadIssueAttachmentUsingPUT",
+        "tag": "Post Purchase Issues",
+        "media_types": [
+          "image/png",
+          "image/gif",
+          "image/bmp",
+          "image/tiff",
+          "image/jpeg",
+          "application/pdf"
+        ],
+        "required": true
+      },
+      {
+        "method": "PUT",
+        "path": "/messaging/message-attachments/{attachmentId}",
+        "operation_id": "uploadAttachmentPUT",
+        "tag": "Message Center",
+        "media_types": [
+          "image/png",
+          "image/gif",
+          "image/bmp",
+          "image/tiff",
+          "image/jpeg",
+          "application/pdf"
+        ],
+        "required": true
+      }
+    ],
+    "required_body_mismatch_count": 0,
+    "parameter_distribution": {
+      "header:string": 280,
+      "location:header": 280,
+      "location:path": 156,
+      "location:query": 271,
+      "path:string": 156,
+      "query:$ref": 1,
+      "query:array": 23,
+      "query:boolean": 10,
+      "query:integer": 90,
+      "query:number": 2,
+      "query:object": 2,
+      "query:string": 143
+    }
+  },
+  "parameter_delta_vs_upstream_matched_routes": {
+    "new_parameters_by_location": {
+      "header": 277,
+      "query": 7
+    },
+    "new_parameters": [
+      {
+        "operation_id": "createProductOffers",
+        "route": [
+          "POST",
+          "/sale/product-offers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "editProductOffers",
+        "route": [
+          "PATCH",
+          "/sale/product-offers/{offerId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getProductOffer",
+        "route": [
+          "GET",
+          "/sale/product-offers/{offerId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPartialProductOffer",
+        "route": [
+          "GET",
+          "/sale/product-offers/{offerId}/parts"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getProductOfferProcessingStatus",
+        "route": [
+          "GET",
+          "/sale/product-offers/{offerId}/operations/{operationId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "searchOffersUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteOfferUsingDELETE",
+        "route": [
+          "DELETE",
+          "/sale/offers/{offerId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createChangePriceCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/offers/{offerId}/change-price-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferTranslationUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers/{offerId}/translations"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateOfferTranslationUsingPATCH",
+        "route": [
+          "PATCH",
+          "/sale/offers/{offerId}/translations/{language}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteManualTranslationUsingDELETE",
+        "route": [
+          "DELETE",
+          "/sale/offers/{offerId}/translations/{language}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "classifiedSellerOfferStatsGET",
+        "route": [
+          "GET",
+          "/sale/classified-seller-stats"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "classifiedOffersStatsGET",
+        "route": [
+          "GET",
+          "/sale/classified-offers-stats"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "changePublicationStatusUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-publication-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPublicationReportUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-publication-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPublicationTasksUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-publication-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getClassifiedPackagesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-classifieds-packages/{offerId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "assignClassifiedPackagesUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-classifieds-packages/{offerId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getClassifiedPackageConfigurationsForCategoryUsingGET",
+        "route": [
+          "GET",
+          "/sale/classifieds-packages"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getClassifiedPackageConfigurationUsingGET",
+        "route": [
+          "GET",
+          "/sale/classifieds-packages/{packageId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getUserSummaryUsingGET",
+        "route": [
+          "GET",
+          "/users/{userId}/ratings-summary"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getUserRatingsUsingGET",
+        "route": [
+          "GET",
+          "/sale/user-ratings"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getUserRatingUsingGET",
+        "route": [
+          "GET",
+          "/sale/user-ratings/{ratingId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "answerUserRatingUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/user-ratings/{ratingId}/answer"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "userRatingRemovalUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/user-ratings/{ratingId}/removal"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSaleQualityUsingGET",
+        "route": [
+          "GET",
+          "/sale/quality"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "meGET",
+        "route": [
+          "GET",
+          "/me"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAdditionalServicesGroupUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-additional-services/groups"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfAdditionalServicesGroupsUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-additional-services/groups"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listSellersOfferBundlesUsingGET",
+        "route": [
+          "GET",
+          "/sale/bundles"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferBundleUsingGET",
+        "route": [
+          "GET",
+          "/sale/bundles/{bundleId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteOfferBundleUsingGET",
+        "route": [
+          "DELETE",
+          "/sale/bundles/{bundleId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateOfferBundleDiscountUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/bundles/{bundleId}/discount"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createPromotionUsingPOST_1",
+        "route": [
+          "POST",
+          "/sale/loyalty/promotions"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listSellerPromotionsUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/loyalty/promotions"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPromotionUsingGET",
+        "route": [
+          "GET",
+          "/sale/loyalty/promotions/{promotionId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updatePromotionUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/loyalty/promotions/{promotionId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deactivatePromotionUsingDELETE",
+        "route": [
+          "DELETE",
+          "/sale/loyalty/promotions/{promotionId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createOrModifyTurnoverDiscountUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/turnover-discount/{marketplaceId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTurnoverDiscountsUsingGET",
+        "route": [
+          "GET",
+          "/sale/turnover-discount"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deactivateTurnoverDiscountsUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/turnover-discount/{marketplaceId}/deactivate"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "calculateFeePreviewUsingPOST",
+        "route": [
+          "POST",
+          "/pricing/offer-fee-preview"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-modification-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getGeneralReportUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-modification-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTasksUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-modification-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "priceModificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-price-change-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPriceModificationCommandStatusUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-price-change-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPriceModificationCommandTasksStatusesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-price-change-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "batchOfferModificationUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-bulk-modification-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "batchOfferModificationCommandStatusUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-bulk-modification-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "batchOfferModificationCommandTaskStatusesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-bulk-modification-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "quantityModificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-quantity-change-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getQuantityModificationCommandStatusUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-quantity-change-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getQuantityModificationCommandTasksStatusesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-quantity-change-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "offerAutomaticPricingModificationCommandUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-price-automation-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getofferAutomaticPricingModificationCommandStatusUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-price-automation-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getofferAutomaticPricingModificationCommandTasksStatusesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-price-automation-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAutomaticPricingRulesUsingGET",
+        "route": [
+          "GET",
+          "/sale/price-automation/rules"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAutomaticPricingRulesUsingPost",
+        "route": [
+          "POST",
+          "/sale/price-automation/rules"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAutomaticPricingRuleByIdUsingGET",
+        "route": [
+          "GET",
+          "/sale/price-automation/rules/{ruleId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAutomaticPricingRuleUsingPut",
+        "route": [
+          "PUT",
+          "/sale/price-automation/rules/{ruleId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteAutomaticPricingRuleUsingDelete",
+        "route": [
+          "DELETE",
+          "/sale/price-automation/rules/{ruleId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAutomaticPricingRulesForOfferUsingGET",
+        "route": [
+          "GET",
+          "/sale/price-automation/offers/{offerId}/rules"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCategoriesUsingGET",
+        "route": [
+          "GET",
+          "/sale/categories"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCategoryUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/categories/{categoryId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getFlatParametersUsingGET_2",
+        "route": [
+          "GET",
+          "/sale/categories/{categoryId}/parameters"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getFlatProductParametersUsingGET",
+        "route": [
+          "GET",
+          "/sale/categories/{categoryId}/product-parameters"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCategoryParametersScheduledChangesUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/category-parameters-scheduled-changes"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCategoryEventsUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/category-events"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfAdditionalServicesDefinitionsCategoriesUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-additional-services/categories"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfShippingRatestUsingGET",
+        "route": [
+          "GET",
+          "/sale/shipping-rates"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createShippingRatesSetUsingPOST",
+        "route": [
+          "POST",
+          "/sale/shipping-rates"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShippingRatesSetUsingGET",
+        "route": [
+          "GET",
+          "/sale/shipping-rates/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyShippingRatesSetUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/shipping-rates/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSaleDeliverySettings",
+        "route": [
+          "GET",
+          "/sale/delivery-settings"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "putSaleDeliverySettings",
+        "route": [
+          "PUT",
+          "/sale/delivery-settings"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createPOSUsingPOST",
+        "route": [
+          "POST",
+          "/points-of-service"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPOSListUsingGET",
+        "route": [
+          "GET",
+          "/points-of-service"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPOSDataUsingGET",
+        "route": [
+          "GET",
+          "/points-of-service/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyPOSUsingPUT",
+        "route": [
+          "PUT",
+          "/points-of-service/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deletePOSUsingDELETE",
+        "route": [
+          "DELETE",
+          "/points-of-service/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createContactUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-contacts"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfContactsUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-contacts"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getContactUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-contacts/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyContactUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-contacts/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsiblePersonsGET",
+        "route": [
+          "GET",
+          "/sale/responsible-persons"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsiblePersonsGET",
+        "route": [
+          "GET",
+          "/sale/responsible-persons"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsiblePersonsPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-persons"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsiblePersonsPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-persons"
+        ],
+        "parameter": "header:Content-Type"
+      },
+      {
+        "operation_id": "responsiblePersonsPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-persons"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsiblePersonsPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-persons/{id}"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsiblePersonsPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-persons/{id}"
+        ],
+        "parameter": "header:Content-Type"
+      },
+      {
+        "operation_id": "responsiblePersonsPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-persons/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsibleProducersGET",
+        "route": [
+          "GET",
+          "/sale/responsible-producers"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsibleProducersGET",
+        "route": [
+          "GET",
+          "/sale/responsible-producers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsibleProducersPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-producers"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsibleProducersPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-producers"
+        ],
+        "parameter": "header:Content-Type"
+      },
+      {
+        "operation_id": "responsibleProducersPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-producers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsibleProducerGET",
+        "route": [
+          "GET",
+          "/sale/responsible-producers/{id}"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsibleProducerGET",
+        "route": [
+          "GET",
+          "/sale/responsible-producers/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "responsibleProducersPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-producers/{id}"
+        ],
+        "parameter": "header:Accept"
+      },
+      {
+        "operation_id": "responsibleProducersPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-producers/{id}"
+        ],
+        "parameter": "header:Content-Type"
+      },
+      {
+        "operation_id": "responsibleProducersPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-producers/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfDeliveryMethodsUsingGET",
+        "route": [
+          "GET",
+          "/sale/delivery-methods"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdditionalServicesGroupUsingGET",
+        "route": [
+          "GET",
+          "/sale/offer-additional-services/groups/{groupId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyAdditionalServicesGroupUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-additional-services/groups/{groupId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdditionalServiceGroupTranslations",
+        "route": [
+          "GET",
+          "/sale/offer-additional-services/groups/{groupId}/translations"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAdditionalServiceGroupTranslation",
+        "route": [
+          "PATCH",
+          "/sale/offer-additional-services/groups/{groupId}/translations/{language}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteAdditionalServiceGroupTranslation",
+        "route": [
+          "DELETE",
+          "/sale/offer-additional-services/groups/{groupId}/translations/{language}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTableUsingGET",
+        "route": [
+          "GET",
+          "/sale/size-tables/{tableId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyTableUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/size-tables/{tableId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTablesUsingGET",
+        "route": [
+          "GET",
+          "/sale/size-tables"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createTableUsingPOST",
+        "route": [
+          "POST",
+          "/sale/size-tables"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTablesTemplatesUsingGET",
+        "route": [
+          "GET",
+          "/sale/size-tables-templates"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPublicSellerListingUsingGET_1",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/return-policies"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAfterSalesServiceReturnPolicyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/return-policies"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAfterSalesServiceReturnPolicyUsingGET",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/return-policies/{returnPolicyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAfterSalesServiceReturnPolicyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/return-policies/{returnPolicyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteAfterSalesServiceReturnPolicyUsingDELETE",
+        "route": [
+          "DELETE",
+          "/after-sales-service-conditions/return-policies/{returnPolicyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPublicSellerListingUsingGET",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/implied-warranties"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAfterSalesServiceImpliedWarrantyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/implied-warranties"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAfterSalesServiceImpliedWarrantyUsingGET",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/implied-warranties/{impliedWarrantyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAfterSalesServiceImpliedWarrantyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/implied-warranties/{impliedWarrantyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPublicSellerListingUsingGET_2",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/warranties"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAfterSalesServiceWarrantyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/warranties"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAfterSalesServiceWarrantyUsingGET",
+        "route": [
+          "GET",
+          "/after-sales-service-conditions/warranties/{warrantyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAfterSalesServiceWarrantyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/warranties/{warrantyId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAfterSalesServiceConditionsAttachmentUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/attachments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadAfterSalesServiceConditionsAttachmentUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "offerQuotesPublicUsingGET",
+        "route": [
+          "GET",
+          "/pricing/offer-quotes"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadOfferImageUsingPOST",
+        "route": [
+          "POST",
+          "/sale/images"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadOfferImageUsingPOST",
+        "route": [
+          "POST",
+          "/sale/images"
+        ],
+        "parameter": "query:isAiCoCreated"
+      },
+      {
+        "operation_id": "createOfferAttachmentUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-attachments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadOfferAttachmentUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferAttachment",
+        "route": [
+          "GET",
+          "/sale/offer-attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrderEventsUsingGET",
+        "route": [
+          "GET",
+          "/order/events"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrderEventsStatisticsUsingGET",
+        "route": [
+          "GET",
+          "/order/event-stats"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfOrdersUsingGET",
+        "route": [
+          "GET",
+          "/order/checkout-forms"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrdersDetailsUsingGET",
+        "route": [
+          "GET",
+          "/order/checkout-forms/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrdersCarriersUsingGET",
+        "route": [
+          "GET",
+          "/order/carriers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrderShipmentsUsingGET",
+        "route": [
+          "GET",
+          "/order/checkout-forms/{id}/shipments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createOrderShipmentsUsingPOST",
+        "route": [
+          "POST",
+          "/order/checkout-forms/{id}/shipments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "setOrderFulfillmentUsingPUT",
+        "route": [
+          "PUT",
+          "/order/checkout-forms/{id}/fulfillment"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOrderInvoicesDetails",
+        "route": [
+          "GET",
+          "/order/checkout-forms/{id}/invoices"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "addOrderInvoicesMetadata",
+        "route": [
+          "POST",
+          "/order/checkout-forms/{id}/invoices"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadOrderInvoiceFile",
+        "route": [
+          "PUT",
+          "/order/checkout-forms/{id}/invoices/{invoiceId}/file"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadOrderBillingDocumentLink",
+        "route": [
+          "POST",
+          "/order/{orderId}/billing-documents/links"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAllegroPickupDropOffPointsGET",
+        "route": [
+          "GET",
+          "/order/carriers/ALLEGRO/points"
+        ],
+        "parameter": "header:If-Modified-Since"
+      },
+      {
+        "operation_id": "getAllegroPickupDropOffPointsGET",
+        "route": [
+          "GET",
+          "/order/carriers/ALLEGRO/points"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getParcelTrackingUsingGET",
+        "route": [
+          "GET",
+          "/order/carriers/{carrierId}/tracking"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getListOfIssuesUsingGET",
+        "route": [
+          "GET",
+          "/sale/issues"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getIssueUsingGET",
+        "route": [
+          "GET",
+          "/sale/issues/{issueId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getChatFromIssueUsingGET",
+        "route": [
+          "GET",
+          "/sale/issues/{issueId}/chat"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "addMessageToIssueUsingPOST",
+        "route": [
+          "POST",
+          "/sale/issues/{issueId}/message"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "changeStatusOfIssueUsingPOST",
+        "route": [
+          "POST",
+          "/sale/issues/{issueId}/status"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAnIssueAttachmentUsingPOST",
+        "route": [
+          "POST",
+          "/sale/issues/attachments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadIssueAttachmentUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/issues/attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getIssueAttachmentUsingGET",
+        "route": [
+          "GET",
+          "/sale/issues/attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createTagPOST_1",
+        "route": [
+          "POST",
+          "/sale/offer-tags"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listSellerTagsGET_1",
+        "route": [
+          "GET",
+          "/sale/offer-tags"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteTagUsingDELETE",
+        "route": [
+          "DELETE",
+          "/sale/offer-tags/{tagId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateTagPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-tags/{tagId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "assignTagToOfferPOST",
+        "route": [
+          "POST",
+          "/sale/offers/{offerId}/tags"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listAssignedOfferTagsGET",
+        "route": [
+          "GET",
+          "/sale/offers/{offerId}/tags"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "offerRatingGET",
+        "route": [
+          "GET",
+          "/sale/offers/{offerId}/rating"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAvailableOfferPromotionPackages",
+        "route": [
+          "GET",
+          "/sale/offer-promotion-packages"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "modifyOfferPromoOptionsUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offers/{offerId}/promo-options-modification"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferPromoOptionsUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers/{offerId}/promo-options"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPromoOptionsForSellerOffersUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers/promo-options"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "promoModificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offers/promo-options-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPromoModificationCommandResultUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers/promo-options-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPromoModificationCommandDetailedResultUsingGET",
+        "route": [
+          "GET",
+          "/sale/offers/promo-options-commands/{commandId}/tasks"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferSmartClassificationGET",
+        "route": [
+          "GET",
+          "/sale/offers/{offerId}/smart"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSaleProducts",
+        "route": [
+          "GET",
+          "/sale/products"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSaleProduct",
+        "route": [
+          "GET",
+          "/sale/products/{productId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "proposeSaleProduct",
+        "route": [
+          "POST",
+          "/sale/product-proposals"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "productChangeProposal",
+        "route": [
+          "POST",
+          "/sale/products/{productId}/change-proposals"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getProductChangeProposal",
+        "route": [
+          "GET",
+          "/sale/products/change-proposals/{changeProposalId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOffersUnfilledParametersUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/offers/unfilled-parameters"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCategoriesThatSupportCompatibilityList",
+        "route": [
+          "GET",
+          "/sale/compatibility-list/supported-categories"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCompatibilityListSuggestion",
+        "route": [
+          "GET",
+          "/sale/compatibility-list-suggestions"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCompatibleProductsGroups",
+        "route": [
+          "GET",
+          "/sale/compatible-products/groups"
+        ],
+        "parameter": "header:If-Modified-Since"
+      },
+      {
+        "operation_id": "getCompatibleProductsGroups",
+        "route": [
+          "GET",
+          "/sale/compatible-products/groups"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCompatibleProducts",
+        "route": [
+          "GET",
+          "/sale/compatible-products"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCompatibleProducts",
+        "route": [
+          "GET",
+          "/sale/compatible-products"
+        ],
+        "parameter": "header:If-Modified-Since"
+      },
+      {
+        "operation_id": "getListOfAdditionalEmailsUsingGET",
+        "route": [
+          "GET",
+          "/account/additional-emails"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "addAdditionalEmailUsingPOST",
+        "route": [
+          "POST",
+          "/account/additional-emails"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdditionalEmailUsingGET",
+        "route": [
+          "GET",
+          "/account/additional-emails/{emailId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteAdditionalEmailUsingDELETE",
+        "route": [
+          "DELETE",
+          "/account/additional-emails/{emailId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPaymentsOperationHistory",
+        "route": [
+          "GET",
+          "/payments/payment-operations"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "placeBid",
+        "route": [
+          "PUT",
+          "/bidding/offers/{offerId}/bid"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getBid",
+        "route": [
+          "GET",
+          "/bidding/offers/{offerId}/bid"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOfferEvents",
+        "route": [
+          "GET",
+          "/sale/offer-events"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "badgeCampaigns_get_all",
+        "route": [
+          "GET",
+          "/sale/badge-campaigns"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "postBadges",
+        "route": [
+          "POST",
+          "/sale/badges"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getBadges",
+        "route": [
+          "GET",
+          "/sale/badges"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "badgeApplications_get_one",
+        "route": [
+          "GET",
+          "/sale/badge-applications/{applicationId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "badgeApplications_get_all",
+        "route": [
+          "GET",
+          "/sale/badge-applications"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "badgeOperations_get_one",
+        "route": [
+          "GET",
+          "/sale/badge-operations/{operationId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "patchBadge",
+        "route": [
+          "PATCH",
+          "/sale/badges/offers/{offerId}/campaigns/{campaignId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "initiateRefund",
+        "route": [
+          "POST",
+          "/payments/refunds"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getRefundedPayments",
+        "route": [
+          "GET",
+          "/payments/refunds"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getBillingEntries",
+        "route": [
+          "GET",
+          "/billing/billing-entries"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getBillingTypes",
+        "route": [
+          "GET",
+          "/billing/billing-types"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getRefundApplication",
+        "route": [
+          "GET",
+          "/order/refund-claims/{claimId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "cancelRefundApplication",
+        "route": [
+          "DELETE",
+          "/order/refund-claims/{claimId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getRefundApplications",
+        "route": [
+          "GET",
+          "/order/refund-claims"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createRefundApplication",
+        "route": [
+          "POST",
+          "/order/refund-claims"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "searchFundraisingCampaigns",
+        "route": [
+          "GET",
+          "/charity/fundraising-campaigns"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getDeliveryServices",
+        "route": [
+          "GET",
+          "/shipment-management/delivery-services"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createNewShipment",
+        "route": [
+          "POST",
+          "/shipment-management/shipments/create-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShipmentCreationStatus",
+        "route": [
+          "GET",
+          "/shipment-management/shipments/create-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "cancelShipment",
+        "route": [
+          "POST",
+          "/shipment-management/shipments/cancel-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShipmentCancellationStatus",
+        "route": [
+          "GET",
+          "/shipment-management/shipments/cancel-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShipmentDetails",
+        "route": [
+          "GET",
+          "/shipment-management/shipments/{shipmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShipmentLabels",
+        "route": [
+          "POST",
+          "/shipment-management/label"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getShipmentProtocol",
+        "route": [
+          "POST",
+          "/shipment-management/protocol"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPickupProposals",
+        "route": [
+          "POST",
+          "/shipment-management/pickup-proposals"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createPickup",
+        "route": [
+          "POST",
+          "/shipment-management/pickups/create-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createPickupStatus",
+        "route": [
+          "GET",
+          "/shipment-management/pickups/create-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getPickupDetails",
+        "route": [
+          "GET",
+          "/shipment-management/pickups/{pickupId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "categorySuggestionUsingGET",
+        "route": [
+          "GET",
+          "/sale/matching-categories"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTaxSettingsForCategory",
+        "route": [
+          "GET",
+          "/sale/tax-settings"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAccountParticipation",
+        "route": [
+          "GET",
+          "/sale/allegro-prices/accounts/participations"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAccountParticipation",
+        "route": [
+          "PATCH",
+          "/sale/allegro-prices/accounts/participations"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "submitOfferCommands",
+        "route": [
+          "POST",
+          "/sale/allegro-prices/offers/submit-offer-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSubmitOfferCommandStatus",
+        "route": [
+          "GET",
+          "/sale/allegro-prices/offers/submit-offer-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "excludeOfferCommands",
+        "route": [
+          "POST",
+          "/sale/allegro-prices/offers/exclusion-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getExcludeOfferCommandStatus",
+        "route": [
+          "GET",
+          "/sale/allegro-prices/offers/exclusion-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAllegroPricesOffers",
+        "route": [
+          "POST",
+          "/sale/allegro-prices/offers-queries"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "submitOfferToAlleDiscountCommands",
+        "route": [
+          "POST",
+          "/sale/alle-discount/submit-offer-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSubmitOfferToAlleDiscountCommandsStatus",
+        "route": [
+          "GET",
+          "/sale/alle-discount/submit-offer-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "withdrawOfferFromAlleDiscountCommands",
+        "route": [
+          "POST",
+          "/sale/alle-discount/withdraw-offer-commands"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getWithdrawOfferFromAlleDiscountCommandsStatus",
+        "route": [
+          "GET",
+          "/sale/alle-discount/withdraw-offer-commands/{commandId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOffersEligibleForAlleDiscount",
+        "route": [
+          "GET",
+          "/sale/alle-discount/{campaignId}/eligible-offers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getOffersSubmittedToAlleDiscount",
+        "route": [
+          "GET",
+          "/sale/alle-discount/{campaignId}/submitted-offers"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAlleDiscountCampaigns",
+        "route": [
+          "GET",
+          "/sale/alle-discount/campaigns"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSellerSmartClassificationGET",
+        "route": [
+          "GET",
+          "/sale/smart"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "marketplacesGET",
+        "route": [
+          "GET",
+          "/marketplaces"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "query:page.id"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "query:read"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "query:status"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "query:type"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "query:orderId"
+      },
+      {
+        "operation_id": "listThreadsGET",
+        "route": [
+          "GET",
+          "/messaging/threads"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getThreadGET",
+        "route": [
+          "GET",
+          "/messaging/threads/{threadId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "changeReadFlagOnThreadPUT",
+        "route": [
+          "PUT",
+          "/messaging/threads/{threadId}/read"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "newMessagePOST",
+        "route": [
+          "POST",
+          "/messaging/messages"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "listMessagesGET",
+        "route": [
+          "GET",
+          "/messaging/threads/{threadId}/messages"
+        ],
+        "parameter": "query:page.id"
+      },
+      {
+        "operation_id": "listMessagesGET",
+        "route": [
+          "GET",
+          "/messaging/threads/{threadId}/messages"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "newMessageInThreadPOST",
+        "route": [
+          "POST",
+          "/messaging/threads/{threadId}/messages"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getMessageGET",
+        "route": [
+          "GET",
+          "/messaging/messages/{messageId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteMessageDELETE",
+        "route": [
+          "DELETE",
+          "/messaging/messages/{messageId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "newAttachmentDeclarationPOST",
+        "route": [
+          "POST",
+          "/messaging/message-attachments"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "uploadAttachmentPUT",
+        "route": [
+          "PUT",
+          "/messaging/message-attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "downloadAttachmentGET",
+        "route": [
+          "GET",
+          "/messaging/message-attachments/{attachmentId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCustomerReturns",
+        "route": [
+          "GET",
+          "/order/customer-returns"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCustomerReturnById",
+        "route": [
+          "GET",
+          "/order/customer-returns/{customerReturnId}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "rejectCustomerReturnRefund",
+        "route": [
+          "POST",
+          "/order/customer-returns/{customerReturnId}/rejection"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdvanceShipNotices",
+        "route": [
+          "GET",
+          "/fulfillment/advance-ship-notices"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createAdvanceShipNotice",
+        "route": [
+          "POST",
+          "/fulfillment/advance-ship-notices"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getRefundDispositionsReport",
+        "route": [
+          "GET",
+          "/fulfillment/returns/refund-dispositions"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdvanceShipNotice",
+        "route": [
+          "GET",
+          "/fulfillment/advance-ship-notices/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}"
+        ],
+        "parameter": "header:if-match"
+      },
+      {
+        "operation_id": "updateAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "deleteAdvanceShipNotice",
+        "route": [
+          "DELETE",
+          "/fulfillment/advance-ship-notices/{id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "cancelAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}/cancel"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdvanceShipNoticeLabels",
+        "route": [
+          "GET",
+          "/fulfillment/advance-ship-notices/{id}/labels"
+        ],
+        "parameter": "header:accept"
+      },
+      {
+        "operation_id": "getAdvanceShipNoticeLabels",
+        "route": [
+          "GET",
+          "/fulfillment/advance-ship-notices/{id}/labels"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "submitCommand",
+        "route": [
+          "PUT",
+          "/fulfillment/submit-commands/{command-id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getSubmitCommand",
+        "route": [
+          "GET",
+          "/fulfillment/submit-commands/{command-id}"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateSubmittedAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}/submitted"
+        ],
+        "parameter": "header:if-match"
+      },
+      {
+        "operation_id": "updateSubmittedAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}/submitted"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getFulfillmentStock",
+        "route": [
+          "GET",
+          "/fulfillment/stock"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getFulfillmentOrderParcels",
+        "route": [
+          "GET",
+          "/fulfillment/orders/{orderId}/parcels"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAvailableProducts",
+        "route": [
+          "GET",
+          "/fulfillment/available-products"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getAdvanceShipNoticeReceivingState",
+        "route": [
+          "GET",
+          "/fulfillment/advance-ship-notices/{id}/receiving-state"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "addTaxId",
+        "route": [
+          "POST",
+          "/fulfillment/tax-id"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "updateTaxId",
+        "route": [
+          "PUT",
+          "/fulfillment/tax-id"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getTaxId",
+        "route": [
+          "GET",
+          "/fulfillment/tax-id"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getCpsConversions",
+        "route": [
+          "GET",
+          "/affiliate/conversions/cps"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getFulfillmentRemovalPreferences",
+        "route": [
+          "GET",
+          "/fulfillment/removal/preferences"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "createFulfillmentRemovalPreferences",
+        "route": [
+          "PUT",
+          "/fulfillment/removal/preferences"
+        ],
+        "parameter": "header:Accept-Language"
+      },
+      {
+        "operation_id": "getDepositTypes",
+        "route": [
+          "GET",
+          "/deposit/types"
+        ],
+        "parameter": "header:Accept-Language"
+      }
+    ],
+    "required_query_promotions_count": 14,
+    "required_query_promotions": [
+      {
+        "operation_id": "getPartialProductOffer",
+        "route": [
+          "GET",
+          "/sale/product-offers/{offerId}/parts"
+        ],
+        "parameter": "include"
+      },
+      {
+        "operation_id": "classifiedOffersStatsGET",
+        "route": [
+          "GET",
+          "/sale/classified-offers-stats"
+        ],
+        "parameter": "offer.id"
+      },
+      {
+        "operation_id": "getClassifiedPackageConfigurationsForCategoryUsingGET",
+        "route": [
+          "GET",
+          "/sale/classifieds-packages"
+        ],
+        "parameter": "category.id"
+      },
+      {
+        "operation_id": "listSellerPromotionsUsingGET_1",
+        "route": [
+          "GET",
+          "/sale/loyalty/promotions"
+        ],
+        "parameter": "promotionType"
+      },
+      {
+        "operation_id": "getPOSListUsingGET",
+        "route": [
+          "GET",
+          "/points-of-service"
+        ],
+        "parameter": "seller.id"
+      },
+      {
+        "operation_id": "offerQuotesPublicUsingGET",
+        "route": [
+          "GET",
+          "/pricing/offer-quotes"
+        ],
+        "parameter": "offer.id"
+      },
+      {
+        "operation_id": "getParcelTrackingUsingGET",
+        "route": [
+          "GET",
+          "/order/carriers/{carrierId}/tracking"
+        ],
+        "parameter": "waybill"
+      },
+      {
+        "operation_id": "getCompatibleProductsGroups",
+        "route": [
+          "GET",
+          "/sale/compatible-products/groups"
+        ],
+        "parameter": "type"
+      },
+      {
+        "operation_id": "getCompatibleProducts",
+        "route": [
+          "GET",
+          "/sale/compatible-products"
+        ],
+        "parameter": "type"
+      },
+      {
+        "operation_id": "getBadges",
+        "route": [
+          "GET",
+          "/sale/badges"
+        ],
+        "parameter": "marketplace.id"
+      },
+      {
+        "operation_id": "searchFundraisingCampaigns",
+        "route": [
+          "GET",
+          "/charity/fundraising-campaigns"
+        ],
+        "parameter": "limit"
+      },
+      {
+        "operation_id": "searchFundraisingCampaigns",
+        "route": [
+          "GET",
+          "/charity/fundraising-campaigns"
+        ],
+        "parameter": "phrase"
+      },
+      {
+        "operation_id": "categorySuggestionUsingGET",
+        "route": [
+          "GET",
+          "/sale/matching-categories"
+        ],
+        "parameter": "name"
+      },
+      {
+        "operation_id": "getTaxSettingsForCategory",
+        "route": [
+          "GET",
+          "/sale/tax-settings"
+        ],
+        "parameter": "category.id"
+      }
+    ],
+    "required_JSON_body_promotions_count": 69,
+    "required_JSON_body_promotions": [
+      {
+        "operation_id": "createProductOffers",
+        "route": [
+          "POST",
+          "/sale/product-offers"
+        ]
+      },
+      {
+        "operation_id": "editProductOffers",
+        "route": [
+          "PATCH",
+          "/sale/product-offers/{offerId}"
+        ]
+      },
+      {
+        "operation_id": "createChangePriceCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/offers/{offerId}/change-price-commands/{commandId}"
+        ]
+      },
+      {
+        "operation_id": "updateOfferTranslationUsingPATCH",
+        "route": [
+          "PATCH",
+          "/sale/offers/{offerId}/translations/{language}"
+        ]
+      },
+      {
+        "operation_id": "changePublicationStatusUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-publication-commands/{commandId}"
+        ]
+      },
+      {
+        "operation_id": "assignClassifiedPackagesUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-classifieds-packages/{offerId}"
+        ]
+      },
+      {
+        "operation_id": "updateOfferBundleDiscountUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/bundles/{bundleId}/discount"
+        ]
+      },
+      {
+        "operation_id": "createPromotionUsingPOST_1",
+        "route": [
+          "POST",
+          "/sale/loyalty/promotions"
+        ]
+      },
+      {
+        "operation_id": "updatePromotionUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/loyalty/promotions/{promotionId}"
+        ]
+      },
+      {
+        "operation_id": "createOrModifyTurnoverDiscountUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/turnover-discount/{marketplaceId}"
+        ]
+      },
+      {
+        "operation_id": "calculateFeePreviewUsingPOST",
+        "route": [
+          "POST",
+          "/pricing/offer-fee-preview"
+        ]
+      },
+      {
+        "operation_id": "modificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-modification-commands/{commandId}"
+        ]
+      },
+      {
+        "operation_id": "priceModificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-price-change-commands/{commandId}"
+        ]
+      },
+      {
+        "operation_id": "batchOfferModificationUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-bulk-modification-commands"
+        ]
+      },
+      {
+        "operation_id": "quantityModificationCommandUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-quantity-change-commands/{commandId}"
+        ]
+      },
+      {
+        "operation_id": "offerAutomaticPricingModificationCommandUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-price-automation-commands"
+        ]
+      },
+      {
+        "operation_id": "createAutomaticPricingRulesUsingPost",
+        "route": [
+          "POST",
+          "/sale/price-automation/rules"
+        ]
+      },
+      {
+        "operation_id": "updateAutomaticPricingRuleUsingPut",
+        "route": [
+          "PUT",
+          "/sale/price-automation/rules/{ruleId}"
+        ]
+      },
+      {
+        "operation_id": "createShippingRatesSetUsingPOST",
+        "route": [
+          "POST",
+          "/sale/shipping-rates"
+        ]
+      },
+      {
+        "operation_id": "modifyShippingRatesSetUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/shipping-rates/{id}"
+        ]
+      },
+      {
+        "operation_id": "putSaleDeliverySettings",
+        "route": [
+          "PUT",
+          "/sale/delivery-settings"
+        ]
+      },
+      {
+        "operation_id": "createContactUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offer-contacts"
+        ]
+      },
+      {
+        "operation_id": "modifyContactUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-contacts/{id}"
+        ]
+      },
+      {
+        "operation_id": "responsiblePersonsPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-persons"
+        ]
+      },
+      {
+        "operation_id": "responsiblePersonsPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-persons/{id}"
+        ]
+      },
+      {
+        "operation_id": "responsibleProducersPOST",
+        "route": [
+          "POST",
+          "/sale/responsible-producers"
+        ]
+      },
+      {
+        "operation_id": "responsibleProducersPUT",
+        "route": [
+          "PUT",
+          "/sale/responsible-producers/{id}"
+        ]
+      },
+      {
+        "operation_id": "updateAdditionalServiceGroupTranslation",
+        "route": [
+          "PATCH",
+          "/sale/offer-additional-services/groups/{groupId}/translations/{language}"
+        ]
+      },
+      {
+        "operation_id": "modifyTableUsingPUT",
+        "route": [
+          "PUT",
+          "/sale/size-tables/{tableId}"
+        ]
+      },
+      {
+        "operation_id": "createTableUsingPOST",
+        "route": [
+          "POST",
+          "/sale/size-tables"
+        ]
+      },
+      {
+        "operation_id": "createAfterSalesServiceReturnPolicyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/return-policies"
+        ]
+      },
+      {
+        "operation_id": "updateAfterSalesServiceReturnPolicyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/return-policies/{returnPolicyId}"
+        ]
+      },
+      {
+        "operation_id": "createAfterSalesServiceImpliedWarrantyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/implied-warranties"
+        ]
+      },
+      {
+        "operation_id": "updateAfterSalesServiceImpliedWarrantyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/implied-warranties/{impliedWarrantyId}"
+        ]
+      },
+      {
+        "operation_id": "createAfterSalesServiceWarrantyUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/warranties"
+        ]
+      },
+      {
+        "operation_id": "updateAfterSalesServiceWarrantyUsingPUT",
+        "route": [
+          "PUT",
+          "/after-sales-service-conditions/warranties/{warrantyId}"
+        ]
+      },
+      {
+        "operation_id": "createAfterSalesServiceConditionsAttachmentUsingPOST",
+        "route": [
+          "POST",
+          "/after-sales-service-conditions/attachments"
+        ]
+      },
+      {
+        "operation_id": "createOrderShipmentsUsingPOST",
+        "route": [
+          "POST",
+          "/order/checkout-forms/{id}/shipments"
+        ]
+      },
+      {
+        "operation_id": "setOrderFulfillmentUsingPUT",
+        "route": [
+          "PUT",
+          "/order/checkout-forms/{id}/fulfillment"
+        ]
+      },
+      {
+        "operation_id": "addOrderInvoicesMetadata",
+        "route": [
+          "POST",
+          "/order/checkout-forms/{id}/invoices"
+        ]
+      },
+      {
+        "operation_id": "createTagPOST_1",
+        "route": [
+          "POST",
+          "/sale/offer-tags"
+        ]
+      },
+      {
+        "operation_id": "updateTagPUT",
+        "route": [
+          "PUT",
+          "/sale/offer-tags/{tagId}"
+        ]
+      },
+      {
+        "operation_id": "assignTagToOfferPOST",
+        "route": [
+          "POST",
+          "/sale/offers/{offerId}/tags"
+        ]
+      },
+      {
+        "operation_id": "modifyOfferPromoOptionsUsingPOST",
+        "route": [
+          "POST",
+          "/sale/offers/{offerId}/promo-options-modification"
+        ]
+      },
+      {
+        "operation_id": "proposeSaleProduct",
+        "route": [
+          "POST",
+          "/sale/product-proposals"
+        ]
+      },
+      {
+        "operation_id": "productChangeProposal",
+        "route": [
+          "POST",
+          "/sale/products/{productId}/change-proposals"
+        ]
+      },
+      {
+        "operation_id": "addAdditionalEmailUsingPOST",
+        "route": [
+          "POST",
+          "/account/additional-emails"
+        ]
+      },
+      {
+        "operation_id": "createRefundApplication",
+        "route": [
+          "POST",
+          "/order/refund-claims"
+        ]
+      },
+      {
+        "operation_id": "createNewShipment",
+        "route": [
+          "POST",
+          "/shipment-management/shipments/create-commands"
+        ]
+      },
+      {
+        "operation_id": "cancelShipment",
+        "route": [
+          "POST",
+          "/shipment-management/shipments/cancel-commands"
+        ]
+      },
+      {
+        "operation_id": "getShipmentLabels",
+        "route": [
+          "POST",
+          "/shipment-management/label"
+        ]
+      },
+      {
+        "operation_id": "getShipmentProtocol",
+        "route": [
+          "POST",
+          "/shipment-management/protocol"
+        ]
+      },
+      {
+        "operation_id": "getPickupProposals",
+        "route": [
+          "POST",
+          "/shipment-management/pickup-proposals"
+        ]
+      },
+      {
+        "operation_id": "createPickup",
+        "route": [
+          "POST",
+          "/shipment-management/pickups/create-commands"
+        ]
+      },
+      {
+        "operation_id": "getAllegroPricesOffers",
+        "route": [
+          "POST",
+          "/sale/allegro-prices/offers-queries"
+        ]
+      },
+      {
+        "operation_id": "submitOfferToAlleDiscountCommands",
+        "route": [
+          "POST",
+          "/sale/alle-discount/submit-offer-commands"
+        ]
+      },
+      {
+        "operation_id": "withdrawOfferFromAlleDiscountCommands",
+        "route": [
+          "POST",
+          "/sale/alle-discount/withdraw-offer-commands"
+        ]
+      },
+      {
+        "operation_id": "changeReadFlagOnThreadPUT",
+        "route": [
+          "PUT",
+          "/messaging/threads/{threadId}/read"
+        ]
+      },
+      {
+        "operation_id": "newMessagePOST",
+        "route": [
+          "POST",
+          "/messaging/messages"
+        ]
+      },
+      {
+        "operation_id": "newMessageInThreadPOST",
+        "route": [
+          "POST",
+          "/messaging/threads/{threadId}/messages"
+        ]
+      },
+      {
+        "operation_id": "newAttachmentDeclarationPOST",
+        "route": [
+          "POST",
+          "/messaging/message-attachments"
+        ]
+      },
+      {
+        "operation_id": "rejectCustomerReturnRefund",
+        "route": [
+          "POST",
+          "/order/customer-returns/{customerReturnId}/rejection"
+        ]
+      },
+      {
+        "operation_id": "createAdvanceShipNotice",
+        "route": [
+          "POST",
+          "/fulfillment/advance-ship-notices"
+        ]
+      },
+      {
+        "operation_id": "updateAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}"
+        ]
+      },
+      {
+        "operation_id": "submitCommand",
+        "route": [
+          "PUT",
+          "/fulfillment/submit-commands/{command-id}"
+        ]
+      },
+      {
+        "operation_id": "updateSubmittedAdvanceShipNotice",
+        "route": [
+          "PUT",
+          "/fulfillment/advance-ship-notices/{id}/submitted"
+        ]
+      },
+      {
+        "operation_id": "addTaxId",
+        "route": [
+          "POST",
+          "/fulfillment/tax-id"
+        ]
+      },
+      {
+        "operation_id": "updateTaxId",
+        "route": [
+          "PUT",
+          "/fulfillment/tax-id"
+        ]
+      },
+      {
+        "operation_id": "createFulfillmentRemovalPreferences",
+        "route": [
+          "PUT",
+          "/fulfillment/removal/preferences"
+        ]
+      }
+    ],
+    "type_annotation_changes_count": 2,
+    "type_annotation_changes": [
+      {
+        "operation_id": "getSaleProducts",
+        "parameter": "query:Dynamic filters",
+        "old": "str",
+        "new": "dict[str, Any]"
+      },
+      {
+        "operation_id": "getCpsConversions",
+        "parameter": "query:includePublisherUrlParameters",
+        "old": "str",
+        "new": "dict[str, Any]"
+      }
+    ],
+    "current_query_array_item_types": {
+      "$ref": 3,
+      "string": 20
+    },
+    "query_object_or_ref_parameters": [
+      {
+        "method": "GET",
+        "path": "/sale/offers",
+        "name": "publication.marketplace",
+        "schema": {
+          "$ref": "#/components/schemas/MarketplaceId"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/sale/products",
+        "name": "Dynamic filters",
+        "schema": {
+          "type": "object",
+          "additionalProperties": {
+            "x-additionalPropertiesName": "filter's id",
+            "type": "string",
+            "description": "Filter value."
+          }
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/affiliate/conversions/cps",
+        "name": "includePublisherUrlParameters",
+        "schema": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "current_required_headers": [
+      {
+        "method": "GET",
+        "path": "/sale/responsible-persons",
+        "name": "Accept",
+        "operation_id": "responsiblePersonsGET"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/responsible-persons",
+        "name": "Accept",
+        "operation_id": "responsiblePersonsPOST"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/responsible-persons",
+        "name": "Content-Type",
+        "operation_id": "responsiblePersonsPOST"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/responsible-persons/{id}",
+        "name": "Accept",
+        "operation_id": "responsiblePersonsPUT"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/responsible-persons/{id}",
+        "name": "Content-Type",
+        "operation_id": "responsiblePersonsPUT"
+      },
+      {
+        "method": "GET",
+        "path": "/sale/responsible-producers",
+        "name": "Accept",
+        "operation_id": "responsibleProducersGET"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/responsible-producers",
+        "name": "Accept",
+        "operation_id": "responsibleProducersPOST"
+      },
+      {
+        "method": "POST",
+        "path": "/sale/responsible-producers",
+        "name": "Content-Type",
+        "operation_id": "responsibleProducersPOST"
+      },
+      {
+        "method": "GET",
+        "path": "/sale/responsible-producers/{id}",
+        "name": "Accept",
+        "operation_id": "responsibleProducerGET"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/responsible-producers/{id}",
+        "name": "Accept",
+        "operation_id": "responsibleProducersPUT"
+      },
+      {
+        "method": "PUT",
+        "path": "/sale/responsible-producers/{id}",
+        "name": "Content-Type",
+        "operation_id": "responsibleProducersPUT"
+      },
+      {
+        "method": "PUT",
+        "path": "/fulfillment/advance-ship-notices/{id}",
+        "name": "if-match",
+        "operation_id": "updateAdvanceShipNotice"
+      },
+      {
+        "method": "GET",
+        "path": "/fulfillment/advance-ship-notices/{id}/labels",
+        "name": "accept",
+        "operation_id": "getAdvanceShipNoticeLabels"
+      },
+      {
+        "method": "PUT",
+        "path": "/fulfillment/advance-ship-notices/{id}/submitted",
+        "name": "if-match",
+        "operation_id": "updateSubmittedAdvanceShipNotice"
+      }
+    ]
+  },
+  "models_ast_delta": {
+    "baseline_top_level_classes": 1144,
+    "current_top_level_classes": 1194,
+    "class_names_added": [
+      "AiCoCreatedImage",
+      "BundlePublicationDTO",
+      "CheckoutFormCodBookedPayment",
+      "CheckoutFormLineItemSerialNumbers",
+      "CheckoutFormLineItemSerialNumbersEntry",
+      "CheckoutFormLineItemSetSerialNumbersEntriesRequest",
+      "CheckoutFormLineItemSetSerialNumbersEntryRequest",
+      "CheckoutFormLineItemSetSerialNumbersRequest",
+      "CheckoutFormLineItemsSetSerialNumbersRequest",
+      "CheckoutFormsOrderInvoiceFileVerification",
+      "CheckoutFormsOrderInvoiceFileVerificationDetails",
+      "CompatibilityListManualRequest",
+      "Component",
+      "Composition",
+      "Composition1",
+      "CountryCodeDto",
+      "DeliveryOptionDto",
+      "DeliveryPaymentDto",
+      "DeliveryProposalDto",
+      "DeliveryTypeDto",
+      "Dimensions",
+      "FlexibleBundleCreateDTO",
+      "FlexibleBundleDiscountDTO",
+      "FlexibleBundleGetDTO",
+      "FlexibleBundleGetOfferDTO",
+      "FlexibleBundleGetSlotDTO",
+      "FlexibleBundleListingDTO",
+      "FlexibleBundleMarketplaceDiscountDTO",
+      "FlexibleBundleOfferAvailabilityDTO",
+      "FlexibleBundleOfferDTO",
+      "FlexibleBundleOfferMarketplaceDetailsDTO",
+      "FlexibleBundleSlotDTO",
+      "FlexibleBundleSlotDiscountDTO",
+      "FlexibleBundleSlotsDiscountDTO",
+      "FlexibleBundleUpdateDTO",
+      "FlexibleBundleWholeBundleDiscountDTO",
+      "FlexibleBundlesListingDTO",
+      "FulfillmentWarehouse",
+      "FulfillmentWarehouseLocation",
+      "Group2",
+      "Ingredient",
+      "Limits",
+      "MessageAttachmentInfoVBeta1",
+      "MessageAuthorVBeta1",
+      "MessageOrderVBeta1",
+      "MessageRelatedObjectVBeta1",
+      "MessageVBeta1",
+      "MessagesListVBeta1",
+      "NewMessageVBeta1",
+      "NextPage2",
+      "NextPage3",
+      "PackageTypeDto",
+      "ParseDiagnosticResponse",
+      "ParseIngredientsRequest",
+      "ParseIngredientsResponse",
+      "ParsedIngredientResponse",
+      "ParsedItemResponse",
+      "ProductAiCoCreatedContent",
+      "ProductIngredientsRequest",
+      "ProductParseResult",
+      "ProductSetElementCompositionRequest",
+      "ProductSetElementCompositionResponse",
+      "ReturnPolicyUpdateRequestV1",
+      "ThreadOrderOfferVBeta1",
+      "ThreadOrderVBeta1",
+      "ThreadParticipantVBeta1",
+      "ThreadReadFlagVBeta1",
+      "ThreadVBeta1",
+      "ThreadsListVBeta1"
+    ],
+    "class_names_removed": [
+      "AdditionalMarketplaces1",
+      "AdditionalMarketplaces5",
+      "AllegroPricesAccountChangeRequest",
+      "AllegroPricesAccountConsentChangeResponse",
+      "AllegroPricesEligibilityResponse",
+      "AllegroPricesOfferChangeRequest",
+      "AllegroPricesOfferConsentChangeResponse",
+      "AllegroPricesQualificationResponse",
+      "CustomCost",
+      "CustomCost1",
+      "NextItemRate",
+      "NextPage1",
+      "PickupDateProposalDto",
+      "Publication10",
+      "ReturnPoliciesListReturnPolicyV2",
+      "ReturnPolicyContactV2",
+      "ReturnPolicyRequestV2",
+      "ReturnPolicyResponseV2",
+      "ReturnPolicyUpdateRequestV2"
+    ],
+    "common_class_count": 1125,
+    "common_classes_with_field_changes": 73,
+    "field_delta_counts": {
+      "fields_added": 32,
+      "fields_removed": 20,
+      "annotations_changed": 61,
+      "requiredness_changed": 7
+    },
+    "field_deltas": [
+      {
+        "class": "AccountParticipationMarketplace",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str, Field(description='Marketplace identifier (e.g., allegro-pl, allegro-cz)', examples=['allegro-pl'])]",
+            "new": "Annotated[str, Field(description=\"Marketplace identifier. One of: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.\", examples=['allegro-pl'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AccountParticipationMarketplaceRequest",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str, Field(description='Marketplace identifier (must be a supported marketplace)', examples=['allegro-pl'])]",
+            "new": "Annotated[str, Field(description=\"Marketplace identifier. Supported values: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.\", examples=['allegro-pl'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AdditionalInfoItem",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "name",
+            "old": "Annotated[str | None, Field(description='The display name for the additional information type. This value is translated based on the \"Accept-Language\" header. By default a message in English is returned.', examples=['Name of additional service'])]",
+            "new": "Annotated[str | None, Field(description='The display name for the additional information type. This value is translated based on the \"Accept-Language\" header. By default a message in Polish is returned.', examples=['Name of additional service'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AdditionalMarketplacesResponse1",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Annotated[Publication8 | None, Field(description='<small>[read-only]</small> Contains information about the visibility status of the listing for the given service.')]",
+            "new": "Annotated[Publication7 | None, Field(description='<small>[read-only]</small> Contains information about the visibility status of the listing for the given service.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AddressDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phone",
+            "old": "Annotated[str, Field(description='Cell phone', examples=['500600700'])]",
+            "new": "Annotated[str, Field(description='Cell phone', examples=['+48500600700'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AiCoCreatedContent",
+        "added": [
+          "images"
+        ],
+        "removed": [
+          "paths"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "AlleDiscountCampaign",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Annotated[Publication10 | None, Field(description='Time period when reduced price (and possible badge if it applies for campaign) is displayed on the list of offers or on the offer page.')]",
+            "new": "Annotated[Publication9 | None, Field(description='Time period when reduced price (and possible badge if it applies for campaign) is displayed on the list of offers or on the offer page.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "BaseSaleProductResponseDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "aiCoCreatedContent",
+            "old": "AiCoCreatedContent | None",
+            "new": "ProductAiCoCreatedContent | None"
+          },
+          {
+            "field": "publication",
+            "old": "Publication5 | None",
+            "new": "Publication4 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "BillingEntry",
+        "added": [
+          "asset",
+          "marketplaceId"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutForm",
+        "added": [
+          "codBookedPayments"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutFormBuyerReference",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phoneNumber",
+            "old": "Annotated[str | None, Field(description='Phone number', examples=['123123123'])]",
+            "new": "Annotated[str | None, Field(description='Phone number', examples=['+48123123123'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutFormDeliveryAddress",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phoneNumber",
+            "old": "Annotated[str | None, Field(description='Phone number', examples=['123123123'])]",
+            "new": "Annotated[str | None, Field(description='Phone number', examples=['+48123123123'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutFormLineItem",
+        "added": [
+          "serialNumbers"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutFormsOrderInvoiceFile",
+        "added": [
+          "verification"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CheckoutFormsOrderInvoices",
+        "added": [
+          "orderMode"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ClaimStatusChangeRequest",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "status",
+            "old": "Annotated[Literal['ACCEPTED_REPAIR', 'ACCEPTED_REFUND', 'ACCEPTED_EXCHANGE', 'ACCEPTED_PARTIAL_REFUND', 'REJECTED_ADDITIONAL_REQUIREMENTS_NOT_COMPLETED', 'REJECTED_PRODUCT_NOT_RETURNED', 'REJECTED_PRODUCT_DAMAGED_BY_USER', 'REJECTED_PRODUCT_CONFORMS_TO_CONTRACT', 'REJECTED_MINOR_DEFECT', 'REJECTED_OTHER'], Field(examples=['ACCEPTED_PARTIAL_REFUND'])]",
+            "new": "Annotated[Literal['ACCEPTED_REPAIR', 'ACCEPTED_REFUND', 'ACCEPTED_EXCHANGE', 'ACCEPTED_PARTIAL_REFUND', 'REJECTED_ADDITIONAL_REQUIREMENTS_NOT_COMPLETED', 'REJECTED_PRODUCT_NOT_RETURNED', 'REJECTED_PRODUCT_DAMAGED_BY_USER', 'REJECTED_PRODUCT_CONFORMS_TO_CONTRACT', 'REJECTED_MINOR_DEFECT', 'REJECTED_OTHER', 'REJECTED_CLAIM_WITHDRAWN_BY_BUYER'], Field(examples=['ACCEPTED_PARTIAL_REFUND'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ClassifiedPackages",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "extraPackages",
+            "old": "list[ClassifiedPackage] | None",
+            "new": "list[ClassifiedExtraPackage] | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CompatibilityListIdItem",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "text",
+            "old": "Annotated[str | None, Field(description='Text description of the compatible item. When creating (Post) or updating (Put) a compatibility list the field is ignored.')]",
+            "new": "Annotated[str | None, Field(description='Text description of the compatible item. When creating (POST) or updating (PATCH) a compatibility list the field is ignored.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CompatibilityListManual",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "items",
+            "old": "Annotated[list[CompatibilityListItem], Field(description='List of the compatible items. Maximum number of elements on the list depends on type of included compatible items. Configuration and details concerning the compatible items in selected category are provided in the response for GET <a href=\"/documentation/#tag/Compatibility-List/paths/~1sale~1compatibility-list~1supported-categories/get\"> supported-categories</a> resource in `validationRules` object.')]",
+            "new": "Annotated[list[CompatibilityListItem] | None, Field(description='List of the compatible items. Maximum number of elements on the list depends on type of included compatible items. Configuration and details concerning the compatible items in selected category are provided in the response for GET <a href=\"/documentation/#tag/Compatibility-List/paths/~1sale~1compatibility-list~1supported-categories/get\"> supported-categories</a> resource in `validationRules` object.')]"
+          },
+          {
+            "field": "type",
+            "old": "Annotated[Literal['MANUAL'], Field(description='Type of the compatibility list.')]",
+            "new": "Annotated[Literal['MANUAL'] | None, Field(description='Type of the compatibility list.')]"
+          }
+        ],
+        "requiredness_changed": [
+          {
+            "field": "items",
+            "old": true,
+            "new": false
+          },
+          {
+            "field": "type",
+            "old": true,
+            "new": false
+          }
+        ]
+      },
+      {
+        "class": "CompatibleProductDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "group",
+            "old": "Annotated[Group1 | None, Field(description='Group to which compatible product is assigned to.')]",
+            "new": "Annotated[Group2 | None, Field(description='Group to which compatible product is assigned to.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CompatibleProductsGroupsDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "groups",
+            "old": "Annotated[list[Group] | None, Field(description='List of groups for given type of compatible products.', examples=[[{'id': 'b0dfe6de8fb2f2b1309ad94c6cc4e09d', 'text': 'ABARTH'}, {'id': '4144e097d2fa7a491cec2a7a4322f2bc', 'text': 'AC'}, {'id': 'de3e2253f276cd1c757f58860d77b9bb', 'text': 'ACURA'}]])]",
+            "new": "Annotated[list[Group1] | None, Field(description='List of groups for given type of compatible products.', examples=[[{'id': 'b0dfe6de8fb2f2b1309ad94c6cc4e09d', 'text': 'ABARTH'}, {'id': '4144e097d2fa7a491cec2a7a4322f2bc', 'text': 'AC'}, {'id': 'de3e2253f276cd1c757f58860d77b9bb', 'text': 'ACURA'}]])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Condition",
+        "added": [],
+        "removed": [
+          "failedDeliveryMethods",
+          "passedDeliveryMethods"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CustomerReturnItem",
+        "added": [
+          "serialNumbers"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "CustomerReturnParcelSender",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phoneNumber",
+            "old": "Annotated[str | None, Field(examples=['333444555'])]",
+            "new": "Annotated[str | None, Field(examples=['+48333444555'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "DeliveryServiceIdDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "deliveryMethodId",
+            "old": "Annotated[str | None, Field(description='Id of delivery method, chosen by buyer in order.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]",
+            "new": "Annotated[str | None, Field(description='Id of delivery method, chosen by buyer in order. If the Method ID is blank, then the system will automatically read it from the order.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "DeliverySettingsRequest",
+        "added": [],
+        "removed": [
+          "customCost"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "DeliverySettingsResponse",
+        "added": [],
+        "removed": [
+          "customCost"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "FulfillmentRefundDisposition",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "stockStatus",
+            "old": "Annotated[Literal['SELLABLE', 'NON_SELLABLE', 'MISSING', 'ITEM_MISMATCH'] | None, Field(description='Status describing whether the item returns to sellable stock. - `SELLABLE` - item returns to sellable stock, - `NON_SELLABLE` - item designated for removal process or disposal, - `MISSING` - expected item was not found in parcel, - `ITEM_MISMATCH` - same product but different serial numbers.')]",
+            "new": "Annotated[Literal['SELLABLE', 'NON_SELLABLE', 'MISSING', 'ITEM_MISMATCH', 'NOT_APPLICABLE'] | None, Field(description='Status describing whether the item returns to sellable stock. - `SELLABLE` - item returns to sellable stock, - `NON_SELLABLE` - item designated for removal process or disposal, - `MISSING` - expected item was not found in parcel, - `ITEM_MISMATCH` - same product but different serial numbers, - `NOT_APPLICABLE` - used for REPLACEMENT type.')]"
+          },
+          {
+            "field": "type",
+            "old": "Annotated[Literal['RETURN', 'BOUNCE'] | None, Field(description='Type of the refund disposition. - `RETURN` - buyer return, - `BOUNCE` - operational return.')]",
+            "new": "Annotated[Literal['RETURN', 'BOUNCE', 'REPLACEMENT'] | None, Field(description='Type of the refund disposition. - `RETURN` - buyer return, - `BOUNCE` - operational return, - `REPLACEMENT` - fewer items shipped than ordered.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "GetSaleProductsResponse",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "nextPage",
+            "old": "NextPage1 | None",
+            "new": "NextPage2 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Group",
+        "added": [
+          "name"
+        ],
+        "removed": [
+          "text"
+        ],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str | None, Field(description='Identifier of the group.', examples=['b0dfe6de8fb2f2b1309ad94c6cc4e09d'], max_length=32, min_length=32)]",
+            "new": "Annotated[str | None, Field(description='Technical identifier of the billing type group.', examples=['delivery-services'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Group1",
+        "added": [
+          "text"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str | None, Field(description='Identifier of the group.', examples=['19d71c872aa6c78663876a7e7bc7776d'])]",
+            "new": "Annotated[str | None, Field(description='Identifier of the group.', examples=['b0dfe6de8fb2f2b1309ad94c6cc4e09d'], max_length=32, min_length=32)]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Marketplace5",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str, Field(description='Marketplace identifier (e.g., allegro-pl, allegro-cz)', examples=['allegro-pl'], min_length=1)]",
+            "new": "Annotated[str, Field(description=\"Marketplace identifier. Supported values: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.\", examples=['allegro-pl'], min_length=1)]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "MarketplaceDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str, Field(description=\"Marketplace identifier (e.g., 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu')\", examples=['allegro-pl'])]",
+            "new": "Annotated[str, Field(description=\"Marketplace identifier. One of: 'allegro-pl', 'allegro-cz', 'allegro-sk', 'allegro-hu'.\", examples=['allegro-pl'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Offer",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str | None, Field(description='ID of the offer associated with the billing entry.', examples=['12345678'])]",
+            "new": "Annotated[str | None, Field(description='ID of the offer associated with the billing entry. Can be either a numeric ID or a UUID.', examples=['12345678'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "OfferBundleDTO",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Annotated[Publication1, Field(description='Bundle status on each marketplace.')]",
+            "new": "Annotated[list[BundlePublicationDTO], Field(description='Bundle status on each marketplace.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "OfferEventEndedOffer",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Annotated[Publication9, Field(description='Information about publication of the given offer.')]",
+            "new": "Annotated[Publication8, Field(description='Information about publication of the given offer.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "OfferImageLinkUploadRequest",
+        "added": [
+          "isAiCoCreated"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "OfferListingDtoV1AdditionalMarketplace",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Annotated[Publication2 | None, Field(description='Information about the publication of the offer on the given marketplace.')]",
+            "new": "Annotated[Publication1 | None, Field(description='Information about the publication of the offer on the given marketplace.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "OfferReference",
+        "added": [
+          "hsNumber"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Output1",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "errors",
+            "old": "list[ErrorsHolder] | None",
+            "new": "list[Error] | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Output3",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "errors",
+            "old": "list[ErrorsHolder] | None",
+            "new": "list[Error] | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "PackageRequestDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "type",
+            "old": "Annotated[str, Field(description='Available values: PACKAGE|DOX|PALLET|OTHER.', examples=['PACKAGE'], pattern='DOX|PACKAGE|PALLET|OTHER')]",
+            "new": "PackageTypeDto"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "PickupCreateRequestDto",
+        "added": [],
+        "removed": [
+          "pickupDateProposalId"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "PickupDateProposalsDto",
+        "added": [],
+        "removed": [
+          "proposalItems"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "PickupProposalsRequestDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "shipmentIds",
+            "old": "Annotated[list[str], Field(max_length=2147483647, min_length=1)]",
+            "new": "Annotated[list[str], Field(description='An array of unique shipment identifiers to retrieve details for. Must contain between 1 and 100 IDs.', max_length=100, min_length=1)]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ProductOfferResponse",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Publication7 | None",
+            "new": "Publication6 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ProductProposalsResponse",
+        "added": [
+          "aiCoCreatedContent"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Publication4 | None",
+            "new": "Publication3 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "endedBy",
+            "old": "Annotated[Literal['USER', 'ADMIN', 'EXPIRATION', 'EMPTY_STOCK', 'PRODUCT_DETACHMENT', 'ERROR'] | None, Field(description='Indicates the reason for ending the offer: - `USER` - offer ended by the seller. - `ADMIN` - offer ended by an admin. - `EXPIRATION` - offer duration had expired (valid for offers with specified duration). - `EMPTY_STOCK` - offer ended because all available items had been sold out. - `PRODUCT_DETACHMENT` - offer ended because its link to the product was removed. Status will only occur\\n  if the base marketplace of offer requires full productization.\\n- `ERROR` - offer ended due to internal problem with offer publication. The publication command responded with\\n  success status, but further processing failed.')]",
+            "new": "Annotated[Literal['USER', 'ADMIN', 'EXPIRATION', 'EMPTY_STOCK', 'PRODUCT_DETACHMENT', 'ERROR', 'VISIBILITY'] | None, Field(description=\"Indicates the reason for ending the offer: - `USER` - offer ended by the seller. - `ADMIN` - offer ended by an admin. - `EXPIRATION` - offer duration had expired (valid for offers with specified duration). - `EMPTY_STOCK` - offer ended because all available items had been sold out. - `PRODUCT_DETACHMENT` - offer ended because its link to the product was removed. Status will only occur\\n  if the base marketplace of offer requires full productization.\\n- `ERROR` - offer ended due to internal problem with offer publication. The publication command responded with\\n  success status, but further processing failed.\\n- `VISIBILITY` - offer ended because it doesn't qualify for visibility in any marketplace.\")]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication1",
+        "added": [
+          "state"
+        ],
+        "removed": [
+          "marketplace",
+          "status"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication2",
+        "added": [
+          "status"
+        ],
+        "removed": [
+          "state"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication3",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "status",
+            "old": "Annotated[Literal['PROPOSED', 'LISTED'] | None, Field(description='The publication status of the product:\\n - `PROPOSED` - product is proposed and can be during the review process\\n - `LISTED` - product is created and reviewed', examples=['PROPOSED'])]",
+            "new": "Annotated[Literal['PROPOSED', 'LISTED'] | None, Field(description='The publication status of the submitted product:\\n - `PROPOSED` - a new product proposal was created and can be reviewed', examples=['LISTED'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication4",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "status",
+            "old": "Annotated[Literal['PROPOSED', 'LISTED'] | None, Field(description='The publication status of the submitted product:\\n - `PROPOSED` - a new product proposal was created and can be reviewed', examples=['LISTED'])]",
+            "new": "Annotated[Literal['PROPOSED', 'LISTED'] | None, Field(description='The publication status of the product:\\n - `PROPOSED` - product is proposed and can be during the review process\\n - `LISTED` - product is created and reviewed', examples=['LISTED'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication5",
+        "added": [
+          "duration",
+          "endingAt",
+          "startingAt"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "status",
+            "old": "Annotated[Literal['PROPOSED', 'LISTED'] | None, Field(description='The publication status of the product:\\n - `PROPOSED` - product is proposed and can be during the review process\\n - `LISTED` - product is created and reviewed', examples=['LISTED'])]",
+            "new": "OfferStatus | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication6",
+        "added": [],
+        "removed": [
+          "duration",
+          "endingAt",
+          "startingAt"
+        ],
+        "annotations_changed": [
+          {
+            "field": "status",
+            "old": "OfferStatus | None",
+            "new": "Annotated[Literal['PROPOSED', 'LISTED', 'NOT_LISTED', 'REMOVED'] | None, Field(description='The publication status of the product assigned to the offer:\\n - `PROPOSED` - a new product proposal was created or an existing product in the review process was selected and assigned to the offer\\n - `LISTED` - a reviewed product from our database was identified and assigned to the offer\\n - `NOT_LISTED` - no new product proposal was created nor an existing product from database was assigned to the offer\\n - `REMOVED` - the product review was negative or the product was merged with another product. This means that the product will soon be removed from the offer and you can assign a correct product.', examples=['LISTED'])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication7",
+        "added": [
+          "refusalReasons",
+          "state"
+        ],
+        "removed": [
+          "status"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication8",
+        "added": [
+          "endedBy"
+        ],
+        "removed": [
+          "refusalReasons",
+          "state"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Publication9",
+        "added": [
+          "from_",
+          "to",
+          "type"
+        ],
+        "removed": [
+          "endedBy"
+        ],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ResponsiblePersonContact",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phoneNumber",
+            "old": "Annotated[str | None, Field(description='Phone number of responsible person. This field is optional.', examples=['123123123'], max_length=30)]",
+            "new": "Annotated[str | None, Field(description='Phone number of responsible person. This field is optional.', examples=['+48123123123'], max_length=30)]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ResponsibleProducerContact",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "phoneNumber",
+            "old": "Annotated[str | None, Field(description='Phone number of responsible producer. This field is optional.', examples=['123123123'], max_length=30)]",
+            "new": "Annotated[str | None, Field(description='Phone number of responsible producer. This field is optional.', examples=['+48123123123'], max_length=30)]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ReturnPolicyRequestV1",
+        "added": [
+          "isFulfillment"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "address",
+            "old": "ReturnPolicyAddress",
+            "new": "ReturnPolicyAddress | None"
+          },
+          {
+            "field": "name",
+            "old": "Annotated[str, Field(description='Return policy name.', examples=['Default'], max_length=200)]",
+            "new": "Annotated[str, Field(description='Return policy name.', max_length=200)]"
+          },
+          {
+            "field": "options",
+            "old": "ReturnPolicyOptions",
+            "new": "ReturnPolicyOptions | None"
+          },
+          {
+            "field": "returnCost",
+            "old": "ReturnPolicyReturnCost",
+            "new": "ReturnPolicyReturnCost | None"
+          }
+        ],
+        "requiredness_changed": [
+          {
+            "field": "address",
+            "old": true,
+            "new": false
+          },
+          {
+            "field": "options",
+            "old": true,
+            "new": false
+          },
+          {
+            "field": "returnCost",
+            "old": true,
+            "new": false
+          }
+        ]
+      },
+      {
+        "class": "ReturnPolicyResponseV1",
+        "added": [
+          "isFulfillment"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "aiCoCreatedContent",
+            "old": "AiCoCreatedContent | None",
+            "new": "ProductAiCoCreatedContent | None"
+          },
+          {
+            "field": "publication",
+            "old": "Publication3 | None",
+            "new": "Publication2 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductOffer",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "images",
+            "old": "Annotated[list[str] | None, Field(examples=['[\"https://a.allegroimg.com/original/12068b/359d04074521b79df1b2807a6727\"]'])]",
+            "new": "Annotated[list[str] | None, Field(examples=[['https://a.allegroimg.com/original/12068b/359d04074521b79df1b2807a6727']])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductOfferPatchRequestV1",
+        "added": [
+          "aiCoCreatedContent"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "compatibilityList",
+            "old": "Annotated[CompatibilityListManual | None, Field(description='For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically.')]",
+            "new": "Annotated[CompatibilityListManualRequest | None, Field(description='For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductOfferRequestBase",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "publication",
+            "old": "Publication6 | None",
+            "new": "Publication5 | None"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductOfferRequestV1",
+        "added": [
+          "aiCoCreatedContent"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "compatibilityList",
+            "old": "Annotated[CompatibilityListManual | None, Field(description='For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically.')]",
+            "new": "Annotated[CompatibilityListManualRequest | None, Field(description='For the `/sale/product-offers` resources you can send only definition of the MANUAL compatibility list. If compatibility list is provided for the product assigned to the offer, it will be used automatically.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "SaleProductOfferResponseV1",
+        "added": [
+          "aiCoCreatedContent"
+        ],
+        "removed": [],
+        "annotations_changed": [],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ShipmentCreateRequestDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "deliveryMethodId",
+            "old": "Annotated[str, Field(description='Id of delivery method, chosen by buyer in order.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]",
+            "new": "Annotated[str | None, Field(deprecated=True, description='Id of delivery method, chosen by buyer in the order. This field will be removed in the future. Use the `carrier`, `cashOnDelivery`, and `packages.transportingInfo` fields instead.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]"
+          }
+        ],
+        "requiredness_changed": [
+          {
+            "field": "deliveryMethodId",
+            "old": true,
+            "new": false
+          }
+        ]
+      },
+      {
+        "class": "ShipmentDto",
+        "added": [],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "deliveryMethodId",
+            "old": "Annotated[str | None, Field(description='Id of delivery method, chosen by buyer in order.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]",
+            "new": "Annotated[str | None, Field(deprecated=True, description='Id of delivery method, chosen by buyer in order. In the future this information will be no longer available. Instead of it use carrier, cashOnDelivery and packages.transportingInfo properties.', examples=['c3066682-97a3-42fe-9eb5-3beeccab840c'])]"
+          },
+          {
+            "field": "transport",
+            "old": "Annotated[list[str] | None, Field(description='List with identifiers of the carriers that take part in the transport of this shipment. Often it is a single value list, when only one carrier is involved. There are shipments where multiple carriers are used to deliver the package, mainly in a case of international shipments, then there will be two or more values.', examples=[['InPost', 'WEDO']])]",
+            "new": "Annotated[list[str] | None, Field(description='List with identifiers of the carriers that take part in the transport of this shipment. Often it is a single value list, when only one carrier is involved. There are shipments where multiple carriers are used to deliver the package, mainly in a case of international shipments, then there will be two or more values.', examples=[['InPost']])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ShippingRate",
+        "added": [],
+        "removed": [
+          "nextItemRate"
+        ],
+        "annotations_changed": [
+          {
+            "field": "firstItemRate",
+            "old": "Annotated[FirstItemRate, Field(description='Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource.')]",
+            "new": "Annotated[FirstItemRate, Field(description='Rate for the first item in the parcel for the given delivery method. The rate amount and currency must comply with the shippingRatesConstraints.firstItemRate restrictions described in the delivery-methods resource. Note that there is no additional payment for any subsequent item in the parcel.')]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "ShippingRatesSet",
+        "added": [
+          "dispatchCountry",
+          "type"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "name",
+            "old": "Annotated[str | None, Field(description='User defined name of the shipping rates set. It may only contain: letters, numbers, hyphens, dots, commas and spaces.', examples=['Allegro Delivery shipping rate'], max_length=64, min_length=1)]",
+            "new": "Annotated[str, Field(description='User defined name of the shipping rates set. It may only contain: letters, numbers, hyphens, dots, commas and spaces.', examples=['Allegro Delivery shipping rate'], max_length=64, min_length=1)]"
+          }
+        ],
+        "requiredness_changed": [
+          {
+            "field": "name",
+            "old": false,
+            "new": true
+          }
+        ]
+      },
+      {
+        "class": "SmartOfferClassificationReport",
+        "added": [],
+        "removed": [
+          "smartDeliveryMethods"
+        ],
+        "annotations_changed": [
+          {
+            "field": "conditions",
+            "old": "Annotated[list[Condition] | None, Field(description='Set of conditions to be met in order for that particular offer to be Smart!. Each condition filters out improperly configured delivery methods or checks some offer attributes. Order of conditions matters. Please keep in mind that this is a **PREVIEW** of an offer classification if being conducted right now - actual classification is triggered only by attribute changes and as of now it cannot be manually done on demand.', examples=[[{'code': 'deliveryMethodPrices', 'name': 'Zgodność z cennikiem', 'description': 'Wymagamy aby metody dostawy były zgodne z cennikiem.', 'fulfilled': True, 'passedDeliveryMethods': [{'id': '2488f7b7-5d1c-4d65-b85c-4cbcf253fd93'}, {'id': 'c3066682-97a3-42fe-9eb5-3beeccab840c'}, {'id': '259b5c7a-9056-4c74-80ec-8bdc50cb0413'}, {'id': '08e2ef8e-90c8-49db-8970-d6c2773f1530'}], 'failedDeliveryMethods': [{'id': 'b20ef9e1-faa2-4f25-9032-adbea23e5cb9'}, {'id': '9081532b-5ad3-467d-80bc-9252982e9dd8'}, {'id': '98f86f81-0018-41c5-ac83-073a56fc7021'}, {'id': '5d9c7838-e05f-4dec-afdd-58e884170ba7'}]}, {'code': 'returnPaidBy', 'name': 'Koszty zwrotu', 'description': 'Oferta musi mieć politykę zwrotu. Zagraniczne metody dostawy są zaklasyfikowane tylko jeśli koszt zwrotu jest pokryty przez sprzedającego.', 'fulfilled': True, 'passedDeliveryMethods': [{'id': '2488f7b7-5d1c-4d65-b85c-4cbcf253fd93'}, {'id': 'c3066682-97a3-42fe-9eb5-3beeccab840c'}], 'failedDeliveryMethods': [{'id': '259b5c7a-9056-4c74-80ec-8bdc50cb0413'}, {'id': '08e2ef8e-90c8-49db-8970-d6c2773f1530'}]}]])]",
+            "new": "Annotated[list[Condition] | None, Field(description='Set of conditions to be met in order for that particular offer to be Smart!. Each condition filters out improperly configured delivery methods or checks some offer attributes. Order of conditions matters. Please keep in mind that this is a **PREVIEW** of an offer classification if being conducted right now - actual classification is triggered only by attribute changes and as of now it cannot be manually done on demand.', examples=[[{'code': 'deliveryMethodPrices', 'name': 'Zgodność z cennikiem', 'description': 'Wymagamy aby metody dostawy były zgodne z cennikiem.', 'fulfilled': True}, {'code': 'returnPaidBy', 'name': 'Koszty zwrotu', 'description': 'Oferta musi mieć politykę zwrotu. Zagraniczne metody dostawy są zaklasyfikowane tylko jeśli koszt zwrotu jest pokryty przez sprzedającego.', 'fulfilled': True}]])]"
+          }
+        ],
+        "requiredness_changed": []
+      },
+      {
+        "class": "Type",
+        "added": [
+          "group"
+        ],
+        "removed": [],
+        "annotations_changed": [
+          {
+            "field": "id",
+            "old": "Annotated[str | None, Field(description='Three-letter code of the billing type of the returned billing entry.', examples=['LIS'])]",
+            "new": "Annotated[str | None, Field(description='Three-letter code of the billing type of the returned billing entry.', examples=['XOR'])]"
+          },
+          {
+            "field": "name",
+            "old": "Annotated[str | None, Field(description='Billing type of the returned billing entry. This type is translated based on the value of the \"Accept-Language\" header. By default a message in English is returned.', examples=['Listing fee'])]",
+            "new": "Annotated[str | None, Field(description='Billing type of the returned billing entry. This type is translated based on the value of the \"Accept-Language\" header. By default a message in Polish is returned.', examples=['One Courier Allegro Delivery additional fee'])]"
+          }
+        ],
+        "requiredness_changed": []
+      }
+    ],
+    "current_component_schema_names_without_exact_class": [
+      "Describes_listing_fee",
+      "Describes_success_commission_fee",
+      "ImpliedWarrantiesList_ImpliedWarrantyBasic_",
+      "Publication_modification",
+      "ReturnPoliciesList_ReturnPolicy_V1",
+      "UUID",
+      "WarrantiesList_WarrantyBasic_",
+      "Wrapper_type_for_preview_conditions",
+      "Wraps_listing_and_commissions_fees"
+    ],
+    "baseline_model_class_names_not_in_current_spec_schema_names": [
+      "AbroadFreeDelivery",
+      "AbroadFreeDelivery1",
+      "AdditionalInfoItem",
+      "AdditionalMarketplaces",
+      "AdditionalMarketplaces1",
+      "AdditionalMarketplaces5",
+      "AdditionalMarketplacesRequest1",
+      "AdditionalMarketplacesResponse1",
+      "AdditionalServices",
+      "Address1",
+      "AlleDiscount",
+      "AlleDiscountCampaign",
+      "Allegro",
+      "AllegroPricesAccountChangeRequest",
+      "AllegroPricesAccountConsentChangeResponse",
+      "AllegroPricesEligibilityResponse",
+      "AllegroPricesOfferChangeRequest",
+      "AllegroPricesOfferConsentChangeResponse",
+      "AllegroPricesQualificationResponse",
+      "Application",
+      "Attachment1",
+      "Attachment2",
+      "Attribute",
+      "Auction",
+      "Balance",
+      "Bargain",
+      "BaseMarketplace",
+      "BasePrice",
+      "Buyer",
+      "Campaign",
+      "Campaign1",
+      "Campaign3",
+      "CampaignConditions",
+      "Category1",
+      "Category2",
+      "Category3",
+      "ChangeByAmount",
+      "ChangeByPercentage",
+      "Classification",
+      "Classification1",
+      "Commission",
+      "Commission1",
+      "Condition",
+      "Condition1",
+      "Configuration1",
+      "Contact1",
+      "Currencies",
+      "CustomCost",
+      "CustomCost1",
+      "Delivery",
+      "Delivery2",
+      "Delivery3",
+      "Delivery4",
+      "DeliveryMethod",
+      "DescribesListingFee",
+      "DescribesSuccessCommissionFee",
+      "Details",
+      "DictionaryItem",
+      "DictionaryItem1",
+      "Discount",
+      "Discount2",
+      "Error1",
+      "Excluded",
+      "FirstItemRate",
+      "FreeDelivery",
+      "FreeDelivery1",
+      "Group",
+      "Group1",
+      "Id",
+      "ImpliedWarrantiesListImpliedWarrantyBasic",
+      "ImpliedWarranty1",
+      "Input",
+      "Input1",
+      "Input2",
+      "Input3",
+      "Input4",
+      "Input5",
+      "JoinPolicy",
+      "JoinPolicy1",
+      "Languages",
+      "LineItem",
+      "LineItem1",
+      "LineItem2",
+      "LineItem3",
+      "Marketplace3",
+      "Marketplace4",
+      "Marketplace5",
+      "Marketplace6",
+      "Marketplace7",
+      "MaxPackageWeight",
+      "MaximumSellingPrice",
+      "MinimalPriceReduction",
+      "MinimumGuaranteedDiscount",
+      "MinimumTurnover",
+      "NewOfferParticipation",
+      "NextItemRate",
+      "NextPage",
+      "NextPage1",
+      "NotRecommended",
+      "NotRecommended1",
+      "Offer",
+      "Offer1",
+      "Offer2",
+      "Offer3",
+      "Offer4",
+      "Offer5",
+      "Offer6",
+      "Offer8",
+      "Offer9",
+      "OpeningItem",
+      "Operation",
+      "Options",
+      "Options1",
+      "Order1",
+      "OrderValue",
+      "Output",
+      "Output1",
+      "Output2",
+      "Output3",
+      "Overpaid",
+      "ParameterModel",
+      "Parent",
+      "Parent1",
+      "Payment1",
+      "PersonalData",
+      "PersonalData1",
+      "PersonalData2",
+      "PickupDateProposalDto",
+      "PriceRange",
+      "Prices",
+      "Prices1",
+      "Process",
+      "Process1",
+      "ProducerData",
+      "Product1",
+      "Product2",
+      "Product3",
+      "ProductOfferAttachmentItem",
+      "ProductSetItem",
+      "ProductSetItem2",
+      "ProposedPrice",
+      "ProposedPrice1",
+      "ProposedPrice3",
+      "Publication1",
+      "Publication10",
+      "Publication2",
+      "Publication3",
+      "Publication4",
+      "Publication5",
+      "Publication6",
+      "Publication7",
+      "Publication8",
+      "Publication9",
+      "PublicationModification",
+      "Publisher",
+      "Quantity",
+      "Quantity1",
+      "Received",
+      "Recommended",
+      "Recommended1",
+      "RedirectCategory",
+      "Rejection",
+      "RemoveItem",
+      "Removed",
+      "Request",
+      "ResponsiblePerson",
+      "ResponsiblePerson1",
+      "ResponsibleProducer",
+      "Restriction",
+      "Restrictions",
+      "Restrictions1",
+      "Restrictions2",
+      "Restrictions3",
+      "Restrictions4",
+      "Restrictions5",
+      "Restrictions6",
+      "Restrictions7",
+      "ReturnPoliciesListReturnPolicyV1",
+      "ReturnPoliciesListReturnPolicyV2",
+      "ReturnPolicy1",
+      "ReturnPolicyContactV2",
+      "ReturnPolicyRequestV2",
+      "ReturnPolicyResponseV2",
+      "ReturnPolicyUpdateRequestV2",
+      "Rule",
+      "Rule1",
+      "Rule3",
+      "ScoreDistributionItem",
+      "Seller1",
+      "SellingMode1",
+      "SellingMode2",
+      "SellingMode3",
+      "SellingMode4",
+      "Service",
+      "SetItem",
+      "ShippingRates1",
+      "ShippingRates2",
+      "ShippingRates4",
+      "ShippingTime",
+      "SizeFeedbackItem",
+      "SizeTable1",
+      "Statistics",
+      "Stock1",
+      "Stock2",
+      "Stock3",
+      "Subject",
+      "Subject1",
+      "SummaryReport",
+      "SupportedCategory",
+      "TaxModel",
+      "Threshold",
+      "Threshold1",
+      "TotalValue",
+      "TrackingDetails",
+      "TrackingDetails1",
+      "Trigger",
+      "Type",
+      "UUIDModel",
+      "UnitPrice",
+      "User1",
+      "ValidationRules",
+      "Value",
+      "Value1",
+      "Value2",
+      "Violation",
+      "Visibility",
+      "WarrantiesListWarrantyBasic",
+      "Warranty1",
+      "WholesalePriceList",
+      "WholesalePriceList1",
+      "WholesalePriceList2",
+      "WithdrawnOfferParticipation",
+      "WrapperTypeForPreviewConditions",
+      "WrapsListingAndCommissionsFees"
+    ],
+    "baseline_component_schema_names_without_exact_class": 71,
+    "current_component_schema_names_without_exact_class_count": 9,
+    "caveat": "Exact-name AST matching is not semantic schema coverage; helper classes and generator renames can explain unmatched names."
+  },
+  "deprecated_operations": {
+    "count": 9,
+    "by_tag": {
+      "Message Center": 1,
+      "Offer bundles": 4,
+      "Rebates and promotions": 3,
+      "Shipment management": 1
+    },
+    "all_generated_docstrings_marked": true,
+    "items": [
+      {
+        "operation_id": "listSellersOfferBundlesUsingGET",
+        "tool": "list_sellers_offer_bundles",
+        "method": "GET",
+        "path": "/sale/bundles",
+        "tag": "Offer bundles",
+        "summary": "List seller's bundles",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "getOfferBundleUsingGET",
+        "tool": "get_offer_bundle",
+        "method": "GET",
+        "path": "/sale/bundles/{bundleId}",
+        "tag": "Offer bundles",
+        "summary": "Get bundle by ID",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "deleteOfferBundleUsingGET",
+        "tool": "delete_offer_bundle",
+        "method": "DELETE",
+        "path": "/sale/bundles/{bundleId}",
+        "tag": "Offer bundles",
+        "summary": "Delete bundle by ID",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "updateOfferBundleDiscountUsingPUT",
+        "tool": "update_offer_bundle_discount",
+        "method": "PUT",
+        "path": "/sale/bundles/{bundleId}/discount",
+        "tag": "Offer bundles",
+        "summary": "Update discount associated with bundle",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "createOrModifyTurnoverDiscountUsingPUT",
+        "tool": "create_or_modify_turnover_discount",
+        "method": "PUT",
+        "path": "/sale/turnover-discount/{marketplaceId}",
+        "tag": "Rebates and promotions",
+        "summary": "Create/modify turnover discount for marketplace",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "getTurnoverDiscountsUsingGET",
+        "tool": "get_turnover_discounts",
+        "method": "GET",
+        "path": "/sale/turnover-discount",
+        "tag": "Rebates and promotions",
+        "summary": "Get the list of turnover discounts",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "deactivateTurnoverDiscountsUsingPUT",
+        "tool": "deactivate_turnover_discounts",
+        "method": "PUT",
+        "path": "/sale/turnover-discount/{marketplaceId}/deactivate",
+        "tag": "Rebates and promotions",
+        "summary": "Deactivate turnover discount for marketplace",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "getDeliveryServices",
+        "tool": "get_delivery_services",
+        "method": "GET",
+        "path": "/shipment-management/delivery-services",
+        "tag": "Shipment management",
+        "summary": "Get available delivery services",
+        "docstring_marked": true
+      },
+      {
+        "operation_id": "deleteMessageDELETE",
+        "tool": "delete_message_delete",
+        "method": "DELETE",
+        "path": "/messaging/messages/{messageId}",
+        "tag": "Message Center",
+        "summary": "Delete single message",
+        "docstring_marked": true
+      }
+    ]
+  },
+  "verification": {
+    "method": "Parsed current OpenAPI YAML and generated Python ASTs, plus git show from upstream/master.",
+    "tests_run": false,
+    "allegro_account_access": false
+  }
+}

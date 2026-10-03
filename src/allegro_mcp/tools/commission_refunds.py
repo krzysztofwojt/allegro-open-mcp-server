@@ -7,16 +7,33 @@ Tag: Commission refunds
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
-def get_refund_application(*, claimId: str) -> dict[str, Any] | ErrorResponse:
+def get_refund_application(
+    *,
+    claimId: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("getRefundApplication", "path:claimId", "claimId")),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundApplication", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get a refund application details
 
     Use this resource to get refund application details. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-pobrac-pojedynczy-wniosek-o-rabat-transakcyjny" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-retrieve-single-sale-commission-refund" target="_blank">EN</a>.
@@ -24,19 +41,29 @@ def get_refund_application(*, claimId: str) -> dict[str, Any] | ErrorResponse:
 
     HTTP: ``GET /order/refund-claims/{claimId}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/order/refund-claims/{claimId}",
-        params=params,
+    return call_operation(
+        "getRefundApplication", {"path:claimId": claimId, "header:Accept-Language": Accept_Language}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def cancel_refund_application(*, claimId: str) -> dict[str, Any] | ErrorResponse:
+def cancel_refund_application(
+    *,
+    claimId: Annotated[
+        str,
+        Field(json_schema_extra=input_schema("cancelRefundApplication", "path:claimId", "claimId")),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "cancelRefundApplication", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Cancel a refund application
 
     Use this resource to cancel a refund application. This cannot be undone. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-anulowac-wniosek-o-rabat-transakcyjny" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-cancel-sale-commission-refund" target="_blank">EN</a>.
@@ -44,25 +71,51 @@ def cancel_refund_application(*, claimId: str) -> dict[str, Any] | ErrorResponse
 
     HTTP: ``DELETE /order/refund-claims/{claimId}``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "DELETE",
-        f"/order/refund-claims/{claimId}",
-        params=params,
+    return call_operation(
+        "cancelRefundApplication",
+        {"path:claimId": claimId, "header:Accept-Language": Accept_Language},
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 def get_refund_applications(
     *,
-    lineItem_offer_id: str | None = None,
-    buyer_id: str | None = None,
-    status: str | None = None,
-    limit: int | None = None,
-    offset: int | None = None,
-) -> dict[str, Any] | ErrorResponse:
+    lineItem_offer_id: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundApplications", "query:lineItem.offer.id", "lineItem_offer_id"
+            )
+        ),
+    ] = None,
+    buyer_id: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getRefundApplications", "query:buyer.id", "buyer_id")
+        ),
+    ] = None,
+    status: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("getRefundApplications", "query:status", "status")),
+    ] = None,
+    limit: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getRefundApplications", "query:limit", "limit")),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getRefundApplications", "query:offset", "offset")),
+    ] = None,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundApplications", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get a list of refund applications
 
     Use this resource to get a list of refund applications based on the provided query parameters. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-pobrac-liste-utworzonych-wnioskow-o-rabat-transakcyjny" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-retrieve-list-of-sale-commission-refunds" target="_blank">EN</a>.
@@ -70,27 +123,37 @@ def get_refund_applications(
 
     HTTP: ``GET /order/refund-claims``
     """
-    params = {
-        "lineItem.offer.id": lineItem_offer_id,
-        "buyer.id": buyer_id,
-        "status": status,
-        "limit": limit,
-        "offset": offset,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/order/refund-claims",
-        params=params,
+    return call_operation(
+        "getRefundApplications",
+        {
+            "query:lineItem.offer.id": lineItem_offer_id,
+            "query:buyer.id": buyer_id,
+            "query:status": status,
+            "query:limit": limit,
+            "query:offset": offset,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
 def create_refund_application(
-    *, body: dict[str, Any] | None = None
-) -> dict[str, Any] | ErrorResponse:
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "createRefundApplication", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("createRefundApplication", "body", "body")),
+    ],
+) -> Any | ErrorResponse:
     """Create a refund application
 
     Use this resource to create a refund application. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-utworzyc-wniosek-o-rabat-transakcyjny" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-create-a-sale-commission-refund-application" target="_blank">EN</a>.
@@ -98,11 +161,6 @@ def create_refund_application(
 
     HTTP: ``POST /order/refund-claims``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/order/refund-claims",
-        json=body,
-        params=params,
+    return call_operation(
+        "createRefundApplication", {"header:Accept-Language": Accept_Language, "body": body}
     )
-    return cast(dict[str, Any], response)

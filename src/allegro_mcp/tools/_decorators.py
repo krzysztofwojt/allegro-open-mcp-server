@@ -133,7 +133,7 @@ def _granted_scopes(client: object) -> set[str]:
     """
     if client is None:
         return set()
-    auth = getattr(client, "_auth", None)
+    auth = getattr(client, "auth_strategy", None)
     tokens = getattr(auth, "_tokens", None) if auth is not None else None
     scope_str = getattr(tokens, "scope", "") or ""
     return {s for s in scope_str.split() if s}

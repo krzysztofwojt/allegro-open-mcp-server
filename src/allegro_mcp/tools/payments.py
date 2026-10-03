@@ -7,29 +7,113 @@ Tag: Payments
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
 def get_payments_operation_history(
     *,
-    wallet_type: str | None = None,
-    wallet_paymentOperator: str | None = None,
-    payment_id: str | None = None,
-    participant_login: str | None = None,
-    occurredAt_gte: str | None = None,
-    occurredAt_lte: str | None = None,
-    group: list[str] | None = None,
-    marketplaceId: str | None = None,
-    currency: str | None = None,
-    limit: int | None = None,
-    offset: int | None = None,
-) -> dict[str, Any] | ErrorResponse:
+    wallet_type: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:wallet.type", "wallet_type"
+            )
+        ),
+    ] = None,
+    wallet_paymentOperator: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory",
+                "query:wallet.paymentOperator",
+                "wallet_paymentOperator",
+            )
+        ),
+    ] = None,
+    payment_id: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:payment.id", "payment_id"
+            )
+        ),
+    ] = None,
+    participant_login: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:participant.login", "participant_login"
+            )
+        ),
+    ] = None,
+    occurredAt_gte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:occurredAt.gte", "occurredAt_gte"
+            )
+        ),
+    ] = None,
+    occurredAt_lte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:occurredAt.lte", "occurredAt_lte"
+            )
+        ),
+    ] = None,
+    group: Annotated[
+        list[str] | None,
+        Field(
+            json_schema_extra=input_schema("getPaymentsOperationHistory", "query:group", "group")
+        ),
+    ] = None,
+    marketplaceId: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:marketplaceId", "marketplaceId"
+            )
+        ),
+    ] = None,
+    currency: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "query:currency", "currency"
+            )
+        ),
+    ] = None,
+    limit: Annotated[
+        int | None,
+        Field(
+            json_schema_extra=input_schema("getPaymentsOperationHistory", "query:limit", "limit")
+        ),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        Field(
+            json_schema_extra=input_schema("getPaymentsOperationHistory", "query:offset", "offset")
+        ),
+    ] = None,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getPaymentsOperationHistory", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Payment operations history
 
     Use this endpoint to get the list of the seller payment operations. Read more: <a href="../../tutorials/jak-sprawdzic-oplaty-nn9DOL5PASX#historia-operacji-platniczych" target="_blank">PL</a> / <a href="../../tutorials/how-to-check-the-fees-3An6Wame3Um#payment-operations" target="_blank">EN</a>.
@@ -37,31 +121,43 @@ def get_payments_operation_history(
 
     HTTP: ``GET /payments/payment-operations``
     """
-    params = {
-        "wallet.type": wallet_type,
-        "wallet.paymentOperator": wallet_paymentOperator,
-        "payment.id": payment_id,
-        "participant.login": participant_login,
-        "occurredAt.gte": occurredAt_gte,
-        "occurredAt.lte": occurredAt_lte,
-        "group": group,
-        "marketplaceId": marketplaceId,
-        "currency": currency,
-        "limit": limit,
-        "offset": offset,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/payments/payment-operations",
-        params=params,
+    return call_operation(
+        "getPaymentsOperationHistory",
+        {
+            "query:wallet.type": wallet_type,
+            "query:wallet.paymentOperator": wallet_paymentOperator,
+            "query:payment.id": payment_id,
+            "query:participant.login": participant_login,
+            "query:occurredAt.gte": occurredAt_gte,
+            "query:occurredAt.lte": occurredAt_lte,
+            "query:group": group,
+            "query:marketplaceId": marketplaceId,
+            "query:currency": currency,
+            "query:limit": limit,
+            "query:offset": offset,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 @requires_writes_enabled
-def initiate_refund(*, body: dict[str, Any] | None = None) -> dict[str, Any] | ErrorResponse:
+def initiate_refund(
+    *,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "initiateRefund", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+    body: Annotated[
+        dict[str, Any] | None,
+        Field(json_schema_extra=input_schema("initiateRefund", "body", "body")),
+    ] = None,
+) -> Any | ErrorResponse:
     """Initiate a refund of a payment
 
     Use this endpoint to initiate a refund of a payment. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-wykonac-zwrot-platnosci" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-refund-a-payment" target="_blank">EN</a>.
@@ -69,29 +165,65 @@ def initiate_refund(*, body: dict[str, Any] | None = None) -> dict[str, Any] | E
 
     HTTP: ``POST /payments/refunds``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "POST",
-        f"/payments/refunds",
-        json=body,
-        params=params,
+    return call_operation(
+        "initiateRefund", {"header:Accept-Language": Accept_Language, "body": body}
     )
-    return cast(dict[str, Any], response)
 
 
 @mcp.tool
 @allegro_call
 def get_refunded_payments(
     *,
-    limit: int | None = None,
-    offset: int | None = None,
-    id: str | None = None,
-    payment_id: str | None = None,
-    order_id: str | None = None,
-    occurredAt_gte: str | None = None,
-    occurredAt_lte: str | None = None,
-    status: list[str] | None = None,
-) -> dict[str, Any] | ErrorResponse:
+    limit: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getRefundedPayments", "query:limit", "limit")),
+    ] = None,
+    offset: Annotated[
+        int | None,
+        Field(json_schema_extra=input_schema("getRefundedPayments", "query:offset", "offset")),
+    ] = None,
+    id: Annotated[
+        str | None, Field(json_schema_extra=input_schema("getRefundedPayments", "query:id", "id"))
+    ] = None,
+    payment_id: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema("getRefundedPayments", "query:payment.id", "payment_id")
+        ),
+    ] = None,
+    order_id: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("getRefundedPayments", "query:order.id", "order_id")),
+    ] = None,
+    occurredAt_gte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundedPayments", "query:occurredAt.gte", "occurredAt_gte"
+            )
+        ),
+    ] = None,
+    occurredAt_lte: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundedPayments", "query:occurredAt.lte", "occurredAt_lte"
+            )
+        ),
+    ] = None,
+    status: Annotated[
+        list[str] | None,
+        Field(json_schema_extra=input_schema("getRefundedPayments", "query:status", "status")),
+    ] = None,
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getRefundedPayments", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get a list of refunded payments
 
     Get a list of refunded payments. Read more: <a href="../../tutorials/jak-obslugiwac-zamowienia-GRaj0qyvwtR#jak-pobrac-liste-zwrotow-platnosci" target="_blank">PL</a> / <a href="../../tutorials/process-orders-PgPMlWDr8Cv#how-to-retrieve-a-list-of-refunded-payment" target="_blank">EN</a>.
@@ -99,19 +231,17 @@ def get_refunded_payments(
 
     HTTP: ``GET /payments/refunds``
     """
-    params = {
-        "limit": limit,
-        "offset": offset,
-        "id": id,
-        "payment.id": payment_id,
-        "order.id": order_id,
-        "occurredAt.gte": occurredAt_gte,
-        "occurredAt.lte": occurredAt_lte,
-        "status": status,
-    }
-    response = get_client().request_json(
-        "GET",
-        f"/payments/refunds",
-        params=params,
+    return call_operation(
+        "getRefundedPayments",
+        {
+            "query:limit": limit,
+            "query:offset": offset,
+            "query:id": id,
+            "query:payment.id": payment_id,
+            "query:order.id": order_id,
+            "query:occurredAt.gte": occurredAt_gte,
+            "query:occurredAt.lte": occurredAt_lte,
+            "query:status": status,
+            "header:Accept-Language": Accept_Language,
+        },
     )
-    return cast(dict[str, Any], response)

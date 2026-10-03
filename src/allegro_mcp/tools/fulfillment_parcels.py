@@ -7,16 +7,35 @@ Tag: Fulfillment Parcels
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 @mcp.tool
 @allegro_call
-def get_fulfillment_order_parcels(*, orderId: str) -> dict[str, Any] | ErrorResponse:
+def get_fulfillment_order_parcels(
+    *,
+    orderId: Annotated[
+        str,
+        Field(
+            json_schema_extra=input_schema("getFulfillmentOrderParcels", "path:orderId", "orderId")
+        ),
+    ],
+    Accept_Language: Annotated[
+        str | None,
+        Field(
+            json_schema_extra=input_schema(
+                "getFulfillmentOrderParcels", "header:Accept-Language", "Accept_Language"
+            )
+        ),
+    ] = None,
+) -> Any | ErrorResponse:
     """Get list of shipped parcels
 
     Use this resource to get list of parcels and included items for a given order. Items include detailed information such as expiration dates and serial numbers. Read more: <a href="../../tutorials/one-fulfillment-by-allegro-0ADwgOLqWSw#jak-obslugiwac-zamowienia" target="_blank">PL</a> / <a href="../../tutorials/one-fulfillment-by-allegro-4R9dXyMPlc9#how-to-handle-orders" target="_blank">EN</a>.
@@ -24,10 +43,7 @@ def get_fulfillment_order_parcels(*, orderId: str) -> dict[str, Any] | ErrorResp
 
     HTTP: ``GET /fulfillment/orders/{orderId}/parcels``
     """
-    params: dict[str, Any] = {}
-    response = get_client().request_json(
-        "GET",
-        f"/fulfillment/orders/{orderId}/parcels",
-        params=params,
+    return call_operation(
+        "getFulfillmentOrderParcels",
+        {"path:orderId": orderId, "header:Accept-Language": Accept_Language},
     )
-    return cast(dict[str, Any], response)

@@ -35,14 +35,15 @@ dependencies = [
     "httpx>=0.27",
     "pydantic>=2.7",
     "pydantic-settings>=2.0",
+    "jsonschema>=4.26",
 ]
 
 [project.urls]
-Homepage      = "https://github.com/piotrlinski/allegro-open-mcp-server"
-Repository    = "https://github.com/piotrlinski/allegro-open-mcp-server"
-Issues        = "https://github.com/piotrlinski/allegro-open-mcp-server/issues"
-Documentation = "https://piotrlinski.github.io/allegro-open-mcp-server/"
-Changelog     = "https://github.com/piotrlinski/allegro-open-mcp-server/blob/master/CHANGELOG.md"
+Homepage      = "https://github.com/krzysztofwojt/allegro-open-mcp-server"
+Repository    = "https://github.com/krzysztofwojt/allegro-open-mcp-server"
+Issues        = "https://github.com/krzysztofwojt/allegro-open-mcp-server/issues"
+Documentation = "https://github.com/krzysztofwojt/allegro-open-mcp-server/tree/update-allegro-api-2026-10-03/docs"
+Changelog     = "https://github.com/krzysztofwojt/allegro-open-mcp-server/blob/update-allegro-api-2026-10-03/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [
@@ -53,6 +54,7 @@ dev = [
     "mypy>=1.10",
     "datamodel-code-generator>=0.26",
     "pyyaml>=6.0",
+    "types-jsonschema>=4.26",
 ]
 docs = [
     "mkdocs>=1.6",

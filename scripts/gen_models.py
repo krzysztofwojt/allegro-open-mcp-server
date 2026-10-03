@@ -23,9 +23,8 @@ import urllib.request
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CACHE_DIR = REPO_ROOT / ".cache"
 SPEC_URL = "https://developer.allegro.pl/swagger.yaml"
-SPEC_PATH = CACHE_DIR / "swagger.yaml"
+SPEC_PATH = REPO_ROOT / "specs" / "swagger.yaml"
 OUTPUT_DIR = REPO_ROOT / "src" / "allegro_client" / "models" / "_generated"
 # datamodel-codegen emits one giant module by default. Splitting one-class-per-file
 # turns a 30 kLOC module into 1 000+ files which makes git diffs and IDE jumps
@@ -35,8 +34,8 @@ OUTPUT_FILE = OUTPUT_DIR / "models.py"
 
 
 def fetch_spec(force: bool = False) -> Path:
-    """Download the Allegro OpenAPI spec to ``.cache/swagger.yaml``."""
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    """Download the Allegro OpenAPI spec to ``specs/swagger.yaml``."""
+    SPEC_PATH.parent.mkdir(parents=True, exist_ok=True)
     if force or not SPEC_PATH.exists():
         print(f"→ downloading {SPEC_URL}")
         with urllib.request.urlopen(SPEC_URL) as resp:
@@ -148,7 +147,7 @@ def format_output() -> None:
     """Run ruff format on the generated tree so blame diffs are stable."""
     subprocess.run(
         ["ruff", "format", str(OUTPUT_DIR)],
-        check=False,  # generated code is exempt from lint, formatting is best-effort.
+        check=True,
     )
 
 

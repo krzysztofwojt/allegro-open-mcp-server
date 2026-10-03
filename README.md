@@ -1,6 +1,8 @@
 # Allegro MCP
 
-[![CI](https://github.com/piotrlinski/allegro-open-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/piotrlinski/allegro-open-mcp-server/actions/workflows/ci.yml)
+Fork of [piotrlinski/allegro-open-mcp-server](https://github.com/piotrlinski/allegro-open-mcp-server), updated from the official Allegro spec.
+
+[![CI](https://github.com/krzysztofwojt/allegro-open-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/krzysztofwojt/allegro-open-mcp-server/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![mypy: strict](https://img.shields.io/badge/mypy-strict-2a6db2.svg)](https://mypy-lang.org/)
@@ -12,12 +14,12 @@ A Python [MCP](https://modelcontextprotocol.io/) server for the
 ```text
 src/
 ├── allegro_client/    # MCP-agnostic — extractable as its own PyPI package
-└── allegro_mcp/       # FastMCP wrapper exposing 268 tools
+└── allegro_mcp/       # FastMCP wrapper exposing 272 tools
 ```
 
 ## Highlights
 
-* **268 MCP tools** spanning all ~30 Allegro resource groups (offers,
+* **272 MCP tools** spanning all ~30 Allegro resource groups (offers,
   orders, shipments, messaging, billing, returns, disputes, payments,
   promotions, fulfillment, …).
 * **Four OAuth flows**: Device Code (recommended for MCP), Authorization
@@ -31,7 +33,7 @@ src/
   OpenAPI 3.0 spec via [datamodel-code-generator](https://github.com/koxudaxi/datamodel-code-generator).
 * **Production-grade tooling**: mypy `--strict`, ruff, pre-commit hooks,
   multi-stage Docker build, GitHub Actions CI on Python 3.10/3.11/3.12.
-* **250+ unit tests**, including a layer-enforcement test that protects
+* **260+ unit tests**, including a layer-enforcement test that protects
   the future package-extraction boundary.
 * **MIT-licensed**, not affiliated with Grupa Allegro. Third-party
   runtime-dependency licenses are inventoried in
@@ -45,7 +47,7 @@ The fastest path is `uvx` — no clone, no virtualenv, no install:
 ALLEGRO_CLIENT_ID=your-client-id \
 ALLEGRO_CLIENT_SECRET=your-client-secret \
 ALLEGRO_AUTH_FLOW=device \
-uvx --from git+https://github.com/piotrlinski/allegro-open-mcp-server allegro-mcp
+uvx --from git+https://github.com/krzysztofwojt/allegro-open-mcp-server@update-allegro-api-2026-10-03 allegro-mcp
 ```
 
 `uvx` resolves the package, installs it into an ephemeral venv, and runs
@@ -57,13 +59,13 @@ stderr; approve in your browser and the refresh token persists at
 To pin a version (or test a branch / PR), append `@<rev>`:
 
 ```bash
-uvx --from git+https://github.com/piotrlinski/allegro-open-mcp-server@v0.1.0 allegro-mcp
+uvx --from git+https://github.com/krzysztofwojt/allegro-open-mcp-server@<commit-sha> allegro-mcp
 ```
 
 CLI flags work the same as env vars — handy when wiring an MCP client:
 
 ```bash
-uvx --from git+https://github.com/piotrlinski/allegro-open-mcp-server allegro-mcp \
+uvx --from git+https://github.com/krzysztofwojt/allegro-open-mcp-server@update-allegro-api-2026-10-03 allegro-mcp \
     --client-id  your-client-id \
     --client-secret  your-client-secret \
     --auth-flow  device \
@@ -73,7 +75,7 @@ uvx --from git+https://github.com/piotrlinski/allegro-open-mcp-server allegro-mc
 If you'd rather work from a clone:
 
 ```bash
-git clone https://github.com/piotrlinski/allegro-open-mcp-server
+git clone --branch update-allegro-api-2026-10-03 https://github.com/krzysztofwojt/allegro-open-mcp-server
 cd allegro-open-mcp-server
 
 uv sync --extra dev
@@ -108,7 +110,7 @@ make test                  # run pytest (250+ tests)
 make lint                  # ruff + mypy --strict
 make format                # apply ruff formatting + auto-fixes
 make gen-models            # regenerate Pydantic models from the OpenAPI spec
-make gen-tools             # regenerate MCP tool modules from the spec
+make gen-tools             # regenerate MCP tool modules from the pinned spec
 make check-models-freshness   # warn if upstream spec moved
 make build                 # build the Docker image
 make run                   # run the server in Docker (stdio)
@@ -144,3 +146,20 @@ Found a vulnerability? Please follow [SECURITY.md](SECURITY.md).
 ## License
 
 [MIT](LICENSE) — community project; not affiliated with Grupa Allegro.
+
+## Current fork and two-account deployment
+
+This fork pins the official Allegro spec in `specs/swagger.yaml` and exposes
+all 269 REST operations plus 3 OAuth tools (272 total). See
+[API update audit](docs/reference/api-update-2026-10-03.md) and
+[two accounts on kiciserwer](docs/how-to/two-accounts-kiciserwer.md).
+
+`make gen-models` and `make gen-tools` use the pinned spec. To update it, run
+`uv run python scripts/gen_models.py --force`, then `make gen-tools`,
+`make format`, `make test`, `make lint`, `make check-generated`, and
+`make check-models-freshness`. `make check-generated` regenerates into a temporary
+tree and rejects stale output; the live freshness check fails on upstream drift.
+
+JSON request bodies and parameters expose the official schema and are validated
+before HTTP I/O. Binary uploads use base64 and their declared media type; binary
+downloads return base64 with media type and length. Writes default to disabled.

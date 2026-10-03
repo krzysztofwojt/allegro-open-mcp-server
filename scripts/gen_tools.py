@@ -6,10 +6,10 @@ Reads the cached swagger.yaml and emits a single Python module per tag at
 one ``@mcp.tool``-decorated function with:
 
 * a snake_case name derived from ``operationId``,
-* typed keyword-only arguments built from the operation's parameters
-  (path + query) plus an optional ``body`` for write operations,
+* keyword-only arguments for path, query and header parameters, with
+  official input schemas, requiredness and JSON or base64 request bodies,
 * a docstring built from the operation's summary / description,
-* return type ``dict[str, Any] | ErrorResponse`` (we don't bind to one of
+* JSON or base64 response envelopes (we don't bind to one of
   the 1 200+ generated Pydantic classes because the OpenAPI components map
   inconsistently to operation responses; raw dicts let callers introspect
   cleanly while keeping the generator simple),
@@ -21,6 +21,8 @@ Run via ``make gen-tools``. Output is committed and reviewed in PRs.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import sys
 import textwrap
@@ -31,7 +33,7 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SPEC_PATH = REPO_ROOT / ".cache" / "swagger.yaml"
+SPEC_PATH = REPO_ROOT / "specs" / "swagger.yaml"
 TOOLS_DIR = REPO_ROOT / "src" / "allegro_mcp" / "tools"
 
 # Methods that mutate state — annotated with @requires_writes_enabled so the
@@ -47,6 +49,9 @@ _READ_OPERATION_OVERRIDES: frozenset[str] = frozenset(
         # POST endpoints that read but don't mutate the seller's account.
         "calculateFeePreview",
         "calculateFeesUsingPOST",
+        "getShipmentLabels",
+        "getShipmentProtocol",
+        "parseIngredients",
     }
 )
 
@@ -73,10 +78,9 @@ def _camel_to_snake(name: str) -> str:
     snake = s2.lower().replace("__", "_")
     snake = _USING_METHOD_SUFFIX.sub("", snake)
     if len(snake) > _MCP_TOOL_NAME_MAX:
-        # Last-resort truncation. We never expect to reach this branch; if
-        # we do, surface it loudly so the maintainer can either lift the cap
-        # upstream or rename the operation manually.
-        snake = snake[:_MCP_TOOL_NAME_MAX].rstrip("_")
+        # A stable digest avoids collisions between names sharing a long prefix.
+        digest = hashlib.sha256(name.encode()).hexdigest()[:8]
+        snake = snake[: _MCP_TOOL_NAME_MAX - 9].rstrip("_") + "_" + digest
     return snake
 
 
@@ -92,24 +96,13 @@ def _slugify_tag(tag: str) -> str:
 
 
 def _python_type_for(schema: dict[str, Any]) -> str:
-    """Map an OpenAPI parameter schema to a Python annotation.
-
-    We don't try to be exhaustive — the goal is "good enough so MCP clients
-    see a sane input schema". Anything we don't understand falls back to
-    ``str | None`` which any JSON-encodable value satisfies.
-    """
-    if not schema:
-        return "str | None"
-    t = schema.get("type")
-    if t == "integer":
-        return "int | None"
-    if t == "number":
-        return "float | None"
-    if t == "boolean":
-        return "bool | None"
-    if t == "array":
-        return "list[str] | None"
-    return "str | None"
+    """Preserve parameter primitive and collection types."""
+    kind = schema.get("type")
+    if kind == "array":
+        return f"list[{_python_type_for(schema.get('items', {}))}]"
+    return {"integer": "int", "number": "float", "boolean": "bool", "object": "dict[str, Any]"}.get(
+        kind, "str"
+    )
 
 
 _PYTHON_KEYWORDS: frozenset[str] = frozenset(
@@ -167,7 +160,7 @@ def _safe_arg_name(name: str) -> str:
     """
     safe = re.sub(r"[^A-Za-z0-9_]", "_", name)
     if safe in _PYTHON_KEYWORDS or not safe or safe[0].isdigit():
-        safe = f"{safe}_"
+        safe = f"{safe}_" if safe in _PYTHON_KEYWORDS else f"param_{safe}"
     return safe
 
 
@@ -203,134 +196,68 @@ def _format_docstring(text: str) -> str:
     return f'"""{body}\n    """'
 
 
-def _path_params(op: dict[str, Any], path_item: dict[str, Any]) -> list[dict[str, Any]]:
-    seen: set[str] = set()
-    out: list[dict[str, Any]] = []
+def _parameters(op: dict[str, Any], path_item: dict[str, Any]) -> list[dict[str, Any]]:
+    """Operation-level parameters override matching path-level parameters."""
+    merged = {}
     for source in (path_item.get("parameters", []), op.get("parameters", [])):
-        for p in source:
-            if not isinstance(p, dict):
-                continue
-            name = p.get("name")
-            if not isinstance(name, str) or name in seen:
-                continue
-            if p.get("in") == "path":
-                seen.add(name)
-                out.append(p)
-    return out
-
-
-def _query_params(op: dict[str, Any], path_item: dict[str, Any]) -> list[dict[str, Any]]:
-    seen: set[str] = set()
-    out: list[dict[str, Any]] = []
-    for source in (path_item.get("parameters", []), op.get("parameters", [])):
-        for p in source:
-            if not isinstance(p, dict):
-                continue
-            name = p.get("name")
-            if not isinstance(name, str) or name in seen:
-                continue
-            if p.get("in") == "query":
-                seen.add(name)
-                out.append(p)
-    return out
-
-
-def _has_request_body(op: dict[str, Any]) -> bool:
-    return bool(op.get("requestBody"))
+        for param in source:
+            merged[(param["in"], param["name"])] = param
+    return list(merged.values())
 
 
 def _build_function(
-    *,
-    operation_id: str,
-    method: str,
-    path: str,
-    op: dict[str, Any],
-    path_item: dict[str, Any],
+    *, operation_id: str, method: str, path: str, op: dict[str, Any], path_item: dict[str, Any]
 ) -> str:
     name = _camel_to_snake(operation_id)
-    docstring = _format_docstring(_docstring(op, method, path))
-    path_params = _path_params(op, path_item)
-    query_params = _query_params(op, path_item)
-    has_body = _has_request_body(op)
-
-    # Build the function signature.
-    args: list[str] = []
-    arg_renames: dict[str, str] = {}  # python identifier → original key.
-    for p in path_params:
-        original = str(p.get("name") or "")
-        identifier = _safe_arg_name(original)
-        annotation = _python_type_for(p.get("schema") or {}).replace(" | None", "")
-        args.append(f"{identifier}: {annotation}")  # required (no default).
-        if identifier != original:
-            arg_renames[identifier] = original
-    for p in query_params:
-        original = str(p.get("name") or "")
-        identifier = _safe_arg_name(original)
-        annotation = _python_type_for(p.get("schema") or {})
-        args.append(f"{identifier}: {annotation} = None")
-        if identifier != original:
-            arg_renames[identifier] = original
-    if has_body:
-        args.append("body: dict[str, Any] | None = None")
-
-    # Build the request invocation.
-    path_template = path
-    for p in path_params:
-        original = str(p.get("name") or "")
-        identifier = _safe_arg_name(original)
-        path_template = path_template.replace(f"{{{original}}}", f"{{{identifier}}}")
-
-    query_lines: list[str] = []
-    if query_params:
-        for p in query_params:
-            original = str(p.get("name") or "")
-            identifier = _safe_arg_name(original)
-            key = original if "." in original or identifier != original else identifier
-            query_lines.append(f'        "{key}": {identifier},')
-
-    body_args = []
-    if has_body:
-        body_args.append("            json=body,")
-
-    method_upper = method.upper()
-    indent = "    "
-
-    # Decorator stack.
+    docs = _docstring(op, method, path)
+    if op.get("deprecated"):
+        docs += "\n\nDEPRECATED by Allegro; prefer the documented replacement."
+    params = _parameters(op, path_item)
+    args = []
+    mapping = []
+    identifiers = set()
+    for param in params:
+        identifier = _safe_arg_name(param["name"])
+        if identifier in identifiers:
+            identifier = param["in"] + "_" + identifier
+        identifiers.add(identifier)
+        required = param.get("required", False) or param["in"] == "path"
+        annotation = _python_type_for(param.get("schema", {}))
+        if not required:
+            annotation += " | None"
+        key = param["in"] + ":" + param["name"]
+        args.append(
+            f"{identifier}: Annotated[{annotation}, Field(json_schema_extra=input_schema({operation_id!r}, {key!r}, {identifier!r}))]"
+            + ("" if required else " = None")
+        )
+        mapping.append(f"{key!r}: {identifier}")
+    content = op.get("requestBody", {}).get("content", {})
+    if content:
+        json_types = [t for t in content if "json" in t]
+        if json_types:
+            required = op["requestBody"].get("required", False)
+            annotation = "dict[str, Any]" + ("" if required else " | None")
+            args.append(
+                f'body: Annotated[{annotation}, Field(json_schema_extra=input_schema({operation_id!r}, "body", "body"))]'
+                + ("" if required else " = None")
+            )
+            mapping.append("'body': body")
+        else:
+            args.append("content_base64: str")
+            args.append(f"content_type: str = {next(iter(content))!r}")
+            mapping.extend(["'content_base64': content_base64", "'content_type': content_type"])
     decorators = ["@mcp.tool", "@allegro_call"]
     if method in _WRITE_METHODS and operation_id not in _READ_OPERATION_OVERRIDES:
         decorators.append("@requires_writes_enabled")
-
-    decorator_block = "\n".join(decorators)
-
-    body_lines: list[str] = []
-    body_lines.append(f"{indent}{docstring}")
-    if query_params:
-        body_lines.append(f"{indent}params = {{")
-        body_lines.extend(query_lines)
-        body_lines.append(f"{indent}}}")
-    else:
-        body_lines.append(f"{indent}params: dict[str, Any] = {{}}")
-    # Cast to dict[str, Any] keeps mypy --strict happy without forcing the
-    # client to introspect schemas; if the response is not a JSON object
-    # (rare — a few endpoints return arrays) the @allegro_call wrapper
-    # will catch the resulting downstream surprise.
-    body_lines.append(f"{indent}response = get_client().request_json(")
-    body_lines.append(f'{indent}    "{method_upper}",')
-    body_lines.append(f'{indent}    f"{path_template}",')
-    if has_body:
-        body_lines.append(f"{indent}    json=body,")
-    body_lines.append(f"{indent}    params=params,")
-    body_lines.append(f"{indent})")
-    body_lines.append(f"{indent}return cast(dict[str, Any], response)")
-
-    args_str = ", ".join(args) if args else ""
-    sig = (
-        f"def {name}(*, {args_str}) -> dict[str, Any] | ErrorResponse:"
-        if args_str
-        else f"def {name}() -> dict[str, Any] | ErrorResponse:"
+    signature = "*, " + ", ".join(args) if args else ""
+    return (
+        "\n".join(decorators)
+        + f"\ndef {name}({signature}) -> Any | ErrorResponse:\n"
+        + "    "
+        + _format_docstring(docs)
+        + "\n"
+        + f"    return call_operation({operation_id!r}, {{{', '.join(mapping)}}})\n"
     )
-
-    return decorator_block + "\n" + sig + "\n" + "\n".join(body_lines) + "\n"
 
 
 _MODULE_HEADER = '''# ruff: noqa
@@ -342,11 +269,14 @@ Tag: {tag}
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Annotated, Any
+
+from pydantic import Field
 
 from ..errors import ErrorResponse
 from ._decorators import requires_writes_enabled
-from ._runtime import allegro_call, get_client, mcp
+from ._runtime import allegro_call, mcp
+from ._request import call_operation, input_schema
 
 
 '''
@@ -372,6 +302,8 @@ def main() -> int:
     spec = yaml.safe_load(SPEC_PATH.read_text())
     operations: dict[str, list[dict[str, Any]]] = defaultdict(list)
     seen_ids: set[str] = set()
+    names: set[str] = {"auth_status", "auth_login_device", "auth_revoke"}
+    contract: dict[str, Any] = {"schemas": spec["components"]["schemas"], "operations": {}}
 
     for path, path_item in spec.get("paths", {}).items():
         if not isinstance(path_item, dict):
@@ -390,6 +322,20 @@ def main() -> int:
                 # OpenAPI sometimes has duplicates; suffix to keep names unique.
                 operation_id = f"{operation_id}_{method}"
             seen_ids.add(operation_id)
+            name = _camel_to_snake(operation_id)
+            if name in names:
+                raise ValueError(f"Duplicate MCP tool name: {name}")
+            names.add(name)
+            contract["operations"][operation_id] = {
+                "method": method.upper(),
+                "path": path,
+                "parameters": _parameters(op, path_item),
+                "requestBody": op.get("requestBody", {}),
+                "responses": op["responses"],
+                "tool": name,
+                "deprecated": op.get("deprecated", False),
+                "tag": tag,
+            }
             operations[module_name].append(
                 {
                     "operationId": operation_id,
@@ -403,9 +349,12 @@ def main() -> int:
 
     # Wipe any previously-generated tool modules but keep the hand-written
     # ones (auth.py, _runtime.py, _decorators.py, __init__.py).
-    keep = {"auth.py", "_runtime.py", "_decorators.py", "__init__.py"}
+    keep = {"auth.py", "__init__.py"}
+    (TOOLS_DIR / "_contract.json").write_text(
+        json.dumps(contract, ensure_ascii=False, indent=2, default=str) + "\n"
+    )
     for existing in TOOLS_DIR.glob("*.py"):
-        if existing.name not in keep:
+        if existing.name not in keep and not existing.name.startswith("_"):
             existing.unlink()
 
     written: list[str] = []

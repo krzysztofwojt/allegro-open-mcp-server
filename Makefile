@@ -32,7 +32,7 @@ ENV_FLAGS = \
     -e ALLEGRO_API_BASE_URL -e ALLEGRO_OAUTH_BASE_URL \
     -e ALLEGRO_DEFAULT_MARKETPLACE -e ALLEGRO_ACCEPT_LANGUAGE \
     -e ALLEGRO_USER_AGENT -e ALLEGRO_TIMEOUT -e ALLEGRO_MAX_RETRIES \
-    -e ALLEGRO_ENABLE_WRITES \
+    -e ALLEGRO_ENABLE_WRITES -e ALLEGRO_TOKEN_STORE_PATH \
     -e ALLEGRO_LOG_DIR -e ALLEGRO_LOG_LEVEL -e ALLEGRO_LOG_RETENTION_DAYS
 
 # Mount the token store so refresh tokens survive container restarts.
@@ -40,7 +40,7 @@ TOKEN_STORE_VOLUME ?= $(HOME)/.allegro-mcp:/home/mcp/.allegro-mcp
 
 .DEFAULT_GOAL := help
 .PHONY: help build run inspector test lint format sync clean \
-        gen-models check-models-freshness gen-tools gen-licenses \
+        gen-models check-models-freshness check-generated gen-tools gen-licenses \
         docs-sync docs-serve docs-build docs-lint docs-link-check \
         docs-coverage docs-all docs-clean
 
@@ -85,11 +85,16 @@ clean: ## Remove the Docker image
 gen-models: ## Codegen Pydantic models from the official OpenAPI spec
 	$(UV) run python scripts/gen_models.py
 
-check-models-freshness: ## Warn if the upstream OpenAPI spec has moved
+check-models-freshness: ## Fail if pinned models differ from the live OpenAPI spec
 	$(UV) run python scripts/check_models_freshness.py
 
-gen-tools: ## Emit the MCP tool inventory from the spec (markdown table)
-	$(UV) run python scripts/gen_tool_inventory.py
+gen-tools: ## Generate MCP tools and their operation contract from the pinned spec
+	$(UV) run python scripts/gen_tools.py
+	$(UV) run ruff format src/allegro_mcp/tools
+	$(UV) run ruff check --fix src/allegro_mcp/tools
+
+check-generated: ## Verify reproducible models and tools against the pinned spec
+	$(UV) run python scripts/check_generated.py
 
 gen-licenses: ## Refresh THIRD_PARTY_NOTICES.md + docs/reference/licenses.md
 	$(UV) run python scripts/gen_licenses.py
@@ -112,7 +117,7 @@ docs-build: docs-gen ## Build the static site (strict: fails on warnings)
 docs-clean: ## Remove the built site
 	rm -rf site
 
-docs-coverage: docs-build ## Verify every @mcp.tool has a rendered page
+docs-coverage: docs-build ## Verify every @mcp.tool is in the rendered catalog
 	$(UV) run python scripts/check_tool_coverage.py site
 
 docs-lint: ## markdownlint + codespell on docs and source prose
