@@ -1,5 +1,11 @@
 # Synology deployment templates
 
+For persistent services exposed through authenticated HTTPS, use
+[the HTTP deployment guide](http.md) and
+[Compose template](compose.http.yaml.example). The SSH/stdio setup below is
+an alternative; do not run it concurrently with the HTTP service against the
+same token volume.
+
 The MCP server uses stdio over SSH. The MCP client starts a container when it
 connects; `ssh -T` keeps a terminal from altering the protocol stream, and
 `docker run --rm -i` removes the container when the client stops it. The two

@@ -123,7 +123,20 @@ def main(argv: list[str] | None = None) -> None:
     init_client(client_config, mcp_config)
 
     try:
-        mcp.run()  # stdio transport — what MCP clients expect.
+        if mcp_config.transport == "http":
+            from .http_auth import APIKeyVerifier
+
+            assert mcp_config.mcp_api_key is not None  # Config validation requires it.
+            mcp.auth = APIKeyVerifier(mcp_config.mcp_api_key)
+            mcp.run(
+                transport="http",
+                host=mcp_config.http_host,
+                port=mcp_config.http_port,
+                path="/mcp",
+                stateless_http=True,
+            )
+        else:
+            mcp.run()
     finally:
         close_client()
 

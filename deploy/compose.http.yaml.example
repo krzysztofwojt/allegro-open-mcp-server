@@ -1,0 +1,46 @@
+# Template only. Build and tag the HTTP-enabled image before starting it.
+# API keys are loaded from the protected NAS env files, never from this file.
+services:
+  allegro-prywatne:
+    image: allegro-mcp:http-20261003
+    restart: unless-stopped
+    env_file:
+      - /volume1/docker/allegro-mcp/config/prywatne.env
+    environment:
+      ALLEGRO_TRANSPORT: http
+      ALLEGRO_HTTP_HOST: 0.0.0.0
+      ALLEGRO_HTTP_PORT: "8000"
+      ALLEGRO_ENABLE_WRITES: "false"
+    ports:
+      - "127.0.0.1:3030:8000"
+    volumes:
+      - allegro-prywatne-tokens:/home/mcp/.allegro-mcp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  allegro-firmowe:
+    image: allegro-mcp:http-20261003
+    restart: unless-stopped
+    env_file:
+      - /volume1/docker/allegro-mcp/config/firmowe.env
+    environment:
+      ALLEGRO_TRANSPORT: http
+      ALLEGRO_HTTP_HOST: 0.0.0.0
+      ALLEGRO_HTTP_PORT: "8000"
+      ALLEGRO_ENABLE_WRITES: "false"
+    ports:
+      - "127.0.0.1:3031:8000"
+    volumes:
+      - allegro-firmowe-tokens:/home/mcp/.allegro-mcp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  allegro-prywatne-tokens:
+    external: true
+  allegro-firmowe-tokens:
+    external: true

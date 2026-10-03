@@ -9,9 +9,9 @@ operators don't juggle two namespaces.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from allegro_client.config import AllegroClientConfig
@@ -29,6 +29,20 @@ class AllegroMCPConfig(BaseSettings):
     extractability boundary explicitly forbids importing MCP knobs from
     inside :mod:`allegro_client`.
     """
+
+    transport: Literal["stdio", "http"] = "stdio"
+    http_host: str = "127.0.0.1"
+    http_port: Annotated[int, Field(ge=1, le=65535)] = 8000
+    mcp_api_key: SecretStr | None = None
+
+    @model_validator(mode="after")
+    def require_http_key(self) -> AllegroMCPConfig:
+        """Refuse HTTP startup without a separate, strong inbound credential."""
+        if self.transport == "http" and (
+            self.mcp_api_key is None or len(self.mcp_api_key.get_secret_value()) < 32
+        ):
+            raise ValueError("HTTP requires ALLEGRO_MCP_API_KEY with at least 32 characters")
+        return self
 
     enable_writes: bool = Field(
         default=False,

@@ -63,7 +63,7 @@ docs = [
 requires-dist = [
     { name = "codespell", marker = "extra == 'docs'", specifier = ">=2.3" },
     { name = "datamodel-code-generator", marker = "extra == 'dev'", specifier = ">=0.26" },
-    { name = "fastmcp", specifier = ">=2.0" },
+    { name = "fastmcp", specifier = ">=3.2.4" },
     { name = "griffe-pydantic", marker = "extra == 'docs'", specifier = ">=1.1" },
     { name = "httpx", specifier = ">=0.27" },
     { name = "jsonschema", specifier = ">=4.26" },
