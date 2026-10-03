@@ -24,8 +24,16 @@ allegro:api:shipments:write
 The shared OAuth application's Developer Apps settings must allow these scopes.
 The private MCP keeps its explicit read scopes and its disabled write gate.
 Messaging already uses the combined `allegro:api:messaging` scope; Allegro does
-not split it into separate read/write permissions. Payments/refunds write scope
-is not part of this profile. Fulfillment warehouse management is also separate.
+not split it into separate read/write permissions. The buyer-payment refund
+scope `allegro:api:payments:write` is not part of this profile. Commission-refund
+applications and customer-return decisions belong to the broader orders scope
+in Allegro's API. Fulfillment warehouse management is also separate.
+
+Relevant existing tools include `create_product_offers`, `edit_product_offers`,
+`change_publication_status`, `quantity_modification_command`,
+`new_message_in_thread_post`, `new_message_post`, `set_order_fulfillment`
+and `create_new_shipment`. Tool generation already covers these endpoints;
+enabling company management does not require editing generated files.
 
 ## Authorization and validation
 
