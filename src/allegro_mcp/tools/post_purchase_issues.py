@@ -161,6 +161,10 @@ def add_message_to_issue(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("addMessageToIssueUsingPOST", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Add a message to an issue
 
@@ -171,7 +175,7 @@ def add_message_to_issue(
     """
     return call_operation(
         "addMessageToIssueUsingPOST",
-        {"path:issueId": issueId, "header:Accept-Language": Accept_Language},
+        {"path:issueId": issueId, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 
@@ -196,6 +200,10 @@ def change_status_of_issue(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("changeStatusOfIssueUsingPOST", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Change status of a claim
 
@@ -206,7 +214,7 @@ def change_status_of_issue(
     """
     return call_operation(
         "changeStatusOfIssueUsingPOST",
-        {"path:issueId": issueId, "header:Accept-Language": Accept_Language},
+        {"path:issueId": issueId, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 
@@ -223,6 +231,10 @@ def create_an_issue_attachment(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("createAnIssueAttachmentUsingPOST", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Create an attachment declaration
 
@@ -232,7 +244,8 @@ def create_an_issue_attachment(
     HTTP: ``POST /sale/issues/attachments``
     """
     return call_operation(
-        "createAnIssueAttachmentUsingPOST", {"header:Accept-Language": Accept_Language}
+        "createAnIssueAttachmentUsingPOST",
+        {"header:Accept-Language": Accept_Language, "body": body},
     )
 
 

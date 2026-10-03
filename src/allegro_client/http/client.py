@@ -163,6 +163,7 @@ class AllegroClient:
         headers: dict[str, str] | None = None,
         content: bytes | None = None,
         allow_binary: bool = False,
+        upload: bool = False,
     ) -> Any:
         """Issue an HTTP request and return the parsed JSON body.
 
@@ -176,6 +177,8 @@ class AllegroClient:
 
         The retry transport handles 429/5xx/network transients before this
         function gets to see the response.
+        With ``upload=True``, route to the official upload host for the
+        configured environment instead of the REST API host.
         """
         media_type = media_types.resolve(path)
         request_headers = httpx.Headers({"Accept": media_type})
@@ -190,6 +193,13 @@ class AllegroClient:
             body = json
 
         cleaned_params = _drop_none(params)
+        if upload:
+            domain = (
+                "allegro.pl"
+                if self._config.environment == "production"
+                else "allegro.pl.allegrosandbox.pl"
+            )
+            path = "https://upload." + domain + path
 
         try:
             response = self._http.request(

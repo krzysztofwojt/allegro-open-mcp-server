@@ -53,6 +53,10 @@ def update_account_participation(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("updateAccountParticipation", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Update account participation
 
@@ -61,7 +65,9 @@ def update_account_participation(
 
     HTTP: ``PATCH /sale/allegro-prices/accounts/participations``
     """
-    return call_operation("updateAccountParticipation", {"header:Accept-Language": Accept_Language})
+    return call_operation(
+        "updateAccountParticipation", {"header:Accept-Language": Accept_Language, "body": body}
+    )
 
 
 @mcp.tool
@@ -77,6 +83,9 @@ def submit_offer_commands(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any], Field(json_schema_extra=input_schema("submitOfferCommands", "body", "body"))
+    ],
 ) -> Any | ErrorResponse:
     """Submit offers command
 
@@ -85,7 +94,9 @@ def submit_offer_commands(
 
     HTTP: ``POST /sale/allegro-prices/offers/submit-offer-commands``
     """
-    return call_operation("submitOfferCommands", {"header:Accept-Language": Accept_Language})
+    return call_operation(
+        "submitOfferCommands", {"header:Accept-Language": Accept_Language, "body": body}
+    )
 
 
 @mcp.tool
@@ -135,6 +146,10 @@ def exclude_offer_commands(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("excludeOfferCommands", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Exclude offers command
 
@@ -143,7 +158,9 @@ def exclude_offer_commands(
 
     HTTP: ``POST /sale/allegro-prices/offers/exclusion-commands``
     """
-    return call_operation("excludeOfferCommands", {"header:Accept-Language": Accept_Language})
+    return call_operation(
+        "excludeOfferCommands", {"header:Accept-Language": Accept_Language, "body": body}
+    )
 
 
 @mcp.tool

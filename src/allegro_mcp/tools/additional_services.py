@@ -32,6 +32,12 @@ def create_additional_services_group(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(
+            json_schema_extra=input_schema("createAdditionalServicesGroupUsingPOST", "body", "body")
+        ),
+    ],
 ) -> Any | ErrorResponse:
     """Create additional services group
 
@@ -41,7 +47,8 @@ def create_additional_services_group(
     HTTP: ``POST /sale/offer-additional-services/groups``
     """
     return call_operation(
-        "createAdditionalServicesGroupUsingPOST", {"header:Accept-Language": Accept_Language}
+        "createAdditionalServicesGroupUsingPOST",
+        {"header:Accept-Language": Accept_Language, "body": body},
     )
 
 
@@ -172,6 +179,12 @@ def modify_additional_services_group(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(
+            json_schema_extra=input_schema("modifyAdditionalServicesGroupUsingPUT", "body", "body")
+        ),
+    ],
 ) -> Any | ErrorResponse:
     """Modify an additional services group
 
@@ -182,5 +195,5 @@ def modify_additional_services_group(
     """
     return call_operation(
         "modifyAdditionalServicesGroupUsingPUT",
-        {"path:groupId": groupId, "header:Accept-Language": Accept_Language},
+        {"path:groupId": groupId, "header:Accept-Language": Accept_Language, "body": body},
     )

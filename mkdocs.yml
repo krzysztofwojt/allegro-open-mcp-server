@@ -123,6 +123,7 @@ nav:
   - How-to guides:
       - Pick an OAuth flow: how-to/oauth-flows.md
       - Two accounts on kiciserwer: how-to/two-accounts-kiciserwer.md
+      - Upload offer images: how-to/upload-offer-images.md
       - Configure Claude Desktop: how-to/with-claude-desktop.md
       - Configure Claude Code: how-to/with-claude-code.md
       - Run with MCP Inspector: how-to/with-mcp-inspector.md

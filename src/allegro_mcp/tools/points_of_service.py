@@ -30,6 +30,9 @@ def create_pos(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any], Field(json_schema_extra=input_schema("createPOSUsingPOST", "body", "body"))
+    ],
 ) -> Any | ErrorResponse:
     """Create a point of service
 
@@ -38,7 +41,9 @@ def create_pos(
 
     HTTP: ``POST /points-of-service``
     """
-    return call_operation("createPOSUsingPOST", {"header:Accept-Language": Accept_Language})
+    return call_operation(
+        "createPOSUsingPOST", {"header:Accept-Language": Accept_Language, "body": body}
+    )
 
 
 @mcp.tool
@@ -123,6 +128,9 @@ def modify_pos(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any], Field(json_schema_extra=input_schema("modifyPOSUsingPUT", "body", "body"))
+    ],
 ) -> Any | ErrorResponse:
     """Modify a point of service
 
@@ -132,7 +140,8 @@ def modify_pos(
     HTTP: ``PUT /points-of-service/{id}``
     """
     return call_operation(
-        "modifyPOSUsingPUT", {"path:id": id, "header:Accept-Language": Accept_Language}
+        "modifyPOSUsingPUT",
+        {"path:id": id, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 

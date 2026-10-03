@@ -131,6 +131,10 @@ def answer_user_rating(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("answerUserRatingUsingPUT", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Answer for user's rating
 
@@ -141,7 +145,7 @@ def answer_user_rating(
     """
     return call_operation(
         "answerUserRatingUsingPUT",
-        {"path:ratingId": ratingId, "header:Accept-Language": Accept_Language},
+        {"path:ratingId": ratingId, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 
@@ -164,6 +168,10 @@ def user_rating_removal(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("userRatingRemovalUsingPUT", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Request removal of user's rating
 
@@ -174,7 +182,7 @@ def user_rating_removal(
     """
     return call_operation(
         "userRatingRemovalUsingPUT",
-        {"path:ratingId": ratingId, "header:Accept-Language": Accept_Language},
+        {"path:ratingId": ratingId, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 

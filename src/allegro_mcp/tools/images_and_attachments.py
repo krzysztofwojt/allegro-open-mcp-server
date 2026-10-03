@@ -38,6 +38,17 @@ def upload_offer_image(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any] | None,
+        Field(json_schema_extra=input_schema("uploadOfferImageUsingPOST", "body", "body")),
+    ] = None,
+    url: Annotated[
+        str | None,
+        Field(json_schema_extra=input_schema("uploadOfferImageUsingPOST", "body:url", "url")),
+    ] = None,
+    content_base64: str | None = None,
+    content_type: str = "image/jpeg",
+    body_base64: str | None = None,
 ) -> Any | ErrorResponse:
     """Upload an offer image
 
@@ -45,10 +56,20 @@ def upload_offer_image(
 
 
     HTTP: ``POST /sale/images``
+
+    Provide either body (JSON), url, or base64 image bytes, never multiple payloads. The returned URL can be used in product.images and offer images.
     """
     return call_operation(
         "uploadOfferImageUsingPOST",
-        {"header:Accept-Language": Accept_Language, "query:isAiCoCreated": isAiCoCreated},
+        {
+            "header:Accept-Language": Accept_Language,
+            "query:isAiCoCreated": isAiCoCreated,
+            "body": body,
+            "body:url": url,
+            "content_base64": content_base64,
+            "content_type": content_type,
+            "body_base64": body_base64,
+        },
     )
 
 
@@ -65,6 +86,10 @@ def create_offer_attachment(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("createOfferAttachmentUsingPOST", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Create an offer attachment
 
@@ -74,7 +99,7 @@ def create_offer_attachment(
     HTTP: ``POST /sale/offer-attachments``
     """
     return call_operation(
-        "createOfferAttachmentUsingPOST", {"header:Accept-Language": Accept_Language}
+        "createOfferAttachmentUsingPOST", {"header:Accept-Language": Accept_Language, "body": body}
     )
 
 

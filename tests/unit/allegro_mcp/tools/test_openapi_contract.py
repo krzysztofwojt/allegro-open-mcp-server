@@ -74,6 +74,10 @@ def captured(monkeypatch: pytest.MonkeyPatch) -> list[httpx.Request]:
 
     def handler(request: httpx.Request) -> httpx.Response:
         requests.append(request)
+        if request.url.path == "/sale/images":
+            return httpx.Response(
+                201, json={"location": "https://a.allegroimg.com/original/mock-image"}
+            )
         if "/labels" in request.url.path:
             return httpx.Response(
                 200, content=b"^XA^XZ", headers={"Content-Type": "x-application/zpl"}
@@ -242,3 +246,103 @@ def test_json_endpoints_do_not_silently_accept_binary(monkeypatch: pytest.Monkey
         monkeypatch.setattr(_request, "get_client", lambda: client)
         with pytest.raises(AllegroError, match="Non-JSON response"):
             _request.call_operation("meGET", {})
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        {"url": "https://example.org/offer.jpg"},
+        {"body": {"url": "https://example.org/offer.jpg"}},
+        {
+            "body_base64": base64.b64encode(b"\xff\xd8mock jpeg\xff\xd9").decode(),
+            "content_type": "image/jpeg",
+        },
+        {"content_base64": base64.b64encode(b"\xff\xd8mock jpeg\xff\xd9").decode()},
+    ],
+)
+def test_offer_image_upload_accepts_payload_through_real_mcp(
+    captured: list[httpx.Request], arguments: dict
+) -> None:
+    async def run() -> None:
+        async with Client(mcp) as session:
+            result = await session.call_tool("upload_offer_image", arguments)
+            assert not result.is_error
+            assert result.data["location"] == "https://a.allegroimg.com/original/mock-image"
+
+    asyncio.run(run())
+    assert len(captured) == 1
+    request = captured[0]
+    assert request.url.host == "upload.allegro.pl"
+    assert request.url.path == "/sale/images"
+    if "url" in arguments or "body" in arguments:
+        assert json.loads(request.content) == arguments.get("body", {"url": arguments.get("url")})
+    else:
+        assert request.content == base64.b64decode(
+            arguments.get("body_base64", arguments.get("content_base64"))
+        )
+        assert request.headers["Content-Type"] == "image/jpeg"
+
+
+def test_offer_image_upload_schema_exposes_all_payload_forms() -> None:
+    tools = {t.name: t for t in asyncio.run(mcp.list_tools())}
+    properties = tools["upload_offer_image"].parameters["properties"]
+    assert {"url", "body", "body_base64", "content_base64", "content_type"} <= properties.keys()
+    assert "url" in json.dumps(properties["body"])
+
+
+@pytest.mark.parametrize(
+    "arguments",
+    [
+        {},
+        {
+            "body:url": "https://example.org/image.jpg",
+            "body_base64": "YWJj",
+            "content_type": "image/jpeg",
+        },
+        {"body_base64": "not base64", "content_type": "image/jpeg"},
+        {"body_base64": "", "content_type": "image/jpeg"},
+        {"body_base64": "YWJj", "content_type": "text/html"},
+        {"body_base64": "YWJj", "content_base64": "YWJj", "content_type": "image/jpeg"},
+        {"body": {}},
+    ],
+)
+def test_offer_image_upload_rejects_invalid_payload_before_io(
+    captured: list[httpx.Request], arguments: dict
+) -> None:
+    with pytest.raises(AllegroError):
+        _request.call_operation("uploadOfferImageUsingPOST", arguments)
+    assert captured == []
+
+
+def test_referenced_request_bodies_are_resolved() -> None:
+    for operation in _request._CONTRACT["operations"].values():
+        assert "$ref" not in operation["requestBody"]
+
+
+@pytest.mark.parametrize(
+    ("environment", "host"),
+    [("production", "upload.allegro.pl"), ("sandbox", "upload.allegro.pl.allegrosandbox.pl")],
+)
+def test_binary_upload_uses_environment_specific_host(environment: str, host: str) -> None:
+    requests = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(201, json={"location": "https://a.allegroimg.com/image"})
+
+    config = AllegroClientConfig(
+        client_id="test",
+        client_secret=SecretStr("test"),
+        environment=environment,
+        auth_flow="device",
+    )
+    with AllegroClient(config, transport=httpx.MockTransport(handler)) as client:
+        client.request_json(
+            "POST",
+            "/sale/images",
+            content=b"jpeg",
+            headers={"Content-Type": "image/jpeg"},
+            upload=True,
+        )
+    assert requests[0].url.host == host
+    assert requests[0].content == b"jpeg"

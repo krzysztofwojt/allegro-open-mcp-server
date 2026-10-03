@@ -42,9 +42,13 @@ def _convert(value: Any) -> Any:
 @cache
 def _schema(operation_id: str, key: str) -> dict[str, Any]:
     op = _CONTRACT["operations"][operation_id]
-    if key == "body":
+    if key == "body" or key.startswith("body:"):
         content = op["requestBody"]["content"]
         schema = next(v["schema"] for k, v in content.items() if "json" in k)
+        if key.startswith("body:"):
+            if "$ref" in schema:
+                schema = _CONTRACT["schemas"][schema["$ref"].split("/")[-1]]
+            schema = schema["properties"][key.split(":", 1)[1]]
     else:
         location, name = key.split(":", 1)
         param = next(p for p in op["parameters"] if p["in"] == location and p["name"] == name)
@@ -134,24 +138,43 @@ def call_operation(operation_id: str, arguments: dict[str, Any]) -> Any:
             raise AllegroError("INVALID_INPUT", f"Unsupported parameter location: {location}")
     content = op["requestBody"].get("content", {})
     body = arguments.get("body")
+    flat_body = {
+        key.removeprefix("body:"): value
+        for key, value in arguments.items()
+        if key.startswith("body:") and value is not None
+    }
+    encoded = arguments.get("content_base64")
+    alias = arguments.get("body_base64")
+    if encoded is not None and alias is not None:
+        raise AllegroError("INVALID_INPUT", "Provide only one base64 upload argument")
+    encoded = encoded if encoded is not None else alias
+    if sum((body is not None, bool(flat_body), encoded is not None)) > 1:
+        raise AllegroError("INVALID_INPUT", "Provide exactly one request payload")
+    if flat_body:
+        body = flat_body
     raw_content = None
     if content:
         json_types = [kind for kind in content if "json" in kind]
-        if json_types:
+        if encoded is not None:
+            kind = arguments.get("content_type")
+            if not isinstance(kind, str) or kind not in content or "json" in kind:
+                raise AllegroError("INVALID_INPUT", "Unsupported upload content type")
+            try:
+                raw_content = base64.b64decode(encoded, validate=True)
+            except (binascii.Error, ValueError, TypeError) as exc:
+                raise AllegroError("INVALID_INPUT", "Invalid base64 upload") from exc
+            if not raw_content:
+                raise AllegroError("INVALID_INPUT", "Empty binary upload")
+            headers["Content-Type"] = str(kind)
+        elif json_types:
             if body is None and op["requestBody"].get("required"):
                 raise AllegroError("INVALID_INPUT", "Missing required request body")
             if body is not None:
                 _validate(operation_id, "body", body)
                 headers["Content-Type"] = json_types[0]
         else:
-            kind = arguments.get("content_type")
-            if kind not in content:
-                raise AllegroError("INVALID_INPUT", "Unsupported upload content type")
-            try:
-                raw_content = base64.b64decode(arguments["content_base64"], validate=True)
-            except (binascii.Error, ValueError) as exc:
-                raise AllegroError("INVALID_INPUT", "Invalid base64 upload") from exc
-            headers["Content-Type"] = str(kind)
+            if op["requestBody"].get("required"):
+                raise AllegroError("INVALID_INPUT", "Missing required binary request body")
     success_types = [
         kind
         for status, response in op["responses"].items()
@@ -162,6 +185,10 @@ def call_operation(operation_id: str, arguments: dict[str, Any]) -> Any:
         headers["Accept"] = next(
             (t for t in success_types if "json" in t), success_types[0]
         ).replace("v1 +json", "v1+json")
+    servers = op.get("servers", [])
+    upload = bool(servers)
+    if upload and servers[0]["url"] != "https://upload.{environment}":
+        raise AllegroError("INVALID_INPUT", "Unsupported OpenAPI operation server")
     return get_client().request_json(
         op["method"],
         path,
@@ -170,6 +197,7 @@ def call_operation(operation_id: str, arguments: dict[str, Any]) -> Any:
         headers=headers,
         content=raw_content,
         allow_binary=any("json" not in kind for kind in success_types),
+        upload=upload,
     )
 
 

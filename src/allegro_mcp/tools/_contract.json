@@ -27797,7 +27797,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/UserRatingAnswerRequest"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserRatingAnswerRequest"
+            }
+          }
+        },
+        "description": "User rating answer request.",
+        "required": true
       },
       "responses": {
         "201": {
@@ -27869,7 +27877,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/UserRatingRemovalRequest"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserRatingRemovalRequest"
+            }
+          }
+        },
+        "description": "User rating removal request.",
+        "required": true
       },
       "responses": {
         "201": {
@@ -28039,7 +28055,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/AdditionalServicesGroupRequest"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/AdditionalServicesGroupRequest"
+            }
+          }
+        },
+        "description": "Additional service group body",
+        "required": true
       },
       "responses": {
         "201": {
@@ -35309,7 +35333,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/Pos"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          }
+        },
+        "description": "Point of service",
+        "required": true
       },
       "responses": {
         "201": {
@@ -35547,7 +35579,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/Pos"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pos"
+            }
+          }
+        },
+        "description": "Point of service",
+        "required": true
       },
       "responses": {
         "200": {
@@ -37080,7 +37120,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/AdditionalServicesGroupRequest"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/AdditionalServicesGroupRequest"
+            }
+          }
+        },
+        "description": "Additional service group body",
+        "required": true
       },
       "responses": {
         "200": {
@@ -38579,6 +38627,20 @@
           }
         }
       },
+      "servers": [
+        {
+          "url": "https://upload.{environment}",
+          "variables": {
+            "environment": {
+              "default": "allegro.pl",
+              "enum": [
+                "allegro.pl",
+                "allegro.pl.allegrosandbox.pl"
+              ]
+            }
+          }
+        }
+      ],
       "responses": {
         "200": {
           "description": "File uploaded correctly.",
@@ -38728,8 +38790,50 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/OfferImageUploadRequest"
+        "required": true,
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/OfferImageLinkUploadRequest"
+            }
+          },
+          "image/jpeg": {
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "description": "File in a binary format"
+            }
+          },
+          "image/png": {
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "description": "File in a binary format"
+            }
+          },
+          "image/webp": {
+            "schema": {
+              "type": "string",
+              "format": "binary",
+              "description": "File in a binary format"
+            }
+          }
+        }
       },
+      "servers": [
+        {
+          "url": "https://upload.{environment}",
+          "variables": {
+            "environment": {
+              "default": "allegro.pl",
+              "enum": [
+                "allegro.pl",
+                "allegro.pl.allegrosandbox.pl"
+              ]
+            }
+          }
+        }
+      ],
       "responses": {
         "201": {
           "description": "Image uploaded correctly",
@@ -38812,7 +38916,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/OfferAttachmentRequest"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/OfferAttachmentRequest"
+            }
+          }
+        },
+        "description": "offer attachment",
+        "required": true
       },
       "responses": {
         "201": {
@@ -38900,6 +39012,20 @@
           }
         }
       },
+      "servers": [
+        {
+          "url": "https://upload.{environment}",
+          "variables": {
+            "environment": {
+              "default": "allegro.pl",
+              "enum": [
+                "allegro.pl",
+                "allegro.pl.allegrosandbox.pl"
+              ]
+            }
+          }
+        }
+      ],
       "responses": {
         "200": {
           "description": "File uploaded correctly",
@@ -40872,7 +40998,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/PostPurchaseIssueMessageRequest"
+        "content": {
+          "application/vnd.allegro.beta.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/MessageRequest"
+            }
+          }
+        },
+        "description": "Message request",
+        "required": true
       },
       "responses": {
         "201": {
@@ -40963,7 +41097,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/ClaimStatusChangeRequest"
+        "content": {
+          "application/vnd.allegro.beta.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/ClaimStatusChangeRequest"
+            }
+          }
+        },
+        "description": "Claim status change",
+        "required": true
       },
       "responses": {
         "200": {
@@ -41011,7 +41153,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/PostPurchaseIssueAttachmentDeclaration"
+        "content": {
+          "application/vnd.allegro.beta.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/AttachmentDeclaration"
+            }
+          }
+        },
+        "description": "A detailed declaration of a file to be uploaded",
+        "required": true
       },
       "responses": {
         "201": {
@@ -42162,7 +42312,15 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/PromoOptionsCommand"
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/PromoOptionsCommand"
+            }
+          }
+        },
+        "description": "Promotion packages modification command request.",
+        "required": true
       },
       "responses": {
         "201": {
@@ -48833,7 +48991,14 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/AllegroPricesAccountParticipationRequest"
+        "required": true,
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/AllegroPricesAccountParticipationRequest"
+            }
+          }
+        }
       },
       "responses": {
         "200": {
@@ -48906,7 +49071,14 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/SubsidySubmitOffersCommand"
+        "required": true,
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/SubsidySubmitOffersCommand"
+            }
+          }
+        }
       },
       "responses": {
         "201": {
@@ -49225,7 +49397,14 @@
         }
       ],
       "requestBody": {
-        "$ref": "#/components/requestBodies/SubsidyExcludeOffersCommand"
+        "required": true,
+        "content": {
+          "application/vnd.allegro.public.v1+json": {
+            "schema": {
+              "$ref": "#/components/schemas/SubsidyExcludeOffersCommand"
+            }
+          }
+        }
       },
       "responses": {
         "201": {

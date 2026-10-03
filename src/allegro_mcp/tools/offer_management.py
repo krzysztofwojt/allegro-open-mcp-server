@@ -495,6 +495,10 @@ def promo_modification_command(
             )
         ),
     ] = None,
+    body: Annotated[
+        dict[str, Any],
+        Field(json_schema_extra=input_schema("promoModificationCommandUsingPUT", "body", "body")),
+    ],
 ) -> Any | ErrorResponse:
     """Batch offer promotion package modification
 
@@ -505,7 +509,7 @@ def promo_modification_command(
     """
     return call_operation(
         "promoModificationCommandUsingPUT",
-        {"path:commandId": commandId, "header:Accept-Language": Accept_Language},
+        {"path:commandId": commandId, "header:Accept-Language": Accept_Language, "body": body},
     )
 
 

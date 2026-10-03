@@ -17,7 +17,7 @@ wymaga drugiego store, a nie przełączania konta w istniejącym store.
 Obraz AMD64 został zbudowany na NAS z commitu `62d1dbb`; test rejestru
 potwierdził 272 tools, nazwy do 62 znaków i wyłączone zapisy. OAuth obu kont
 zostało osobno zatwierdzone, a `GET /me` potwierdziło różne tożsamości. Aktualne szablony i instrukcje przygotowania są w
-[deploy/README.md](../../deploy/README.md).
+[deploy/README.md](https://github.com/krzysztofwojt/allegro-open-mcp-server/blob/update-allegro-api-2026-10-03/deploy/README.md).
 
 NAS nie ma Git ani Buildx: źródła przesyłamy jako `git archive` przez SSH,
 a build wykonujemy z `DOCKER_BUILDKIT=0`. Konfiguracja jest poza repozytorium,

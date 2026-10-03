@@ -234,18 +234,33 @@ def _build_function(
     content = op.get("requestBody", {}).get("content", {})
     if content:
         json_types = [t for t in content if "json" in t]
+        binary_types = [t for t in content if "json" not in t]
         if json_types:
-            required = op["requestBody"].get("required", False)
+            required = op["requestBody"].get("required", False) and not binary_types
             annotation = "dict[str, Any]" + ("" if required else " | None")
             args.append(
                 f'body: Annotated[{annotation}, Field(json_schema_extra=input_schema({operation_id!r}, "body", "body"))]'
                 + ("" if required else " = None")
             )
             mapping.append("'body': body")
-        else:
-            args.append("content_base64: str")
-            args.append(f"content_type: str = {next(iter(content))!r}")
+            if binary_types:
+                for field, schema in op.get("json_body_properties", {}).items():
+                    if field in identifiers:
+                        continue
+                    identifier = _safe_arg_name(field)
+                    args.append(
+                        f'{identifier}: Annotated[{_python_type_for(schema)} | None, Field(json_schema_extra=input_schema({operation_id!r}, "body:{field}", {identifier!r}))] = None'
+                    )
+                    mapping.append(f"'body:{field}': {identifier}")
+                docs += "\n\nProvide either body (JSON), url, or base64 image bytes, never multiple payloads. The returned URL can be used in product.images and offer images."
+        if binary_types:
+            suffix = " | None = None" if json_types else ""
+            args.append("content_base64: str" + suffix)
+            args.append(f"content_type: str = {binary_types[0]!r}")
             mapping.extend(["'content_base64': content_base64", "'content_type': content_type"])
+            if json_types:
+                args.append("body_base64: str | None = None")
+                mapping.append("'body_base64': body_base64")
     decorators = ["@mcp.tool", "@allegro_call"]
     if method in _WRITE_METHODS and operation_id not in _READ_OPERATION_OVERRIDES:
         decorators.append("@requires_writes_enabled")
@@ -313,6 +328,24 @@ def main() -> int:
                 continue
             if not isinstance(op, dict):
                 continue
+            op = dict(op)
+            body = op.get("requestBody", {})
+            seen_refs: set[str] = set()
+            while "$ref" in body:
+                ref = body["$ref"]
+                prefix = "#/components/requestBodies/"
+                if not ref.startswith(prefix) or ref in seen_refs:
+                    raise ValueError(f"Unsupported or cyclic requestBody reference: {ref}")
+                seen_refs.add(ref)
+                body = spec["components"]["requestBodies"][ref.removeprefix(prefix)]
+            op["requestBody"] = body
+            json_schema = next(
+                (v.get("schema", {}) for t, v in body.get("content", {}).items() if "json" in t),
+                {},
+            )
+            if "$ref" in json_schema:
+                json_schema = spec["components"]["schemas"][json_schema["$ref"].split("/")[-1]]
+            op["json_body_properties"] = json_schema.get("properties", {})
             operation_id = (
                 op.get("operationId") or f"{method}_{re.sub(r'[^a-zA-Z0-9]+', '_', path)}"
             )
@@ -331,6 +364,11 @@ def main() -> int:
                 "path": path,
                 "parameters": _parameters(op, path_item),
                 "requestBody": op.get("requestBody", {}),
+                **(
+                    {"servers": op.get("servers", path_item.get("servers"))}
+                    if op.get("servers", path_item.get("servers"))
+                    else {}
+                ),
                 "responses": op["responses"],
                 "tool": name,
                 "deprecated": op.get("deprecated", False),
