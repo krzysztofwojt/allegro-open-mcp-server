@@ -1,0 +1,7 @@
+# Explicit opt-in for company-account management. Apply only after approval
+# and a company OAuth grant with the required scopes. Private stays read-only.
+# docker compose -f compose.yaml -f compose.firmowe-writes.yaml up -d --no-deps allegro-firmowe
+services:
+  allegro-firmowe:
+    environment:
+      ALLEGRO_ENABLE_WRITES: "true"
