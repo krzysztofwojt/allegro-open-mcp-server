@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.7
 # See README.md for build/run instructions and MCP-client config.
 #
 # Multi-stage build: a uv-based builder produces a self-contained virtualenv,
@@ -6,6 +5,7 @@
 # store is mounted at ``/home/mcp/.allegro-mcp`` so refresh tokens survive
 # container restarts.
 
+# Plain RUN instructions also support Synology Docker without Buildx.
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
 WORKDIR /app
@@ -18,12 +18,10 @@ ENV UV_COMPILE_BYTECODE=1 \
 # ``[tool.hatch.build.targets.wheel.force-include]`` doesn't trip on a
 # missing file when the editable wheel is built.
 COPY pyproject.toml uv.lock README.md THIRD_PARTY_NOTICES.md ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-install-project --no-dev
+RUN uv sync --frozen --no-install-project --no-dev
 
 COPY src/ ./src/
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev
 
 
 FROM python:3.12-slim-bookworm AS runtime

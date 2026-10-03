@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "allegro-prywatne": {
+      "command": "ssh",
+      "args": [
+        "-T",
+        "kiciserwer",
+        "/usr/local/bin/docker run --rm -i --name allegro-prywatne --env-file /volume1/docker/allegro-mcp/config/prywatne.env -v allegro-prywatne-tokens:/home/mcp/.allegro-mcp allegro-mcp:0af314e-synology-v1"
+      ]
+    },
+    "allegro-firmowe": {
+      "command": "ssh",
+      "args": [
+        "-T",
+        "kiciserwer",
+        "/usr/local/bin/docker run --rm -i --name allegro-firmowe --env-file /volume1/docker/allegro-mcp/config/firmowe.env -v allegro-firmowe-tokens:/home/mcp/.allegro-mcp allegro-mcp:0af314e-synology-v1"
+      ]
+    }
+  }
+}

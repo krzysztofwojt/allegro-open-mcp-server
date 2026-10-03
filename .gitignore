@@ -237,3 +237,5 @@ __marimo__/
 *.env.*
 !.env.example
 **/tokens.json
+
+!deploy/*.env.example
