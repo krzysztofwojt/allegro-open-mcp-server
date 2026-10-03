@@ -90,6 +90,8 @@ tasks remain separate. Verify the task's exit status and served TLS certificates
 - DSM's IPv4 and IPv6 firewall is enabled with a default drop policy. Allegro
   uses the existing TCP 443 allowance; no backend-port allowance was added.
   Docker binds both upstream ports only to `127.0.0.1`.
+  Synology Tailscale uses userspace networking and can forward private tailnet
+  traffic to these loopback listeners; this path also requires the MCP key.
 - Local HTTP and public HTTPS both rejected missing, invalid and other-account
   keys with 401. Matching keys initialized MCP, listed 272 tools (maximum name
   length 62), and read `/me` for the distinct private and company accounts.
