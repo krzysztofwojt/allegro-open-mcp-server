@@ -53,3 +53,19 @@ enabling company management does not require editing generated files.
 Changing requested scopes in an env file alone does not grant permissions.
 Treat the returned token scope set as authoritative. See [Allegro's scope
 documentation](https://developer.allegro.pl/news/zarzadzanie-lista-scopeow-aplikacji-allegro-v8WDrwvnXF2).
+
+## Deployment verification — 2026-10-03
+
+The operator-approved company deployment has its write gate enabled and a new
+grant containing all four management scopes and messaging. The private
+deployment keeps its write gate disabled. Buyer-payment refunds remain excluded.
+
+Both deployments passed local and public HTTPS checks: missing, invalid and
+other-account keys returned HTTP 401; authenticated requests returned HTTP 200,
+listed 272 tools and read the expected account identity. The company token was
+saved only after checking its account identity and granted scopes. The 26
+targeted write-gating, HTTP-authentication and contract tests passed.
+
+No offer, customer message, order or shipment was changed to test activation.
+Real write operations therefore remain untested. Token files, OAuth secrets,
+client access keys and backups remain outside the repository.
