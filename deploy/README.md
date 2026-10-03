@@ -59,7 +59,10 @@ before writing credentials. Templates contain no real credentials.
 The AMD64 image was built from release `62d1dbb` on kiciserwer. Its ID is
 `sha256:3a48f93bd129a249572aefa8e313879477716dc16c8ec2acf8519e42218e94e3`.
 Runtime registration reports 272 tools, maximum name length 62, writes disabled,
-and UID/GID 999:999. OAuth grants for both accounts are still pending.
+and UID/GID 999:999. Both accounts have completed separate Device Flow grants.
+Credentials remain outside the source checkout, with config directory mode
+0700 and credential files mode 0600; token stores use distinct named volumes.
+Read-only `/me` confirms different account identities.
 
 The NAS has no Git or Buildx. Transfer a pinned revision from your workstation
 using `git archive REVISION | ssh kiciserwer "tar -xf - -C RELEASE_DIRECTORY"`
