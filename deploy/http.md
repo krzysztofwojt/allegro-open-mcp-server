@@ -1,9 +1,11 @@
-# Public HTTPS deployment template
+# Public HTTPS deployment
 
 This guide and [the Compose example](compose.http.yaml.example) describe a
-possible NAS deployment. The image tag `allegro-mcp:http-20261003` is a
-placeholder; this repository change does not confirm that an image, container,
-DNS record, TLS certificate, or reverse-proxy rule exists on the NAS.
+NAS deployment. On 2026-10-03, `allegro-mcp:http-20261003` was built on
+kiciserwer from commit `ec394d168d1355f632d1da6b95ad2db21733a9ad` and both
+services were started from `/volume1/docker/allegro-mcp/http/compose.yaml`.
+The image ID is
+`sha256:bf6f35bd23adb1fe3986863602598a62ac0a02389da05d7f03c93f00d3aede2c`.
 
 ## Endpoints and keys
 
@@ -18,6 +20,12 @@ Allegro OAuth settings. Keep the files under
 `/volume1/docker/allegro-mcp/config/`, with directory mode `0700` and file mode
 `0600`. The sample Compose file loads these files at runtime and contains no
 key values. Never commit, paste into chat, or reuse either inbound API key.
+
+For client configuration, protected files containing only the MCP key are
+available at `/volume1/docker/allegro-mcp/config/client-access/prywatne.key`
+and `firmowe.key`. These contain no Allegro OAuth credentials. Copy the matching
+key into the client's secret field. If rotating a key, update both its env file
+and client key file, then recreate only that account's container.
 
 The inbound `ALLEGRO_MCP_API_KEY` protects bot-to-MCP requests. It is separate
 from Allegro's OAuth credentials and token store. Keep the two token volumes
@@ -68,3 +76,25 @@ running this script at 00:15. It renews and deploys only the two Allegro
 certificates, treats ACME's not-due status separately, and fails on renewal or
 deployment errors or certificates expiring within 14 days. Existing certificate
 tasks remain separate. Verify the task's exit status and served TLS certificates.
+
+## Verified deployment (2026-10-03)
+
+- Both public DNS records are DNS-only A records in the Cloudflare `kwojt.net`
+  zone, matching the existing public MCP address. CoreDNS was not changed.
+- DSM routes terminate TLS and forward to loopback ports 3030 and 3031.
+  ZeroSSL certificates for both names expire on 2027-01-01. HTTPS validation
+  through the public WAN address passed. HSTS is enabled for these new names.
+- Enabled DSM task 20, `Renew Allegro MCP HTTPS certificates`, runs daily at
+  00:15 as `certadmin`. A manual scheduler run succeeded; fresh certificates
+  were correctly reported as not yet due. Future renewal remains automatic.
+- DSM's IPv4 and IPv6 firewall is enabled with a default drop policy. Allegro
+  uses the existing TCP 443 allowance; no backend-port allowance was added.
+  Docker binds both upstream ports only to `127.0.0.1`.
+- Local HTTP and public HTTPS both rejected missing, invalid and other-account
+  keys with 401. Matching keys initialized MCP, listed 272 tools (maximum name
+  length 62), and read `/me` for the distinct private and company accounts.
+- Both services have writes disabled and `unless-stopped` restart policies.
+  No write operation was used for verification. Bot connections are left to
+  the account owner; direct ChatGPT OAuth is not implemented by this deployment.
+- All 274 tests, lint, mypy, generated-output/freshness checks, package build,
+  NAS Docker build and GitHub CI for the HTTP implementation passed.
