@@ -14,19 +14,15 @@ wymaga drugiego store, a nie przełączania konta w istniejącym store.
 
 ## Przygotowanie NAS
 
-Wykonać później na kiciserwerze. Obecna aktualizacja nie wdraża usług na NAS
-ani nie autoryzuje żadnego konta Allegro.
+Obraz AMD64 został zbudowany na NAS z commitu `62d1dbb`; test rejestru
+potwierdził 272 tools, nazwy do 62 znaków i wyłączone zapisy. OAuth obu kont
+pozostaje do zatwierdzenia. Aktualne szablony i instrukcje przygotowania są w
+[deploy/README.md](../../deploy/README.md).
 
-```sh
-mkdir -p /volume1/docker/allegro-mcp
-cd /volume1/docker/allegro-mcp
-git clone --branch update-allegro-api-2026-10-03 \
-  https://github.com/krzysztofwojt/allegro-open-mcp-server.git repo
-cd repo
-/usr/local/bin/docker build -f docker/Dockerfile -t allegro-mcp:2026-10-03 .
-/usr/local/bin/docker volume create allegro-prywatne-tokens
-/usr/local/bin/docker volume create allegro-firmowe-tokens
-```
+NAS nie ma Git ani Buildx: źródła przesyłamy jako `git archive` przez SSH,
+a build wykonujemy z `DOCKER_BUILDKIT=0`. Konfiguracja jest poza repozytorium,
+w katalogu `config/` z uprawnieniami 0700 i bez odziedziczonych ACL Synology;
+pliki mają 0600. Oba osobne wolumeny tokenów są przygotowane.
 
 Dla powtarzalnego wdrożenia przypnij commit wskazany w raporcie aktualizacji,
 a następnie zachowaj tag obrazu. Nie pobieraj ruchomej gałęzi przy każdym starcie.
@@ -34,7 +30,7 @@ Lokalny build na Macu sprawdza architekturę ARM64; build na NAS przygotuje
 obraz dla jego architektury. Dostęp do Dockera zależy od uprawnień operatora NAS.
 
 Zarejestruj aplikację OAuth z Device Flow w panelu Allegro. Przygotuj poza
-repozytorium `/volume1/docker/allegro-mcp/prywatne.env` i `firmowe.env`,
+repozytorium `/volume1/docker/allegro-mcp/config/prywatne.env` i `firmowe.env`,
 z uprawnieniami `0600`. W każdym pliku ustaw:
 
 ```env
@@ -45,6 +41,7 @@ ALLEGRO_ENVIRONMENT=production
 ALLEGRO_ENABLE_WRITES=false
 ALLEGRO_TOKEN_STORE_PATH=/home/mcp/.allegro-mcp/tokens.json
 ALLEGRO_ACCEPT_LANGUAGE=pl-PL
+ALLEGRO_USER_AGENT=Registered-App-Name/2026.10.03 (+https://example.org/app-documentation)
 ```
 
 Sekrety aplikacji mogą być wspólne dla dwóch grantów, jeśli konfiguracja aplikacji
@@ -63,9 +60,9 @@ Wklej w terminalu NAS:
 
 ```sh
 /usr/local/bin/docker run --rm -i \
-  --env-file /volume1/docker/allegro-mcp/prywatne.env \
+  --env-file /volume1/docker/allegro-mcp/config/prywatne.env \
   -v allegro-prywatne-tokens:/home/mcp/.allegro-mcp \
-  --entrypoint python allegro-mcp:2026-10-03 -c '
+  --entrypoint python allegro-mcp:0af314e-synology-v1 -c '
 from allegro_client import AllegroClient, AllegroClientConfig
 from allegro_client.auth import build_auth
 config = AllegroClientConfig()
@@ -93,14 +90,14 @@ Przykład konfiguracji klienta obsługującego `mcpServers` (SSH bez TTY):
       "command": "ssh",
       "args": [
         "-T", "kiciserwer",
-        "/usr/local/bin/docker run --rm -i --name allegro-prywatne --env-file /volume1/docker/allegro-mcp/prywatne.env -v allegro-prywatne-tokens:/home/mcp/.allegro-mcp allegro-mcp:2026-10-03"
+        "/usr/local/bin/docker run --rm -i --name allegro-prywatne --env-file /volume1/docker/allegro-mcp/config/prywatne.env -v allegro-prywatne-tokens:/home/mcp/.allegro-mcp allegro-mcp:0af314e-synology-v1"
       ]
     },
     "allegro-firmowe": {
       "command": "ssh",
       "args": [
         "-T", "kiciserwer",
-        "/usr/local/bin/docker run --rm -i --name allegro-firmowe --env-file /volume1/docker/allegro-mcp/firmowe.env -v allegro-firmowe-tokens:/home/mcp/.allegro-mcp allegro-mcp:2026-10-03"
+        "/usr/local/bin/docker run --rm -i --name allegro-firmowe --env-file /volume1/docker/allegro-mcp/config/firmowe.env -v allegro-firmowe-tokens:/home/mcp/.allegro-mcp allegro-mcp:0af314e-synology-v1"
       ]
     }
   }
@@ -130,3 +127,6 @@ Uruchomienie i transport SSH na kiciserwerze będą sprawdzone podczas wdrożeni
 Pełne listowanie 272 tools może przekroczyć budżet narzędzi niektórych klientów;
 takie ograniczenie klienta wymaga filtrowania po stronie klienta lub późniejszego
 profilu narzędzi, nie pomijania endpoints w generatorze.
+
+Nagłówek `ALLEGRO_USER_AGENT` wygeneruj dla zarejestrowanej aplikacji w
+https://apps.developer.allegro.pl/user-agent . Przykładowa wartość wymaga zastąpienia.

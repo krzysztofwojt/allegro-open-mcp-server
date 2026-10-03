@@ -53,3 +53,21 @@ uses standard RUN instructions; cache mounts are unnecessary. Protect the
 new config directory with mode 0700 and credential files with mode 0600.
 Remove inherited Synology ACLs granting everyone access on this new directory
 before writing credentials. Templates contain no real credentials.
+
+## Verified NAS preparation (2026-10-03)
+
+The AMD64 image was built from release `62d1dbb` on kiciserwer. Its ID is
+`sha256:3a48f93bd129a249572aefa8e313879477716dc16c8ec2acf8519e42218e94e3`.
+Runtime registration reports 272 tools, maximum name length 62, writes disabled,
+and UID/GID 999:999. OAuth grants for both accounts are still pending.
+
+The NAS has no Git or Buildx. Transfer a pinned revision from your workstation
+using `git archive REVISION | ssh kiciserwer "tar -xf - -C RELEASE_DIRECTORY"`
+after creating the release directory. Keep credentials outside that directory.
+
+Generate the mandatory `ALLEGRO_USER_AGENT` in the official application panel:
+https://apps.developer.allegro.pl/user-agent . Its application name must match
+the registered application. Both accounts may use one OAuth application;
+authorize each separately with its own token volume. The scopes in the templates
+request read access; messaging, ratings and disputes combine read and write
+permissions in Allegro, while MCP still blocks writes.
